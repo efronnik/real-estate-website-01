@@ -1,0 +1,40 @@
+{
+  "kind": "collectionType",
+  "collectionName": "faq_items",
+  "info": {
+    "singularName": "faq-item",
+    "pluralName": "faq-items",
+    "displayName": "FAQItem"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "question": {
+      "type": "string",
+      "required": true
+    },
+    "answer": {
+      "type": "richtext",
+      "required": true
+    },
+    "pageType": {
+      "type": "enumeration",
+      "enum": [
+        "glowna",
+        "sprzedaz",
+        "inwestycje",
+        "o-mnie",
+        "kontakt",
+        "blog",
+        "kalkulator",
+        "bledy"
+      ],
+      "required": true
+    },
+    "order": {
+      "type": "integer",
+      "default": 0
+    }
+  }
+}

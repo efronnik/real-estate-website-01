@@ -25,26 +25,31 @@
 - Зафиксированы 2 lejki (seller/investor) и маршруты страниц
 - Утверждена CTA-карта по страницам
 - Утверждены поля форм: `kontakt` и `wycena`
-- Унифицирован UI-скелет: общий header/footer, общие компоненты форм
-- Документ решений Day 1: `DAY1_DECISION.md`
+- Унифицирован UI-скелет: общий header/footer, общие компоненты форм: DONE
+- Документ решений Day 1: `Documents/DAY1/DAY1_DECISION.md`
 - Проверка соответствия Day 1 по коду и документам: DONE
 
-## Day 2 — Архитектура и UI-основа (статус: PARTIAL DONE)
+## Day 2 — Архитектура и UI-основа (статус: DONE)
 - Единый layout/navigation/component-base: DONE
 - Дальнейшая чистка секций и reusable-блоков: DONE
 - Маршрутизация под расширение без рефактора ядра: DONE
 - Финальная донастройка адаптивности ключевых шаблонов: DONE 
-- Mobile navigation (burger menu): кнопка, overlay, open/close state, блокировка фонового скролла, закрытие по ESC/клику вне меню
+- Mobile navigation (burger menu): кнопка, overlay, open/close state, блокировка фонового скролла, закрытие по ESC/клику вне меню: DONE 
 
-## Day 3 — CMS (Strapi) и модели данных
-- Поднять Strapi
-- Создать коллекции: `Page`, `BlogPost`, `Lead`, `SEO` (опционально `FAQ`, `Testimonials`)
-- Настроить роли и доступы клиента
-- Заполнить тестовыми данными для разработки
+## Day 3 — CMS (Strapi) и модели данных (статус: DONE)
+- Поднять Strapi: DONE
+- Создать коллекции (4 обязательных): `Page`, `BlogPost`, `Lead`, `SEO`: DONE
+- Добавить коллекции (4 желательных для проекта): `SiteSettings`, `FAQItem`, `Testimonial`, `Category` (или `Tag`): DONE
+- Можно добавить позже: `CaseStudy`, `Service`, `Author`, `Redirect`: DONE
+- Настроить роли и доступы клиента: DONE
+- Заполнить тестовыми данными для разработки: DONE
 
 ## Day 4 — Главная (конверсионная)
 - Собрать lead-gen структуру (оффер, доказательства, процесс, CTA)
+- Оптимизировать порядок секций под конверсию в 2 lejki (seller/inwestor), включая перестановку блоков при необходимости
+- Явно зафиксировать входы в 2 lejki (seller/inwestor) и приоритеты CTA
 - Подключить контент из CMS
+- SEO-структура страницы: 1xH1 + иерархия H2/H3 + внутренняя перелинковка в lejki
 - Проверить mobile/tablet/desktop
 
 ## Day 5 — Страница Sprzedaz
@@ -52,18 +57,21 @@
 - Секции: выцена транзакционная vs офферная, маркетинг, отбор лидов, безопасность
 - CTA на консультацию + форма wycena
 - SEO-структура: H1/H2/H3
+- Lejek-логика: переходы Sprzedaz -> Kontakt/Wycena и контроль точек конверсии
 
 ## Day 6 — Страница Inwestycje
 - SEO-landing под inwestowanie/flipy Warszawa
 - Секции: как работает, ошибки, для кого, CTA
 - Internal linking (в т.ч. на kalkulator/wycena)
 - Alt-тексты + SEO-семантика
+- Lejek-логика: переходы Inwestycje -> Kontakt/Blog/Kalkulator без дублирования CTA
 
 ## Day 7 — O mnie + personal brand
 - Экспертный профиль и преимущества
 - Конверсионная структура контента (сканируемая)
 - CTA в оба lejki
 - SEO-поля из CMS
+- SEO-структура страницы: 1xH1 + H2/H3 + релевантные внутренние ссылки в Sprzedaz/Inwestycje
 
 ## Day 8 — Kontakt + обе формы (UI/UX)
 - Финализация страницы `Kontakt`
@@ -71,6 +79,7 @@
 - Клиентская валидация, состояния, сообщения, подтверждение отправки
 - Унификация форменных компонентов
 - Юридические согласия в формах + ссылки на политику приватности/RODO
+- SEO-структура страницы Kontakt + корректные точки входа в формы из обоих lejki
 
 ## Day 9 — Backend обработки лидов
 - Server-side validation + sanitization
@@ -86,6 +95,7 @@
 - Категории/теги (если нужны)
 - Базовое SEO статей
 - Fallback-поведение при недоступности CMS (без падения страницы)
+- SEO-структура list/detail (H1/H2/H3), внутренние ссылки из статей в lejki и CTA на лид-формы
 
 ## Day 11 — GA4 и события конверсии
 - Интеграция GA4
@@ -117,6 +127,7 @@
 ## Day 14 — Deploy и передача
 - Deploy frontend + CMS
 - Домен/SSL/env
+- Production-hardening CMS: переход Strapi на PostgreSQL, настройка media storage, backup/restore и monitoring/alerting
 - Передача доступов: hosting, CMS, analytics, source code
 - Краткая инструкция клиенту + финальная сдача
 - Документация по env и доступам (где хранится, как ротировать)

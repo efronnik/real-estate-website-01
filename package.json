@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "cms:dev": "npm --prefix ./cms run develop",
+    "cms:start": "npm --prefix ./cms run start",
+    "cms:build": "npm --prefix ./cms run build"
   },
   "dependencies": {
     "next": "16.2.2",

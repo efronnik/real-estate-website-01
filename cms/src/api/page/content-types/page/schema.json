@@ -1,0 +1,52 @@
+{
+  "kind": "collectionType",
+  "collectionName": "pages",
+  "info": {
+    "singularName": "page",
+    "pluralName": "pages",
+    "displayName": "Page"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "title",
+      "required": true,
+      "unique": true
+    },
+    "pageType": {
+      "type": "enumeration",
+      "enum": [
+        "glowna",
+        "sprzedaz",
+        "inwestycje",
+        "o-mnie",
+        "kontakt",
+        "blog",
+        "kalkulator",
+        "bledy"
+      ],
+      "required": true
+    },
+    "headline": {
+      "type": "string"
+    },
+    "lead": {
+      "type": "text"
+    },
+    "content": {
+      "type": "richtext"
+    },
+    "seo": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::seo.seo"
+    }
+  }
+}

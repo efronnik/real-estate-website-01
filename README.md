@@ -1,36 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Real Estate Website + Strapi CMS
 
-## Getting Started
+Frontend: Next.js (`/`)  
+CMS: Strapi (`/cms`)
 
-First, run the development server:
+## Requirements
+
+- Node.js
+- npm
+
+## Environment setup
+
+### CMS
+
+```bash
+cp cms/.env.example cms/.env
+```
+
+Required CMS env keys are documented in `cms/.env.example`:
+
+- `HOST`, `PORT`
+- `APP_KEYS`, `API_TOKEN_SALT`, `ADMIN_JWT_SECRET`, `TRANSFER_TOKEN_SALT`, `ENCRYPTION_KEY`, `JWT_SECRET`
+- `DATABASE_*`
+- `CORS_ORIGIN` (default: `http://localhost:3000`)
+
+## Run commands
+
+### Frontend
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Frontend URL: `http://localhost:3000`
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### CMS
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run cms:build
+npm run cms:start
+```
 
-## Learn More
+CMS URL: `http://localhost:1337`  
+Admin URL: `http://localhost:1337/admin`
 
-To learn more about Next.js, take a look at the following resources:
+> If `cms:dev` (`strapi develop`) hits local file watcher limits (`EMFILE`), use `cms:start` after `cms:build`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Frontend <-> CMS contract
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Frontend reads public CMS content via Strapi REST API (`/api/*`), for example `/api/pages`
+- CORS allows requests from `CORS_ORIGIN`
+- Public role is read-only for selected collections
 
-## Deploy on Vercel
+## Smoke check
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+With CMS running:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+curl http://localhost:1337/api/pages
+```
+
+Expected: JSON with `data` array (it may be empty before content is added).

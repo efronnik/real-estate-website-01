@@ -1,0 +1,39 @@
+{
+  "kind": "collectionType",
+  "collectionName": "site_settings",
+  "info": {
+    "singularName": "site-settings",
+    "pluralName": "site-settings-items",
+    "displayName": "SiteSettings"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "siteName": {
+      "type": "string",
+      "required": true
+    },
+    "defaultLocale": {
+      "type": "string",
+      "default": "pl"
+    },
+    "contactEmail": {
+      "type": "email"
+    },
+    "contactPhone": {
+      "type": "string"
+    },
+    "businessAddress": {
+      "type": "text"
+    },
+    "ga4MeasurementId": {
+      "type": "string"
+    },
+    "defaultSeo": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::seo.seo"
+    }
+  }
+}
