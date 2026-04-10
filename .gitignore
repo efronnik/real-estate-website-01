@@ -30,8 +30,30 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
-.env*
+# env files / secrets
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+**/.env
+**/.env.local
+**/.env.development.local
+**/.env.test.local
+**/.env.production.local
+!**/.env.example
+
+# credentials and private keys
+*.key
+*.crt
+*.p12
+*.pfx
+*.jks
+*.keystore
+*.kdbx
+credentials.json
+service-account*.json
+firebase-admin*.json
 
 # vercel
 .vercel
