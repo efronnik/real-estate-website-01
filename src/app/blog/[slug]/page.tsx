@@ -2,6 +2,11 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useParams } from "next/navigation";
+import { SiteFooter } from "@/components/site-footer";
+import { SiteTopbar } from "@/components/site-topbar";
+import { Prefooter } from "@/components/prefooter";
+import { ScrollToTopButton } from "@/components/scroll-to-top-button";
+import { ROUTE_PATHS } from "@/config/navigation";
 
 type Article = {
   title: string;
@@ -372,7 +377,7 @@ const checklistImages = [
   "https://images.pexels.com/photos/7821510/pexels-photo-7821510.jpeg?auto=compress&cs=tinysrgb&w=1800",
 ];
 
-export default function PoradnikArticlePage() {
+export default function BlogArticlePage() {
   const params = useParams<{ slug: string }>();
   const slug = String(params.slug);
   const article = articles[slug];
@@ -476,10 +481,10 @@ export default function PoradnikArticlePage() {
       <main className="article-page">
         <section className="section">
           <div className="container article-shell">
-            <p className="eyebrow">Poradnik</p>
+            <p className="eyebrow">Blog</p>
             <h1 className="section-title">Artykuł nie został znaleziony</h1>
-            <p className="section-copy">Sprawdź listę materiałów na stronie poradnika.</p>
-            <a href="/poradnik" className="link-arrow">Wróć do poradnika</a>
+            <p className="section-copy">Sprawdź listę materiałów na stronie bloga.</p>
+            <a href={ROUTE_PATHS.blog} className="link-arrow">Wróć do bloga</a>
           </div>
         </section>
       </main>
@@ -496,13 +501,7 @@ export default function PoradnikArticlePage() {
   return (
     <>
       <main className={`article-page ${hasHero ? "article-page--hero" : ""}`}>
-        <header className="site-topbar">
-          <a href="/" className="site-brand" aria-label="FIND home"><img src="/LOGO.png" alt="FIND" /></a>
-          <nav className="site-nav" aria-label="Primary navigation">
-            <a href="/">Główna</a><a href="/o-mnie">O mnie</a><a href="/bledy">Błędy</a><a href="/poradnik">Poradnik</a><a href="/kalkulator">Kalkulator</a><a href="/kontakt">Kontakt</a>
-          </nav>
-          <div className="site-spacer" aria-hidden="true"></div>
-        </header>
+        <SiteTopbar />
 
         {hasHero && (
           <section className="section article-hero">
@@ -619,25 +618,14 @@ export default function PoradnikArticlePage() {
       </main>
 
       <div className="footer-stack">
-        <section className="prefooter-stage" aria-label="Sekcja końcowa">
-          <div className="prefooter-sticky">
-            <div className="prefooter-shell">
-              <p className="prefooter-kicker">Koniec przewijania? Zróbmy pierwszy krok.</p>
-              <h2>Sprzedaj mieszkanie spokojnie i na dobrych warunkach.</h2>
-              <a href="#kontakt" className="prefooter-btn"><span className="prefooter-btn-text-wrap" aria-hidden="true"><span className="prefooter-btn-text prefooter-btn-text-top">Umów konsultację</span><span className="prefooter-btn-text prefooter-btn-text-bottom">Umów konsultację</span></span><span className="sr-only">Umów konsultację</span><span className="prefooter-btn-arrow" aria-hidden="true">→</span></a>
-            </div>
-          </div>
-        </section>
-        <footer className="site-footer">
-          <div className="container footer-shell">
-            <div className="footer-brand"><a href="/" className="footer-logo" aria-label="FIND home"><img src="/LOGO.png" alt="FIND" /></a><p className="footer-copy">Eksperckie wsparcie właściciela mieszkania: od strategii ceny po bezpieczny podpis.</p></div>
-            <div className="footer-links"><a href="/">Główna</a><a href="/o-mnie">O mnie</a><a href="/bledy">Błędy</a><a href="/poradnik">Poradnik</a><a href="/kalkulator">Kalkulator</a><a href="/kontakt">Kontakt</a></div>
-            <div className="footer-social"><a href="#" aria-label="Instagram"><span className="social-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><rect x="3.5" y="3.5" width="17" height="17" rx="5"></rect><circle cx="12" cy="12" r="4.1"></circle><circle cx="17.35" cy="6.65" r="1"></circle></svg></span>Instagram</a><a href="#" aria-label="Facebook"><span className="social-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M14.2 8.1h2.2V4.5h-2.6c-3 0-4.6 1.8-4.6 4.9v2H6.8v3.7h2.4V20h3.8v-4.9h2.9l.5-3.7h-3.4V9.8c0-1 .4-1.7 1.6-1.7Z"></path></svg></span>Facebook</a><a href="#" aria-label="LinkedIn"><span className="social-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="9.2" width="3.4" height="10.8"></rect><circle cx="5.7" cy="5.8" r="1.6"></circle><path d="M10 9.2h3.3v1.5c.6-1 1.8-1.8 3.6-1.8 3 0 4.1 2 4.1 5.1V20h-3.5v-5.3c0-1.7-.6-2.6-1.9-2.6-1.5 0-2.2 1.1-2.2 2.6V20H10V9.2Z"></path></svg></span>LinkedIn</a></div>
-          </div>
-          <div className="container footer-bottom"><p>© {year} FIND. Wszelkie prawa zastrzeżone.</p></div>
-        </footer>
+        <Prefooter
+          kicker="Koniec przewijania? Zróbmy pierwszy krok."
+          title="Sprzedaj mieszkanie spokojnie i na dobrych warunkach."
+          buttons={[{ href: "/kontakt", label: "Umów konsultację" }]}
+        />
+        <SiteFooter year={year} />
       </div>
-      <button className="to-top" type="button" aria-label="Wróć na górę" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}><span aria-hidden="true">↑</span></button>
+      <ScrollToTopButton />
     </>
   );
 }

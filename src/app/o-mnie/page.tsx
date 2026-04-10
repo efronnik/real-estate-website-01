@@ -1,6 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { SiteFooter } from "@/components/site-footer";
+import { SiteTopbar } from "@/components/site-topbar";
+import { Prefooter } from "@/components/prefooter";
+import { ScrollToTopButton } from "@/components/scroll-to-top-button";
 
 const portfolioCases = [
   {
@@ -121,13 +125,7 @@ export default function AboutPage() {
   return (
     <>
       <main className="about-page">
-        <header className="site-topbar">
-          <a href="/" className="site-brand" aria-label="FIND home"><img src="/LOGO.png" alt="FIND" /></a>
-          <nav className="site-nav" aria-label="Primary navigation">
-            <a href="/">Główna</a><a href="/o-mnie">O mnie</a><a href="/bledy">Błędy</a><a href="/poradnik">Poradnik</a><a href="/kalkulator">Kalkulator</a><a href="/kontakt">Kontakt</a>
-          </nav>
-          <div className="site-spacer" aria-hidden="true"></div>
-        </header>
+        <SiteTopbar />
 
         <section className="section about-hero">
           <div className="container hero-grid">
@@ -209,34 +207,21 @@ export default function AboutPage() {
       </main>
 
       <div className="footer-stack">
-        <section className="prefooter-stage prefooter-stage--tall" aria-label="Sekcja końcowa">
-          <div className="prefooter-sticky prefooter-sticky--tall">
-            <div className="prefooter-shell prefooter-shell--tall">
-              <p className="prefooter-kicker">Porozmawiajmy o Twojej nieruchomości</p>
-              <h2>Jeśli chcesz sprzedać mieszkanie z planem i spokojem, umów rozmowę.</h2>
-              <p className="prefooter-copy">Zaczniemy od krótkiej diagnozy i konkretnego kierunku działań.</p>
-              <a href="#kontakt" className="prefooter-btn">
-                <span className="prefooter-btn-text-wrap" aria-hidden="true"><span className="prefooter-btn-text prefooter-btn-text-top">Umów konsultację</span><span className="prefooter-btn-text prefooter-btn-text-bottom">Umów konsultację</span></span>
-                <span className="sr-only">Umów konsultację</span>
-                <span className="prefooter-btn-arrow" aria-hidden="true">→</span>
-              </a>
-            </div>
-          </div>
-        </section>
+        <Prefooter
+          tall
+          kicker="Porozmawiajmy o Twojej nieruchomości"
+          title="Jeśli chcesz sprzedać mieszkanie z planem i spokojem, umów rozmowę."
+          copy="Zaczniemy od krótkiej diagnozy i konkretnego kierunku działań."
+          buttons={[
+            { href: "/kontakt", label: "Umów konsultację" },
+            { href: "/sprzedaz", label: "Zobacz ofertę sprzedaży" },
+          ]}
+        />
 
-        <footer className="site-footer">
-          <div className="container footer-shell">
-            <div className="footer-brand"><a href="/" className="footer-logo" aria-label="FIND home"><img src="/LOGO.png" alt="FIND" /></a><p className="footer-copy">Eksperckie wsparcie właściciela mieszkania: od strategii ceny po bezpieczny podpis.</p></div>
-            <div className="footer-links"><a href="/">Główna</a><a href="/o-mnie">O mnie</a><a href="/bledy">Błędy</a><a href="/poradnik">Poradnik</a><a href="/kalkulator">Kalkulator</a><a href="/kontakt">Kontakt</a></div>
-            <div className="footer-social"><a href="#" aria-label="Instagram"><span className="social-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><rect x="3.5" y="3.5" width="17" height="17" rx="5"></rect><circle cx="12" cy="12" r="4.1"></circle><circle cx="17.35" cy="6.65" r="1"></circle></svg></span>Instagram</a><a href="#" aria-label="Facebook"><span className="social-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M14.2 8.1h2.2V4.5h-2.6c-3 0-4.6 1.8-4.6 4.9v2H6.8v3.7h2.4V20h3.8v-4.9h2.9l.5-3.7h-3.4V9.8c0-1 .4-1.7 1.6-1.7Z"></path></svg></span>Facebook</a><a href="#" aria-label="LinkedIn"><span className="social-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="9.2" width="3.4" height="10.8"></rect><circle cx="5.7" cy="5.8" r="1.6"></circle><path d="M10 9.2h3.3v1.5c.6-1 1.8-1.8 3.6-1.8 3 0 4.1 2 4.1 5.1V20h-3.5v-5.3c0-1.7-.6-2.6-1.9-2.6-1.5 0-2.2 1.1-2.2 2.6V20H10V9.2Z"></path></svg></span>LinkedIn</a></div>
-          </div>
-          <div className="container footer-bottom"><p>© {year} FIND. Wszelkie prawa zastrzeżone.</p></div>
-        </footer>
+        <SiteFooter year={year} />
       </div>
 
-      <button className="to-top" type="button" aria-label="Wróć na górę" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
-        <span aria-hidden="true">↑</span>
-      </button>
+      <ScrollToTopButton />
     </>
   );
 }
