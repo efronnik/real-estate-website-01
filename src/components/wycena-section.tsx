@@ -1,7 +1,8 @@
 "use client";
 
 import type { FormEvent } from "react";
-import { handleFieldValidationOnInput, handleInvalidSubmit } from "@/lib/form-validation";
+import { useState } from "react";
+import { handleFieldValidationOnInput, handleInvalidSubmit, submitLeadForm } from "@/lib/form-validation";
 
 type WycenaSectionProps = {
   sourcePage: string;
@@ -9,8 +10,26 @@ type WycenaSectionProps = {
 };
 
 export function WycenaSection({ sourcePage, sectionId = "wycena" }: WycenaSectionProps) {
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    handleInvalidSubmit(event);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [statusMessage, setStatusMessage] = useState<string | null>(null);
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const hasInvalidFields = handleInvalidSubmit(event);
+    if (hasInvalidFields) return;
+
+    setIsSubmitting(true);
+    setStatusMessage(null);
+
+    try {
+      await submitLeadForm(event.currentTarget);
+      event.currentTarget.reset();
+      setStatusMessage("Dziekujemy. Formularz wyceny zostal wyslany.");
+    } catch {
+      setStatusMessage("Nie udalo sie wyslac formularza. Sprobuj ponownie.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleFieldInput = (event: FormEvent<HTMLFormElement>) => {
@@ -122,7 +141,7 @@ export function WycenaSection({ sourcePage, sectionId = "wycena" }: WycenaSectio
               przetwarzanie danych kontaktowych <span className="required-mark">*</span>
             </label>
 
-            <button type="submit">
+            <button type="submit" disabled={isSubmitting}>
               <span className="prefooter-btn-text-wrap" aria-hidden="true">
                 <span className="prefooter-btn-text prefooter-btn-text-top">Wyślij wycenę</span>
                 <span className="prefooter-btn-text prefooter-btn-text-bottom">Wyślij wycenę</span>
@@ -132,6 +151,7 @@ export function WycenaSection({ sourcePage, sectionId = "wycena" }: WycenaSectio
                 →
               </span>
             </button>
+              {statusMessage ? <p className="form-status">{statusMessage}</p> : null}
           </form>
         </div>
       </div>

@@ -5,6 +5,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { SiteTopbar } from "@/components/site-topbar";
 import { Prefooter } from "@/components/prefooter";
 import { ScrollToTopButton } from "@/components/scroll-to-top-button";
+import { fetchCmsPageBySlug } from "@/lib/cms";
 
 const portfolioCases = [
   {
@@ -82,6 +83,25 @@ export default function AboutPage() {
   const [activeValueIndex, setActiveValueIndex] = useState(0);
   const processCardRefs = useRef<Array<HTMLElement | null>>([]);
   const valueCardRefs = useRef<Array<HTMLElement | null>>([]);
+  const [cmsLead, setCmsLead] = useState<string | null>(null);
+  const [cmsHeadline, setCmsHeadline] = useState<string | null>(null);
+  const [cmsContent, setCmsContent] = useState<string | null>(null);
+
+  useEffect(() => {
+    let mounted = true;
+    const loadCmsPage = async () => {
+      const page = await fetchCmsPageBySlug("o-mnie");
+      if (mounted && page) {
+        setCmsHeadline(page.headline ?? null);
+        setCmsLead(page.lead ?? null);
+        setCmsContent(page.content ?? null);
+      }
+    };
+    void loadCmsPage();
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   useEffect(() => {
     const updateByCenter = (refs: Array<HTMLElement | null>, setter: (idx: number) => void) => {
@@ -131,9 +151,9 @@ export default function AboutPage() {
           <div className="container hero-grid">
             <div className="hero-copy">
               <p className="eyebrow">O mnie</p>
-              <h1 className="section-title">Eksperckie prowadzenie sprzedaży nieruchomości w modelu premium</h1>
-              <p className="section-copy">Nazywam się [Twoje imię]. Pracuję z właścicielami mieszkań, którzy chcą sprzedać świadomie: z planem, kontrolą procesu i wynikiem finansowym, który ma uzasadnienie rynkowe.</p>
-              <p className="section-copy">Łączę doświadczenie negocjacyjne, przygotowanie oferty i estetykę prezentacji. Dzięki temu sprzedaż jest uporządkowana, przewidywalna i bez chaosu.</p>
+              <h1 className="section-title">{cmsHeadline ?? "Eksperckie prowadzenie sprzedaży nieruchomości w modelu premium"}</h1>
+              <p className="section-copy">{cmsLead ?? "Nazywam się [Twoje imię]. Pracuję z właścicielami mieszkań, którzy chcą sprzedać świadomie: z planem, kontrolą procesu i wynikiem finansowym, który ma uzasadnienie rynkowe."}</p>
+              <p className="section-copy">{cmsContent ?? "Łączę doświadczenie negocjacyjne, przygotowanie oferty i estetykę prezentacji. Dzięki temu sprzedaż jest uporządkowana, przewidywalna i bez chaosu."}</p>
             </div>
             <figure className="hero-photo"><img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=1800&q=80" alt="Portret eksperta nieruchomości" /></figure>
           </div>

@@ -1,7 +1,8 @@
 "use client";
 
 import type { FormEvent } from "react";
-import { handleFieldValidationOnInput, handleInvalidSubmit } from "@/lib/form-validation";
+import { useState } from "react";
+import { handleFieldValidationOnInput, handleInvalidSubmit, submitLeadForm } from "@/lib/form-validation";
 
 type ContactFormProps = {
   sourcePage: string;
@@ -9,8 +10,26 @@ type ContactFormProps = {
 };
 
 export function ContactForm({ sourcePage, leadType = "kontakt" }: ContactFormProps) {
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    handleInvalidSubmit(event);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [statusMessage, setStatusMessage] = useState<string | null>(null);
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const hasInvalidFields = handleInvalidSubmit(event);
+    if (hasInvalidFields) return;
+
+    setIsSubmitting(true);
+    setStatusMessage(null);
+
+    try {
+      await submitLeadForm(event.currentTarget);
+      event.currentTarget.reset();
+      setStatusMessage("Dziekujemy. Formularz zostal wyslany.");
+    } catch {
+      setStatusMessage("Nie udalo sie wyslac formularza. Sprobuj ponownie.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleFieldInput = (event: FormEvent<HTMLFormElement>) => {
@@ -58,7 +77,7 @@ export function ContactForm({ sourcePage, leadType = "kontakt" }: ContactFormPro
         <input className="consent-checkbox" type="checkbox" name="consent_data" required /> Wyrazam zgode na przetwarzanie danych
         kontaktowych <span className="required-mark">*</span>
       </label>
-      <button type="submit">
+      <button type="submit" disabled={isSubmitting}>
         <span className="prefooter-btn-text-wrap" aria-hidden="true">
           <span className="prefooter-btn-text prefooter-btn-text-top">Wyślij zapytanie</span>
           <span className="prefooter-btn-text prefooter-btn-text-bottom">Wyślij zapytanie</span>
@@ -68,6 +87,7 @@ export function ContactForm({ sourcePage, leadType = "kontakt" }: ContactFormPro
           →
         </span>
       </button>
+      {statusMessage ? <p className="form-status">{statusMessage}</p> : null}
     </form>
   );
 }

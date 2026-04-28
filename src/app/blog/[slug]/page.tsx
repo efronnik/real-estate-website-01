@@ -7,6 +7,7 @@ import { SiteTopbar } from "@/components/site-topbar";
 import { Prefooter } from "@/components/prefooter";
 import { ScrollToTopButton } from "@/components/scroll-to-top-button";
 import { ROUTE_PATHS } from "@/config/navigation";
+import { fetchCmsBlogPostBySlug, type CmsBlogPostRecord } from "@/lib/cms";
 
 type Article = {
   title: string;
@@ -380,7 +381,21 @@ const checklistImages = [
 export default function BlogArticlePage() {
   const params = useParams<{ slug: string }>();
   const slug = String(params.slug);
-  const article = articles[slug];
+  const [cmsArticle, setCmsArticle] = useState<CmsBlogPostRecord | null>(null);
+  const fallbackArticle = articles[slug];
+  const article = cmsArticle
+    ? {
+        title: cmsArticle.title ?? "Artykuł",
+        lead: cmsArticle.excerpt ?? "Treść artykułu z CMS.",
+        category: "Blog / CMS",
+        readTime: "5 min czytania",
+        points: [],
+        checklist: [],
+        showFramework: false,
+        showMistakes: false,
+        closing: cmsArticle.content ?? "",
+      }
+    : fallbackArticle;
   const year = new Date().getFullYear();
   const hasHero = heroSlugs.includes(slug);
 
@@ -391,6 +406,20 @@ export default function BlogArticlePage() {
 
   const signalCardRefs = useRef<Array<HTMLElement | null>>([]);
   const mistakeCardRefs = useRef<Array<HTMLElement | null>>([]);
+
+  useEffect(() => {
+    let mounted = true;
+    const loadCmsArticle = async () => {
+      const post = await fetchCmsBlogPostBySlug(slug);
+      if (mounted) {
+        setCmsArticle(post);
+      }
+    };
+    void loadCmsArticle();
+    return () => {
+      mounted = false;
+    };
+  }, [slug]);
 
   const frameworkSteps = useMemo(() => {
     const list = article?.framework ?? [];

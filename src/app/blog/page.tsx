@@ -1,9 +1,11 @@
 "use client";
 
+import { useEffect, useMemo, useState } from "react";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteTopbar } from "@/components/site-topbar";
 import { Prefooter } from "@/components/prefooter";
 import { ScrollToTopButton } from "@/components/scroll-to-top-button";
+import { fetchCmsBlogPosts, type CmsBlogPostRecord, fetchCmsPageBySlug } from "@/lib/cms";
 
 const blogPaths = [
   {
@@ -72,9 +74,43 @@ const posts = [
 ];
 
 export default function BlogPage() {
-  const featuredPost = posts[0];
-  const sidePosts = posts.slice(1);
+  const [cmsPosts, setCmsPosts] = useState<CmsBlogPostRecord[]>([]);
+  const [heroHeadline, setHeroHeadline] = useState<string | null>(null);
+  const [heroLead, setHeroLead] = useState<string | null>(null);
+  const listPosts = useMemo(() => {
+    if (!cmsPosts.length) return posts;
+    return cmsPosts
+      .filter((post) => Boolean(post.slug) && Boolean(post.title))
+      .map((post, idx) => ({
+        slug: post.slug as string,
+        title: post.title as string,
+        excerpt: post.excerpt ?? "Artykuł ekspercki o sprzedaży i inwestowaniu w nieruchomości.",
+        image: posts[idx % posts.length].image,
+        meta: "Blog / CMS",
+        cta: "Czytaj artykuł",
+      }));
+  }, [cmsPosts]);
+  const featuredPost = listPosts[0];
+  const sidePosts = listPosts.slice(1);
   const year = new Date().getFullYear();
+
+  useEffect(() => {
+    let mounted = true;
+    const loadCmsData = async () => {
+      const [blogPosts, blogPage] = await Promise.all([
+        fetchCmsBlogPosts(),
+        fetchCmsPageBySlug("blog"),
+      ]);
+      if (!mounted) return;
+      setCmsPosts(blogPosts);
+      setHeroHeadline(blogPage?.headline ?? null);
+      setHeroLead(blogPage?.lead ?? null);
+    };
+    void loadCmsData();
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   return (
     <>
@@ -88,22 +124,24 @@ export default function BlogPage() {
           <div className="blog-hero-overlay" aria-hidden="true"></div>
           <div className="container blog-hero-shell">
             <p className="eyebrow">Blog</p>
-            <h1 className="section-title">Blog sprzedaży mieszkania</h1>
-            <p className="section-copy">Zebrane w jednym miejscu: wycena, przygotowanie oferty, dokumenty, podatki i negocjacje. Treści ułożone tak, aby przeprowadzić Cię od decyzji o sprzedaży do bezpiecznej finalizacji.</p>
+            <h1 className="section-title">{heroHeadline ?? "Blog sprzedaży mieszkania"}</h1>
+            <p className="section-copy">{heroLead ?? "Zebrane w jednym miejscu: wycena, przygotowanie oferty, dokumenty, podatki i negocjacje. Treści ułożone tak, aby przeprowadzić Cię od decyzji o sprzedaży do bezpiecznej finalizacji."}</p>
           </div>
         </section>
 
         <section id="blog" className="section blog">
           <div className="container">
             <div className="editorial editorial--full-bleed">
-              <div className="editorial-bg" style={{ backgroundImage: `url(${featuredPost.image})` }}>
+              <div className="editorial-bg" style={{ backgroundImage: `url(${featuredPost?.image ?? posts[0].image})` }}>
                 <div className="scan-lines" aria-hidden="true"></div>
                 <div className="scan-lines-right" aria-hidden="true"></div>
                 <article className="featured-copy">
-                  <p className="meta">{featuredPost.meta}</p>
-                  <h3>{featuredPost.title}</h3>
-                  <p>{featuredPost.excerpt}</p>
-                  <a href={`/blog/${featuredPost.slug}`} className="link-arrow">{featuredPost.cta}</a>
+                  <p className="meta">{featuredPost?.meta ?? "Blog / CMS"}</p>
+                  <h3>{featuredPost?.title ?? "Brak artykułów"}</h3>
+                  <p>{featuredPost?.excerpt ?? "Dodaj pierwszy wpis w Strapi, aby wyświetlić go na stronie."}</p>
+                  {featuredPost?.slug ? (
+                    <a href={`/blog/${featuredPost.slug}`} className="link-arrow">{featuredPost.cta}</a>
+                  ) : null}
                 </article>
                 <div className="dock">
                   {sidePosts.map((post) => (

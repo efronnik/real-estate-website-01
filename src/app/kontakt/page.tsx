@@ -1,13 +1,31 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteTopbar } from "@/components/site-topbar";
 import { Prefooter } from "@/components/prefooter";
 import { LeadContactSection } from "@/components/lead-contact-section";
 import { ScrollToTopButton } from "@/components/scroll-to-top-button";
+import { fetchCmsPageBySlug } from "@/lib/cms";
 
 export default function KontaktPage() {
   const year = new Date().getFullYear();
+  const [heroTitle, setHeroTitle] = useState<string | null>(null);
+  const [heroLead, setHeroLead] = useState<string | null>(null);
+
+  useEffect(() => {
+    let mounted = true;
+    const loadCmsPage = async () => {
+      const page = await fetchCmsPageBySlug("kontakt");
+      if (!mounted || !page) return;
+      setHeroTitle(page.headline ?? null);
+      setHeroLead(page.lead ?? null);
+    };
+    void loadCmsPage();
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   return (
     <>
@@ -21,8 +39,8 @@ export default function KontaktPage() {
           <div className="kontakt-hero-overlay" aria-hidden="true"></div>
           <div className="container kontakt-hero-shell">
             <p className="eyebrow">Kontakt</p>
-            <h1 className="section-title">Porozmawiajmy o sprzedaży Twojej nieruchomości</h1>
-            <p className="section-copy">Krótka konsultacja wystarczy, żeby ustalić kierunek działań i bezpieczny plan sprzedaży.</p>
+            <h1 className="section-title">{heroTitle ?? "Porozmawiajmy o sprzedaży Twojej nieruchomości"}</h1>
+            <p className="section-copy">{heroLead ?? "Krótka konsultacja wystarczy, żeby ustalić kierunek działań i bezpieczny plan sprzedaży."}</p>
           </div>
         </section>
 
