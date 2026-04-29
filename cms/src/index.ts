@@ -77,6 +77,7 @@ export default {
       "api::site-settings.site-settings.findOne",
       "api::seo.seo.find",
       "api::seo.seo.findOne",
+      "api::lead.lead.create",
     ];
 
     const editorCrudActions = [

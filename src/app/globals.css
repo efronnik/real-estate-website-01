@@ -491,6 +491,153 @@ a {
   flex-wrap: wrap;
 }
 
+.sale-pillars {
+  background: #efeae2;
+  border-top: 1px solid rgba(20, 20, 20, 0.08);
+  border-bottom: 1px solid rgba(20, 20, 20, 0.08);
+}
+
+.sale-pillars-shell {
+  display: grid;
+  gap: 1rem;
+}
+
+.sale-pillars-shell .section-title {
+  max-width: 18ch;
+}
+
+.sale-pillars-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem;
+}
+
+.sale-pillar-card {
+  display: grid;
+  gap: 0.65rem;
+  padding: 1rem;
+  border: 1px solid rgba(20, 20, 20, 0.12);
+  background: rgba(255, 255, 255, 0.66);
+}
+
+.sale-pillar-card h3 {
+  font-size: clamp(1.2rem, 2.2vw, 1.7rem);
+  line-height: 1.08;
+}
+
+.sale-pillar-card p {
+  color: rgba(19, 19, 19, 0.77);
+}
+
+.sale-pillar-card ul {
+  margin: 0;
+  padding-left: 1.05rem;
+  display: grid;
+  gap: 0.4rem;
+}
+
+.sale-pillar-card li {
+  color: rgba(19, 19, 19, 0.86);
+}
+
+.sale-cta-strip {
+  background: #131517;
+  color: #f6f1e8;
+}
+
+.sale-cta-shell {
+  display: grid;
+  gap: 0.8rem;
+  justify-items: start;
+}
+
+.sale-cta-shell h2 {
+  font-size: clamp(1.7rem, 4vw, 2.8rem);
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+  max-width: 18ch;
+}
+
+.sale-cta-shell p {
+  color: rgba(246, 241, 232, 0.82);
+  max-width: 60ch;
+}
+
+.sale-cta-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.sale-social-proof {
+  background: #f6f2eb;
+  border-top: 1px solid rgba(20, 20, 20, 0.08);
+  border-bottom: 1px solid rgba(20, 20, 20, 0.08);
+}
+
+.sale-social-proof-shell {
+  display: grid;
+  gap: 1rem;
+}
+
+.sale-social-proof-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem;
+}
+
+.sale-social-proof-card {
+  display: grid;
+  gap: 0.55rem;
+  padding: 1rem;
+  border: 1px solid rgba(20, 20, 20, 0.12);
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.sale-social-proof-card .stars {
+  color: #d4af37;
+  letter-spacing: 0.16em;
+}
+
+.sale-social-proof-card blockquote {
+  margin: 0;
+  color: rgba(19, 19, 19, 0.9);
+}
+
+.sale-social-proof-card footer {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.sale-social-proof-card footer span {
+  color: rgba(19, 19, 19, 0.68);
+  font-size: 0.9rem;
+}
+
+.inwestycje-seo-gallery {
+  background: #f6f2eb;
+}
+
+.inwestycje-seo-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.7rem;
+}
+
+.inwestycje-seo-gallery-item {
+  margin: 0;
+  border: 1px solid rgba(20, 20, 20, 0.12);
+  overflow: hidden;
+  min-height: 220px;
+}
+
+.inwestycje-seo-gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
 @media (max-width: 900px) {
   .hero-cta-row {
     flex-direction: column;
@@ -1410,6 +1557,9 @@ a {
   .results-layout,
   .value-layout,
   .funnel-cards,
+  .inwestycje-seo-gallery-grid,
+  .sale-social-proof-grid,
+  .sale-pillars-grid,
   .lane-checks,
   .offer-layout,
   .service-row {

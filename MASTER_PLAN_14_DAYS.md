@@ -55,23 +55,23 @@
 - Проверить mobile/tablet/desktop: DONE
 
 ## Day 5 — Страница Sprzedaz
-- Структура процесса продажи (включая 5 шагов)
-- Секции: выцена транзакционная vs офферная, маркетинг, отбор лидов, безопасность
-- CTA на консультацию + форма wycena
-- Подключить контент страницы `Sprzedaz` из CMS (`Page` + связанные блоки)
-- Подключить SEO-поля страницы `Sprzedaz` из CMS (`SEO`: title, description, canonical, OG)
-- SEO-структура: H1/H2/H3
-- Lejek-логика: переходы Sprzedaz -> Kontakt/Wycena и контроль точек конверсии
+- Структура процесса продажи (включая 5 шагов): DONE
+- Секции: выцена транзакционная vs офферная, маркетинг, отбор лидов, безопасность: DONE
+- CTA на консультацию + форма wycena: DONE
+- Подключить контент страницы `Sprzedaz` из CMS (`Page` + связанные блоки): DONE
+- Подключить SEO-поля страницы `Sprzedaz` из CMS (`SEO`: title, description, canonical, OG): DONE
+- SEO-структура: H1/H2/H3: DONE
+- Lejek-логика: переходы Sprzedaz -> Kontakt/Wycena и контроль точек конверсии: DONE
 
 ## Day 6 — Страница Inwestycje
-- SEO-landing под inwestowanie/flipy Warszawa
-- Секции: как работает, ошибки, для кого, CTA
-- Internal linking (в т.ч. на kalkulator/wycena)
-- Подключить контент страницы `Inwestycje` из CMS (`Page` + связанные блоки)
-- Подключить SEO-поля страницы `Inwestycje` из CMS (`SEO`: title, description, canonical, OG)
-- Зафиксировать решение по `Kalkulator`: (A) остается кодовым инструментом, (B) получает CMS-контент (hero/SEO/CTA) — выбрать один вариант и реализовать
-- Alt-тексты + SEO-семантика
-- Lejek-логика: переходы Inwestycje -> Kontakt/Blog/Kalkulator без дублирования CTA
+- SEO-landing под inwestowanie/flipy Warszawa: DONE
+- Секции: как работает, ошибки, для кого, CTA: DONE
+- Internal linking (в т.ч. на kalkulator/wycena): DONE
+- Подключить контент страницы `Inwestycje` из CMS (`Page` + связанные блоки): DONE
+- Подключить SEO-поля страницы `Inwestycje` из CMS (`SEO`: title, description, canonical, OG): DONE
+- Зафиксировать решение по `Kalkulator`: DONE (выбран вариант A — страница остается кодовым инструментом; CMS не управляет hero/SEO/CTA этого шага)
+- Alt-тексты + SEO-семантика: DONE
+- Lejek-логика: переходы Inwestycje -> Kontakt/Blog/Kalkulator без дублирования CTA: DONE
 
 ## Day 7 — O mnie + personal brand
 - Экспертный профиль и преимущества

@@ -31,6 +31,21 @@ export type CmsBlogPostRecord = {
   publishedAt?: string;
 };
 
+export type CmsFaqItemRecord = {
+  question?: string;
+  answer?: string;
+  pageType?: string;
+  order?: number;
+};
+
+export type CmsTestimonialRecord = {
+  authorName?: string;
+  quote?: string;
+  rating?: number;
+  city?: string;
+  isFeatured?: boolean;
+};
+
 type StrapiListResponse<T> = {
   data?: Array<{ id: number; attributes?: T } & T>;
 };
@@ -85,6 +100,23 @@ export async function fetchCmsBlogPostBySlug(slug: string): Promise<CmsBlogPostR
   return items[0] ?? null;
 }
 
+export async function fetchCmsFaqByPageType(pageType: string): Promise<CmsFaqItemRecord[]> {
+  const params = new URLSearchParams({
+    "filters[pageType][$eq]": pageType,
+    sort: "order:asc",
+    "pagination[pageSize]": "20",
+  });
+  return fetchStrapiList<CmsFaqItemRecord>("faq-items", params);
+}
+
+export async function fetchCmsFeaturedTestimonials(): Promise<CmsTestimonialRecord[]> {
+  const params = new URLSearchParams({
+    "filters[isFeatured][$eq]": "true",
+    "pagination[pageSize]": "6",
+  });
+  return fetchStrapiList<CmsTestimonialRecord>("testimonials", params);
+}
+
 function toAbsoluteUrl(raw: string | null | undefined): string | undefined {
   if (!raw) return undefined;
   if (raw.startsWith("http://") || raw.startsWith("https://")) {
@@ -93,7 +125,7 @@ function toAbsoluteUrl(raw: string | null | undefined): string | undefined {
   return `${STRAPI_URL}${raw}`;
 }
 
-type HomeMetadata = {
+type PageMetadata = {
   title: string;
   description: string;
   alternates?: { canonical?: string };
@@ -110,14 +142,12 @@ type HomeMetadata = {
   };
 };
 
-export async function getHomePageMetadataFromCms(): Promise<HomeMetadata | null> {
-  const page = await fetchCmsPageBySlug("glowna");
-  const seo = page?.seo;
+function buildPageMetadataFromSeo(seo: CmsSeoRecord | null | undefined, fallbackCanonical: string): PageMetadata | null {
   if (!seo?.metaTitle || !seo.metaDescription) {
     return null;
   }
 
-  const canonical = seo.canonicalUrl || SITE_URL;
+  const canonical = seo.canonicalUrl || fallbackCanonical;
   const ogImageUrl = toAbsoluteUrl(seo.ogImage?.url);
 
   return {
@@ -138,4 +168,17 @@ export async function getHomePageMetadataFromCms(): Promise<HomeMetadata | null>
       follow: !seo.noindex,
     },
   };
+}
+
+export async function getHomePageMetadataFromCms(): Promise<PageMetadata | null> {
+  const page = await fetchCmsPageBySlug("glowna");
+  const seo = page?.seo;
+  return buildPageMetadataFromSeo(seo, SITE_URL);
+}
+
+export async function getPageMetadataFromCms(slug: string, pagePath: string): Promise<PageMetadata | null> {
+  const page = await fetchCmsPageBySlug(slug);
+  const seo = page?.seo;
+  const canonicalFallback = `${SITE_URL}${pagePath.startsWith("/") ? pagePath : `/${pagePath}`}`;
+  return buildPageMetadataFromSeo(seo, canonicalFallback);
 }

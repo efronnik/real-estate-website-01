@@ -31,6 +31,8 @@ const clamp = (value: number, min: number, max: number) => Math.min(Math.max(val
 const formatPln = (value: number) =>
   new Intl.NumberFormat("pl-PL", { style: "currency", currency: "PLN", maximumFractionDigits: 0 }).format(value);
 
+// Day 6 architectural decision: Kalkulator remains a code-driven tool (option A),
+// not a CMS-managed landing for hero/SEO/CTA content.
 export default function KalkulatorPage() {
   const year = new Date().getFullYear();
   const [area, setArea] = useState(50);
