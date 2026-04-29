@@ -69,17 +69,17 @@
 - Internal linking (в т.ч. на kalkulator/wycena): DONE
 - Подключить контент страницы `Inwestycje` из CMS (`Page` + связанные блоки): DONE
 - Подключить SEO-поля страницы `Inwestycje` из CMS (`SEO`: title, description, canonical, OG): DONE
-- Зафиксировать решение по `Kalkulator`: DONE (выбран вариант A — страница остается кодовым инструментом; CMS не управляет hero/SEO/CTA этого шага)
+- Зафиксировать решение по `Kalkulator`: DONE (выбран вариант A — страница остается кодовым инструментом; CMS не управляет hero/SEO/CTA этого шага): DONE
 - Alt-тексты + SEO-семантика: DONE
 - Lejek-логика: переходы Inwestycje -> Kontakt/Blog/Kalkulator без дублирования CTA: DONE
 
 ## Day 7 — O mnie + personal brand
-- Экспертный профиль и преимущества
-- Конверсионная структура контента (сканируемая)
-- CTA в оба lejki
-- SEO-поля из CMS
-- Подключить контент страницы `O mnie` из CMS (`Page`)
-- SEO-структура страницы: 1xH1 + H2/H3 + релевантные внутренние ссылки в Sprzedaz/Inwestycje
+- Экспертный профиль и преимущества: DONE
+- Конверсионная структура контента (сканируемая): DONE
+- CTA в оба lejki: DONE
+- SEO-поля из CMS: DONE
+- Подключить контент страницы `O mnie` из CMS (`Page`): DONE
+- SEO-структура страницы: 1xH1 + H2/H3 + релевантные внутренние ссылки в Sprzedaz/Inwestycje: DONE
 
 ## Day 8 — Kontakt + обе формы (UI/UX)
 - Финализация страницы `Kontakt`

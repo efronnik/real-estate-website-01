@@ -638,6 +638,106 @@ a {
   display: block;
 }
 
+.about-expert {
+  background: #f6f2eb;
+  border-top: 1px solid rgba(20, 20, 20, 0.08);
+  border-bottom: 1px solid rgba(20, 20, 20, 0.08);
+}
+
+.about-expert-shell {
+  display: grid;
+  gap: 1rem;
+}
+
+.about-expert-head .section-title {
+  max-width: 18ch;
+}
+
+.about-expert-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.about-expert-stat {
+  display: grid;
+  gap: 0.3rem;
+  padding: 0.9rem;
+  border: 1px solid rgba(20, 20, 20, 0.12);
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.about-expert-stat strong {
+  font-size: clamp(1.25rem, 2.4vw, 2rem);
+  color: #131313;
+}
+
+.about-expert-stat p {
+  color: rgba(19, 19, 19, 0.72);
+}
+
+.about-expert-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.about-expert-card {
+  display: grid;
+  gap: 0.5rem;
+  padding: 1rem;
+  border: 1px solid rgba(20, 20, 20, 0.12);
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.about-expert-card h3 {
+  font-size: clamp(1.1rem, 2vw, 1.5rem);
+  line-height: 1.1;
+}
+
+.about-expert-card p {
+  color: rgba(19, 19, 19, 0.78);
+}
+
+.about-scan {
+  background: #efeae2;
+}
+
+.about-scan-shell {
+  display: grid;
+  gap: 1rem;
+}
+
+.about-scan-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.about-scan-card {
+  display: grid;
+  gap: 0.55rem;
+  padding: 1rem;
+  border: 1px solid rgba(20, 20, 20, 0.12);
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.about-scan-card h3 {
+  font-size: clamp(1.05rem, 1.8vw, 1.35rem);
+  line-height: 1.12;
+}
+
+.about-scan-card ul {
+  margin: 0;
+  padding-left: 1rem;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.about-scan-card li {
+  color: rgba(19, 19, 19, 0.82);
+}
+
 @media (max-width: 900px) {
   .hero-cta-row {
     flex-direction: column;
@@ -1556,6 +1656,9 @@ a {
 
   .results-layout,
   .value-layout,
+  .about-expert-stats,
+  .about-expert-grid,
+  .about-scan-grid,
   .funnel-cards,
   .inwestycje-seo-gallery-grid,
   .sale-social-proof-grid,
