@@ -1235,6 +1235,13 @@ a {
   color: rgba(255, 255, 255, 0.74);
 }
 
+.form-helper {
+  margin: 0 0 0.2rem;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.88rem;
+  line-height: 1.4;
+}
+
 .required-mark {
   color: var(--gold);
   font-weight: 700;
@@ -1263,6 +1270,16 @@ a {
   gap: 0.55rem;
   letter-spacing: normal;
   font-size: 0.92rem;
+}
+
+.form-consent a {
+  color: #f3d696;
+  text-decoration: underline;
+  text-underline-offset: 0.12em;
+}
+
+.form-consent--secondary {
+  margin-top: -0.25rem;
 }
 
 .consent-checkbox {
@@ -1310,6 +1327,25 @@ a {
   padding: 1rem 1.4rem;
   cursor: pointer;
   transition: background-color 180ms ease, border-color 180ms ease, color 180ms ease;
+}
+
+.form button:disabled {
+  opacity: 0.72;
+  cursor: wait;
+}
+
+.form-status {
+  margin: 0.5rem 0 0;
+  font-size: 0.9rem;
+  line-height: 1.35;
+}
+
+.form-status--success {
+  color: #8fd6a3;
+}
+
+.form-status--error {
+  color: #ff8f8f;
 }
 
 .footer-stack {

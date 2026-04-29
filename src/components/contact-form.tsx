@@ -1,8 +1,6 @@
 "use client";
 
-import type { FormEvent } from "react";
-import { useState } from "react";
-import { handleFieldValidationOnInput, handleInvalidSubmit, submitLeadForm } from "@/lib/form-validation";
+import { LeadForm } from "@/components/lead-form";
 
 type ContactFormProps = {
   sourcePage: string;
@@ -10,41 +8,14 @@ type ContactFormProps = {
 };
 
 export function ContactForm({ sourcePage, leadType = "kontakt" }: ContactFormProps) {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [statusMessage, setStatusMessage] = useState<string | null>(null);
-
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const hasInvalidFields = handleInvalidSubmit(event);
-    if (hasInvalidFields) return;
-
-    setIsSubmitting(true);
-    setStatusMessage(null);
-
-    try {
-      await submitLeadForm(event.currentTarget);
-      event.currentTarget.reset();
-      setStatusMessage("Dziekujemy. Formularz zostal wyslany.");
-    } catch {
-      setStatusMessage("Nie udalo sie wyslac formularza. Sprobuj ponownie.");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const handleFieldInput = (event: FormEvent<HTMLFormElement>) => {
-    handleFieldValidationOnInput(event);
-  };
-
   return (
-    <form className="form" noValidate onSubmit={handleSubmit} onInput={handleFieldInput}>
-      <input type="hidden" name="lead_type" value={leadType} />
-      <input type="hidden" name="source_page" value={sourcePage} />
-      <input type="hidden" name="language" value="pl" />
-      <input type="hidden" name="utm_source" value="" />
-      <input type="hidden" name="utm_medium" value="" />
-      <input type="hidden" name="utm_campaign" value="" />
-
+    <LeadForm
+      sourcePage={sourcePage}
+      leadType={leadType}
+      helperText="Odpowiadamy zwykle w ciagu jednego dnia roboczego."
+      submitLabel="Wyślij zapytanie"
+      successMessage="Dziekujemy. Formularz zostal wyslany. Potwierdzimy kontakt maksymalnie w 1 dzien roboczy."
+    >
       <label>
         Imię i nazwisko <span className="required-mark">*</span>
         <input type="text" name="full_name" placeholder="Jan Kowalski" required />
@@ -73,21 +44,6 @@ export function ContactForm({ sourcePage, leadType = "kontakt" }: ContactFormPro
           placeholder="Napisz, czego potrzebujesz i jakiej nieruchomosci dotyczy temat."
         />
       </label>
-      <label className="form-consent">
-        <input className="consent-checkbox" type="checkbox" name="consent_data" required /> Wyrazam zgode na przetwarzanie danych
-        kontaktowych <span className="required-mark">*</span>
-      </label>
-      <button type="submit" disabled={isSubmitting}>
-        <span className="prefooter-btn-text-wrap" aria-hidden="true">
-          <span className="prefooter-btn-text prefooter-btn-text-top">Wyślij zapytanie</span>
-          <span className="prefooter-btn-text prefooter-btn-text-bottom">Wyślij zapytanie</span>
-        </span>
-        <span className="sr-only">Wyślij zapytanie</span>
-        <span className="prefooter-btn-arrow" aria-hidden="true">
-          →
-        </span>
-      </button>
-      {statusMessage ? <p className="form-status">{statusMessage}</p> : null}
-    </form>
+    </LeadForm>
   );
 }

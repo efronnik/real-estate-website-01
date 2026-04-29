@@ -10,10 +10,28 @@ function isValidatableField(target: EventTarget | null): target is ValidatableFi
   );
 }
 
+function getValidationMessage(field: ValidatableField): string {
+  if (field.validity.valueMissing) return "To pole jest wymagane.";
+  if (field.validity.typeMismatch && field.type === "email") return "Podaj poprawny adres e-mail.";
+  if (field.validity.typeMismatch && field.type === "tel") return "Podaj poprawny numer telefonu.";
+  if (field.validity.badInput) return "Podaj poprawna wartosc.";
+  if (field.validity.rangeUnderflow) return "Wartosc jest zbyt niska.";
+  if (field.validity.rangeOverflow) return "Wartosc jest zbyt wysoka.";
+  if (field.validity.stepMismatch) return "Wprowadz poprawny format wartosci.";
+  if (field.validity.tooShort) return "Wprowadz wiecej znakow.";
+  if (field.validity.tooLong) return "Wprowadz mniej znakow.";
+  if (field.validity.patternMismatch) return "Wprowadz wartosc w poprawnym formacie.";
+  return "Sprawdz to pole.";
+}
+
 export function markInvalidFields(form: HTMLFormElement) {
   const fields = form.querySelectorAll<ValidatableField>("input, textarea, select");
   fields.forEach((field) => {
     if (!field.willValidate) return;
+    field.setCustomValidity("");
+    if (!field.validity.valid) {
+      field.setCustomValidity(getValidationMessage(field));
+    }
     field.dataset.invalid = field.validity.valid ? "false" : "true";
   });
 }
@@ -30,12 +48,14 @@ export function handleInvalidSubmit(event: FormEvent<HTMLFormElement>) {
     "input[data-invalid='true'], textarea[data-invalid='true'], select[data-invalid='true']",
   );
   firstInvalid?.focus();
+  firstInvalid?.reportValidity();
   return true;
 }
 
 export function handleFieldValidationOnInput(event: FormEvent<HTMLFormElement>) {
   if (!isValidatableField(event.target)) return;
   if (!event.target.willValidate) return;
+  event.target.setCustomValidity("");
   event.target.dataset.invalid = event.target.validity.valid ? "false" : "true";
 }
 

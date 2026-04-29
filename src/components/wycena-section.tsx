@@ -1,8 +1,6 @@
 "use client";
 
-import type { FormEvent } from "react";
-import { useState } from "react";
-import { handleFieldValidationOnInput, handleInvalidSubmit, submitLeadForm } from "@/lib/form-validation";
+import { LeadForm } from "@/components/lead-form";
 
 type WycenaSectionProps = {
   sourcePage: string;
@@ -10,32 +8,6 @@ type WycenaSectionProps = {
 };
 
 export function WycenaSection({ sourcePage, sectionId = "wycena" }: WycenaSectionProps) {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [statusMessage, setStatusMessage] = useState<string | null>(null);
-
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const hasInvalidFields = handleInvalidSubmit(event);
-    if (hasInvalidFields) return;
-
-    setIsSubmitting(true);
-    setStatusMessage(null);
-
-    try {
-      await submitLeadForm(event.currentTarget);
-      event.currentTarget.reset();
-      setStatusMessage("Dziekujemy. Formularz wyceny zostal wyslany.");
-    } catch {
-      setStatusMessage("Nie udalo sie wyslac formularza. Sprobuj ponownie.");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const handleFieldInput = (event: FormEvent<HTMLFormElement>) => {
-    handleFieldValidationOnInput(event);
-  };
-
   return (
     <section className="section cta" id={sectionId}>
       <div className="container">
@@ -53,14 +25,13 @@ export function WycenaSection({ sourcePage, sectionId = "wycena" }: WycenaSectio
             </div>
           </div>
 
-          <form className="form" noValidate onSubmit={handleSubmit} onInput={handleFieldInput}>
-            <input type="hidden" name="lead_type" value="wycena" />
-            <input type="hidden" name="source_page" value={sourcePage} />
-            <input type="hidden" name="language" value="pl" />
-            <input type="hidden" name="utm_source" value="" />
-            <input type="hidden" name="utm_medium" value="" />
-            <input type="hidden" name="utm_campaign" value="" />
-
+          <LeadForm
+            sourcePage={sourcePage}
+            leadType="wycena"
+            helperText="Wstepna wycena to pierwszy krok. Po analizie skontaktujemy sie z rekomendowanym scenariuszem dzialania."
+            submitLabel="Wyślij wycenę"
+            successMessage="Dziekujemy. Formularz wyceny zostal wyslany. Wrocimy z odpowiedzia maksymalnie w 1 dzien roboczy."
+          >
             <label>
               Imię i nazwisko <span className="required-mark">*</span>
               <input type="text" name="full_name" placeholder="Jan Kowalski" required />
@@ -136,23 +107,7 @@ export function WycenaSection({ sourcePage, sectionId = "wycena" }: WycenaSectio
                 placeholder="Wpisz informacje o nieruchomosci i sytuacji sprzedazy."
               />
             </label>
-            <label className="form-consent">
-              <input className="consent-checkbox" type="checkbox" name="consent_data" required /> Wyrazam zgode na
-              przetwarzanie danych kontaktowych <span className="required-mark">*</span>
-            </label>
-
-            <button type="submit" disabled={isSubmitting}>
-              <span className="prefooter-btn-text-wrap" aria-hidden="true">
-                <span className="prefooter-btn-text prefooter-btn-text-top">Wyślij wycenę</span>
-                <span className="prefooter-btn-text prefooter-btn-text-bottom">Wyślij wycenę</span>
-              </span>
-              <span className="sr-only">Wyślij wycenę</span>
-              <span className="prefooter-btn-arrow" aria-hidden="true">
-                →
-              </span>
-            </button>
-              {statusMessage ? <p className="form-status">{statusMessage}</p> : null}
-          </form>
+          </LeadForm>
         </div>
       </div>
     </section>

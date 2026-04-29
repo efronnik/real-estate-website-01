@@ -242,7 +242,7 @@ export default async function SprzedazPage() {
               bezpośrednio do formularza wyceny nieruchomości.
             </p>
             <div className="sale-cta-actions">
-              <a href={ROUTE_PATHS.kontakt} className="prefooter-btn" data-conversion-point="sprzedaz_strip_kontakt">
+              <a href={`${ROUTE_PATHS.kontakt}?lane=sprzedaz#kontakt`} className="prefooter-btn" data-conversion-point="sprzedaz_strip_kontakt">
                 <span className="prefooter-btn-text-wrap" aria-hidden="true">
                   <span className="prefooter-btn-text prefooter-btn-text-top">Umów konsultację</span>
                   <span className="prefooter-btn-text prefooter-btn-text-bottom">Umów konsultację</span>
@@ -272,7 +272,7 @@ export default async function SprzedazPage() {
           title="Wybierz kolejny krok: szybka wycena albo rozmowa 1:1."
           buttons={[
             { href: "#wycena", label: "Przejdz do wyceny" },
-            { href: ROUTE_PATHS.kontakt, label: "Umow konsultacje" },
+            { href: `${ROUTE_PATHS.kontakt}?lane=sprzedaz#kontakt`, label: "Umow konsultacje" },
           ]}
         />
         <SiteFooter year={year} />

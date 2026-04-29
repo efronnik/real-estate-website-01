@@ -290,7 +290,7 @@ export default async function InwestycjePage() {
             <h2>Chcesz sprawdzić, która strategia inwestowania będzie najlepsza dla Ciebie?</h2>
             <p>Umów konsultację inwestycyjną i otrzymaj konkretny plan działania dla Twojego kapitału.</p>
             <div className="sale-cta-actions">
-              <a href="#kontakt" className="prefooter-btn">
+              <a href={`${ROUTE_PATHS.kontakt}?lane=inwestycje#kontakt`} className="prefooter-btn">
                 <span className="prefooter-btn-text-wrap" aria-hidden="true">
                   <span className="prefooter-btn-text prefooter-btn-text-top">Umów konsultację inwestycyjną</span>
                   <span className="prefooter-btn-text prefooter-btn-text-bottom">Umów konsultację inwestycyjną</span>
