@@ -47,10 +47,12 @@ export async function generateMetadata(): Promise<Metadata> {
   return cmsMetadata;
 }
 
+type KontaktSearchParams = {
+  lane?: string | string[];
+};
+
 type KontaktPageProps = {
-  searchParams?: {
-    lane?: string | string[];
-  };
+  searchParams?: Promise<KontaktSearchParams>;
 };
 
 function toSingleParam(value: string | string[] | undefined): string | undefined {
@@ -61,7 +63,8 @@ function toSingleParam(value: string | string[] | undefined): string | undefined
 export default async function KontaktPage({ searchParams }: KontaktPageProps) {
   const year = new Date().getFullYear();
   const cmsPage = await fetchCmsPageBySlug("kontakt");
-  const laneParam = toSingleParam(searchParams?.lane);
+  const resolvedSearchParams = searchParams ? await searchParams : undefined;
+  const laneParam = toSingleParam(resolvedSearchParams?.lane);
   const isInvestorLane = laneParam === "inwestycje";
   const formLeadType = isInvestorLane ? "inwestor" : "kontakt";
   const heroTitle = cmsPage?.headline ?? "Porozmawiajmy o sprzedaży Twojej nieruchomości";
