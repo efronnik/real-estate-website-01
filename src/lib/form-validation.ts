@@ -67,6 +67,17 @@ type LeadPayload = {
   email?: string;
   message?: string;
   city?: string;
+  preferredContactTime?: string;
+  district?: string;
+  propertyType?: string;
+  areaM2?: number;
+  rooms?: number;
+  condition?: string;
+  floor?: string;
+  buildingType?: string;
+  ownershipType?: string;
+  expectedPrice?: string;
+  timeline?: string;
   utmSource?: string;
   utmMedium?: string;
   utmCampaign?: string;
@@ -75,6 +86,13 @@ type LeadPayload = {
 
 function asText(formData: FormData, key: string): string {
   return String(formData.get(key) ?? "").trim();
+}
+
+function asNumber(formData: FormData, key: string): number | undefined {
+  const value = asText(formData, key);
+  if (!value) return undefined;
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : undefined;
 }
 
 function buildLeadPayload(form: HTMLFormElement): LeadPayload {
@@ -90,6 +108,17 @@ function buildLeadPayload(form: HTMLFormElement): LeadPayload {
     email: asText(formData, "email") || undefined,
     message: asText(formData, "message") || undefined,
     city: asText(formData, "city") || asText(formData, "city_or_district") || undefined,
+    preferredContactTime: asText(formData, "preferred_contact_time") || undefined,
+    district: asText(formData, "district") || undefined,
+    propertyType: asText(formData, "property_type") || undefined,
+    areaM2: asNumber(formData, "area_m2"),
+    rooms: asNumber(formData, "rooms"),
+    condition: asText(formData, "condition") || undefined,
+    floor: asText(formData, "floor") || undefined,
+    buildingType: asText(formData, "building_type") || undefined,
+    ownershipType: asText(formData, "ownership_type") || undefined,
+    expectedPrice: asText(formData, "expected_price") || undefined,
+    timeline: asText(formData, "timeline") || undefined,
     utmSource: asText(formData, "utm_source") || undefined,
     utmMedium: asText(formData, "utm_medium") || undefined,
     utmCampaign: asText(formData, "utm_campaign") || undefined,

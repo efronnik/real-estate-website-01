@@ -40,6 +40,50 @@
     "city": {
       "type": "string"
     },
+    "preferredContactTime": {
+      "type": "string"
+    },
+    "district": {
+      "type": "string"
+    },
+    "propertyType": {
+      "type": "enumeration",
+      "enum": [
+        "mieszkanie",
+        "dom",
+        "lokal"
+      ]
+    },
+    "areaM2": {
+      "type": "decimal"
+    },
+    "rooms": {
+      "type": "integer"
+    },
+    "condition": {
+      "type": "enumeration",
+      "enum": [
+        "do_remontu",
+        "dobry",
+        "bardzo_dobry",
+        "premium"
+      ]
+    },
+    "floor": {
+      "type": "string"
+    },
+    "buildingType": {
+      "type": "string"
+    },
+    "ownershipType": {
+      "type": "string"
+    },
+    "expectedPrice": {
+      "type": "string"
+    },
+    "timeline": {
+      "type": "string"
+    },
     "utmSource": {
       "type": "string"
     },
