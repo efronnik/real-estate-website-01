@@ -4,7 +4,7 @@ import { SiteTopbar } from "@/components/site-topbar";
 import { Prefooter } from "@/components/prefooter";
 import { LeadContactSection } from "@/components/lead-contact-section";
 import { ScrollToTopButton } from "@/components/scroll-to-top-button";
-import { fetchCmsPageBySlug, getPageMetadataFromCms } from "@/lib/cms";
+import { fetchCmsPageBySlug, getPageMetadataFromCms, safeCmsCall } from "@/lib/cms";
 import { ROUTE_PATHS } from "@/config/navigation";
 
 const kontaktFinalBlocks = [
@@ -40,7 +40,7 @@ const fallbackMetadata: Metadata = {
 };
 
 export async function generateMetadata(): Promise<Metadata> {
-  const cmsMetadata = await getPageMetadataFromCms("kontakt", "/kontakt");
+  const cmsMetadata = await safeCmsCall(() => getPageMetadataFromCms("kontakt", "/kontakt"), null);
   if (!cmsMetadata) {
     return fallbackMetadata;
   }
@@ -60,7 +60,7 @@ function toSingleParam(value: string | string[] | undefined): string | undefined
 
 export default async function KontaktPage({ searchParams }: KontaktPageProps) {
   const year = new Date().getFullYear();
-  const cmsPage = await fetchCmsPageBySlug("kontakt");
+  const cmsPage = await safeCmsCall(() => fetchCmsPageBySlug("kontakt"), null);
   const resolvedSearchParams = searchParams ? await searchParams : undefined;
   const laneParam = toSingleParam(resolvedSearchParams?.lane);
   const isInvestorLane = laneParam === "inwestycje";

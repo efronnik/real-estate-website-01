@@ -1,5 +1,6 @@
 const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL ?? "http://localhost:1337";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+const CMS_FETCH_TIMEOUT_MS = 5000;
 
 export type CmsPageRecord = {
   title?: string;
@@ -29,6 +30,15 @@ export type CmsBlogPostRecord = {
   content?: string;
   createdAt?: string;
   publishedAt?: string;
+  seo?: CmsSeoRecord | null;
+  category?: {
+    name?: string;
+    slug?: string;
+    attributes?: {
+      name?: string;
+      slug?: string;
+    };
+  } | null;
 };
 
 export type CmsFaqItemRecord = {
@@ -58,9 +68,12 @@ function pickRecord<T>(item: { attributes?: T } & T): T {
 }
 
 async function fetchStrapiList<T>(resource: string, params: URLSearchParams): Promise<T[]> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), CMS_FETCH_TIMEOUT_MS);
   try {
     const response = await fetch(`${STRAPI_URL}/api/${resource}?${params.toString()}`, {
       cache: "no-store",
+      signal: controller.signal,
     });
     if (!response.ok) {
       return [];
@@ -70,6 +83,16 @@ async function fetchStrapiList<T>(resource: string, params: URLSearchParams): Pr
     return (payload.data ?? []).map((item) => pickRecord<T>(item));
   } catch {
     return [];
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
+export async function safeCmsCall<T>(call: () => Promise<T>, fallback: T): Promise<T> {
+  try {
+    return await call();
+  } catch {
+    return fallback;
   }
 }
 
@@ -87,6 +110,8 @@ export async function fetchCmsBlogPosts(): Promise<CmsBlogPostRecord[]> {
   const params = new URLSearchParams({
     "pagination[pageSize]": "50",
     sort: "publishedAt:desc",
+    "populate[seo][populate][ogImage]": "*",
+    "populate[category]": "*",
   });
   return fetchStrapiList<CmsBlogPostRecord>("blog-posts", params);
 }
@@ -95,6 +120,8 @@ export async function fetchCmsBlogPostBySlug(slug: string): Promise<CmsBlogPostR
   const params = new URLSearchParams({
     "filters[slug][$eq]": slug,
     "pagination[pageSize]": "1",
+    "populate[seo][populate][ogImage]": "*",
+    "populate[category]": "*",
   });
   const items = await fetchStrapiList<CmsBlogPostRecord>("blog-posts", params);
   return items[0] ?? null;
@@ -180,5 +207,12 @@ export async function getPageMetadataFromCms(slug: string, pagePath: string): Pr
   const page = await fetchCmsPageBySlug(slug);
   const seo = page?.seo;
   const canonicalFallback = `${SITE_URL}${pagePath.startsWith("/") ? pagePath : `/${pagePath}`}`;
+  return buildPageMetadataFromSeo(seo, canonicalFallback);
+}
+
+export async function getBlogPostMetadataFromCms(slug: string): Promise<PageMetadata | null> {
+  const post = await fetchCmsBlogPostBySlug(slug);
+  const seo = post?.seo;
+  const canonicalFallback = `${SITE_URL}/blog/${slug}`;
   return buildPageMetadataFromSeo(seo, canonicalFallback);
 }

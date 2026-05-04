@@ -10,6 +10,7 @@ import {
   fetchCmsFeaturedTestimonials,
   fetchCmsPageBySlug,
   getPageMetadataFromCms,
+  safeCmsCall,
 } from "@/lib/cms";
 
 const saleProcessSteps = [
@@ -91,7 +92,7 @@ const fallbackMetadata: Metadata = {
 };
 
 export async function generateMetadata(): Promise<Metadata> {
-  const cmsMetadata = await getPageMetadataFromCms("sprzedaz", "/sprzedaz");
+  const cmsMetadata = await safeCmsCall(() => getPageMetadataFromCms("sprzedaz", "/sprzedaz"), null);
   if (!cmsMetadata) {
     return fallbackMetadata;
   }
@@ -101,9 +102,9 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function SprzedazPage() {
   const year = new Date().getFullYear();
   const [cmsPage, cmsFaqItems, cmsTestimonials] = await Promise.all([
-    fetchCmsPageBySlug("sprzedaz"),
-    fetchCmsFaqByPageType("sprzedaz"),
-    fetchCmsFeaturedTestimonials(),
+    safeCmsCall(() => fetchCmsPageBySlug("sprzedaz"), null),
+    safeCmsCall(() => fetchCmsFaqByPageType("sprzedaz"), []),
+    safeCmsCall(fetchCmsFeaturedTestimonials, []),
   ]);
   const introTitle = cmsPage?.headline ?? "Sprzedaz nieruchomosci to dobrze zaplanowany proces";
   const introCopy =
@@ -189,10 +190,7 @@ export default async function SprzedazPage() {
             <p className="eyebrow">Opinie klientów</p>
             <h2 className="section-title">Doświadczenie klientów po współpracy sprzedażowej</h2>
             <div className="sale-social-proof-grid">
-              {(cmsTestimonials.length ? cmsTestimonials : [
-                { quote: "Sprzedaż była uporządkowana od pierwszej rozmowy do podpisania dokumentów.", authorName: "Klient sprzedający", city: "Warszawa" },
-                { quote: "Największa zmiana to spokój i jasny plan na każdym etapie procesu.", authorName: "Właściciel mieszkania", city: "Mokotów" },
-              ]).map((item, idx) => (
+              {cmsTestimonials.map((item, idx) => (
                 <article key={`${item.authorName ?? "testimonial"}-${idx}`} className="sale-social-proof-card">
                   <p className="stars">★★★★★</p>
                   <blockquote>{item.quote}</blockquote>
@@ -202,6 +200,11 @@ export default async function SprzedazPage() {
                   </footer>
                 </article>
               ))}
+              {cmsTestimonials.length === 0 ? (
+                <article className="sale-social-proof-card">
+                  <p>Brak opinii w CMS dla tej sekcji. Dodaj rekordy `Testimonial`, aby je wyświetlić.</p>
+                </article>
+              ) : null}
             </div>
           </div>
         </section>
@@ -210,25 +213,17 @@ export default async function SprzedazPage() {
           <div className="container">
             <div className="surface faq-box">
               <h2>FAQ sprzedaży nieruchomości</h2>
-              {(cmsFaqItems.length ? cmsFaqItems : [
-                {
-                  question: "Czym różni się wycena ofertowa od transakcyjnej?",
-                  answer: "Wycena ofertowa to cena startowa pod ekspozycję, a transakcyjna to realny poziom finalizacji po negocjacjach i weryfikacji popytu.",
-                },
-                {
-                  question: "Ile trwa proces sprzedaży mieszkania?",
-                  answer: "To zależy od lokalizacji i strategii, ale dobrze przygotowany proces zwykle skraca czas ekspozycji i przyspiesza finalizację.",
-                },
-                {
-                  question: "Czy mogę zacząć od konsultacji zamiast formularza?",
-                  answer: "Tak. Możesz najpierw umówić krótką konsultację, a formularz wyceny uzupełnić po rozmowie.",
-                },
-              ]).map((item, idx) => (
+              {cmsFaqItems.map((item, idx) => (
                 <article key={`${item.question ?? "faq"}-${idx}`} className="faq-item">
                   <h3>{item.question}</h3>
                   <p>{item.answer}</p>
                 </article>
               ))}
+              {cmsFaqItems.length === 0 ? (
+                <article className="faq-item">
+                  <p>Brak pytań FAQ w CMS dla strony sprzedaży. Dodaj rekordy `FAQItem` z `pageType=sprzedaz`.</p>
+                </article>
+              ) : null}
             </div>
           </div>
         </section>

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { AboutPageClient } from "@/components/about-page-client";
-import { fetchCmsPageBySlug, getPageMetadataFromCms } from "@/lib/cms";
+import { fetchCmsPageBySlug, getPageMetadataFromCms, safeCmsCall } from "@/lib/cms";
 
 const fallbackMetadata: Metadata = {
   title: "O mnie | FIND",
@@ -8,7 +8,7 @@ const fallbackMetadata: Metadata = {
 };
 
 export async function generateMetadata(): Promise<Metadata> {
-  const cmsMetadata = await getPageMetadataFromCms("o-mnie", "/o-mnie");
+  const cmsMetadata = await safeCmsCall(() => getPageMetadataFromCms("o-mnie", "/o-mnie"), null);
   if (!cmsMetadata) {
     return fallbackMetadata;
   }
@@ -16,7 +16,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function AboutPage() {
-  const cmsPage = await fetchCmsPageBySlug("o-mnie");
+  const cmsPage = await safeCmsCall(() => fetchCmsPageBySlug("o-mnie"), null);
   return (
     <AboutPageClient
       cmsHeadline={cmsPage?.headline ?? null}

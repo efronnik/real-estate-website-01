@@ -5,6 +5,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { SiteTopbar } from "@/components/site-topbar";
 import { Prefooter } from "@/components/prefooter";
 import { ScrollToTopButton } from "@/components/scroll-to-top-button";
+import { ROUTE_PATHS } from "@/config/navigation";
 import { fetchCmsBlogPosts, type CmsBlogPostRecord, fetchCmsPageBySlug } from "@/lib/cms";
 
 const blogPaths = [
@@ -73,6 +74,10 @@ const posts = [
   },
 ];
 
+function getCmsCategoryLabel(post: CmsBlogPostRecord): string {
+  return post.category?.name ?? post.category?.attributes?.name ?? "Blog / CMS";
+}
+
 export default function BlogPage() {
   const [cmsPosts, setCmsPosts] = useState<CmsBlogPostRecord[]>([]);
   const [heroHeadline, setHeroHeadline] = useState<string | null>(null);
@@ -86,7 +91,7 @@ export default function BlogPage() {
         title: post.title as string,
         excerpt: post.excerpt ?? "Artykuł ekspercki o sprzedaży i inwestowaniu w nieruchomości.",
         image: posts[idx % posts.length].image,
-        meta: "Blog / CMS",
+        meta: getCmsCategoryLabel(post),
         cta: "Czytaj artykuł",
       }));
   }, [cmsPosts]);
@@ -131,6 +136,10 @@ export default function BlogPage() {
 
         <section id="blog" className="section blog">
           <div className="container">
+            <header className="process-head">
+              <p className="eyebrow">Lista artykułów</p>
+              <h2 className="section-title">Najnowsze materiały: sprzedaż, negocjacje i finalizacja</h2>
+            </header>
             <div className="editorial editorial--full-bleed">
               <div className="editorial-bg" style={{ backgroundImage: `url(${featuredPost?.image ?? posts[0].image})` }}>
                 <div className="scan-lines" aria-hidden="true"></div>
@@ -180,6 +189,7 @@ export default function BlogPage() {
         <section className="section blog-structure">
           <div className="container">
             <div className="surface faq-box">
+              <h2>FAQ i kolejne kroki po lekturze</h2>
               <h3>FAQ: najczęstsze pytania właścicieli mieszkań</h3>
               <article className="faq-item"><h4>Od czego zacząć sprzedaż mieszkania, żeby nie tracić czasu?</h4><p>Zacznij od krótkiego audytu: realna cena startowa, plan przygotowania mieszkania i harmonogram publikacji. Bez tej kolejności ogłoszenie często trafia na rynek zbyt wcześnie i od razu traci dynamikę.</p></article>
               <article className="faq-item"><h4>Ile czasu dać ofercie, zanim zmieniać cenę?</h4><p>Najpierw analizuj dane z pierwszych 7-14 dni: liczba zapytań, jakość rozmów i reakcje po prezentacjach. Dopiero na tej podstawie podejmuj decyzję o korekcie ceny, zdjęć albo opisu.</p></article>
@@ -187,6 +197,19 @@ export default function BlogPage() {
               <article className="faq-item"><h4>Czy home staging i profesjonalne zdjęcia naprawdę robią różnicę?</h4><p>Tak, bo pierwsza decyzja kupującego zapada w ogłoszeniu. Dobrze przygotowane wnętrze i spójne zdjęcia podnoszą liczbę jakościowych zapytań i skracają czas dochodzenia do spotkania.</p></article>
               <article className="faq-item"><h4>Jak negocjować, żeby nie oddać ceny na starcie?</h4><p>Ustal przed rozmowami warunki graniczne i kolejność ustępstw. Dzięki temu odpowiadasz spokojnie na presję kupującego i bronisz ceny argumentami, a nie emocjami.</p></article>
               <article className="faq-item"><h4>Kiedy warto skonsultować sprzedaż z ekspertem?</h4><p>Najlepiej na starcie albo wtedy, gdy oferta jest aktywna, ale nie daje efektu. To momenty, w których zmiana strategii najszybciej poprawia wynik sprzedaży i ogranicza koszt czasu.</p></article>
+            </div>
+            <div className="surface faq-box">
+              <h3>Przejdź do właściwej ścieżki działania</h3>
+              <p>
+                Po lekturze artykułów możesz od razu przejść do odpowiedniego lejka i zostawić lead.
+              </p>
+              <p className="section-copy">
+                <a href={`${ROUTE_PATHS.sprzedaz}#wycena`}>Sprzedaż: formularz wyceny</a>
+                {" | "}
+                <a href={`${ROUTE_PATHS.kontakt}#kontakt`}>Kontakt: konsultacja 1:1</a>
+                {" | "}
+                <a href={ROUTE_PATHS.inwestycje}>Inwestycje: ścieżka inwestora</a>
+              </p>
             </div>
           </div>
         </section>
@@ -199,8 +222,8 @@ export default function BlogPage() {
           kicker="Potrzebujesz strategii dopasowanej do Twojego mieszkania?"
           title="Umów krótką rozmowę i sprawdźmy, jakie działania najszybciej poprawią wynik sprzedaży."
           buttons={[
-            { href: "/kontakt", label: "Umów konsultację" },
-            { href: "/sprzedaz", label: "Wyceń nieruchomość" },
+            { href: `${ROUTE_PATHS.kontakt}#kontakt`, label: "Umów konsultację" },
+            { href: `${ROUTE_PATHS.sprzedaz}#wycena`, label: "Wyceń nieruchomość" },
           ]}
         />
         <SiteFooter year={year} />

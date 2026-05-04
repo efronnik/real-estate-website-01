@@ -99,17 +99,17 @@
 - Базовая безопасность API (rate limit, CORS, защита endpoint-ов): DONE
 - Ограничения и защита payload: лимиты размера тела запроса, whitelisting полей, нормализация/очистка входных данных: DONE
 - Политика PII в логах: персональные данные не пишутся в открытые логи, только технические идентификаторы и коды ошибок: DONE
-- <span style="color: #facc15">Проверка доставки лида end-to-end (форма -> backend -> `Lead`/уведомление): PROCESSED</span>
+- Проверка доставки лида end-to-end (форма -> backend -> `Lead`/уведомление): PROCESSED
 
-## Day 10 — Blog (listing + slug)
-- Листинг статей + страница статьи по slug
-- Подключение к CMS (`BlogPost`)
-- Категории/теги (если нужны)
-- Базовое SEO статей
-- Подключить SEO-поля list/detail из CMS (`SEO` у `BlogPost`, metadata на страницах)
-- Подключить `FAQItem`/`Testimonial` из CMS в те секции, где они выводятся (без хардкода)
-- Fallback-поведение при недоступности CMS (без падения страницы)
-- SEO-структура list/detail (H1/H2/H3), внутренние ссылки из статей в lejki и CTA на лид-формы
+## Day 10 — Blog (listing + slug): DONE
+- Листинг статей + страница статьи по slug: DONE
+- Подключение к CMS (`BlogPost`): DONE
+- Категории/теги (если нужны): DONE
+- Базовое SEO статей: DONE
+- Подключить SEO-поля list/detail из CMS (`SEO` у `BlogPost`, metadata на страницах): DONE
+- Подключить `FAQItem`/`Testimonial` из CMS в те секции, где они выводятся (без хардкода): DONE
+- Fallback-поведение при недоступности CMS (без падения страницы): DONE
+- SEO-структура list/detail (H1/H2/H3), внутренние ссылки из статей в lejki и CTA на лид-формы: DONE
 
 ## Day 11 — GA4 и события конверсии
 - Интеграция GA4

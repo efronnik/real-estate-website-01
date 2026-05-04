@@ -10,6 +10,7 @@ import {
   fetchCmsFeaturedTestimonials,
   fetchCmsPageBySlug,
   getPageMetadataFromCms,
+  safeCmsCall,
 } from "@/lib/cms";
 
 const investorLandingSections = [
@@ -100,7 +101,7 @@ const fallbackMetadata: Metadata = {
 };
 
 export async function generateMetadata(): Promise<Metadata> {
-  const cmsMetadata = await getPageMetadataFromCms("inwestycje", "/inwestycje");
+  const cmsMetadata = await safeCmsCall(() => getPageMetadataFromCms("inwestycje", "/inwestycje"), null);
   if (!cmsMetadata) {
     return fallbackMetadata;
   }
@@ -110,9 +111,9 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function InwestycjePage() {
   const year = new Date().getFullYear();
   const [cmsPage, cmsFaqItems, cmsTestimonials] = await Promise.all([
-    fetchCmsPageBySlug("inwestycje"),
-    fetchCmsFaqByPageType("inwestycje"),
-    fetchCmsFeaturedTestimonials(),
+    safeCmsCall(() => fetchCmsPageBySlug("inwestycje"), null),
+    safeCmsCall(() => fetchCmsFaqByPageType("inwestycje"), []),
+    safeCmsCall(fetchCmsFeaturedTestimonials, []),
   ]);
   const introTitle = cmsPage?.headline ?? "Inwestowanie w nieruchomosci w Warszawie";
   const introCopy =
@@ -240,10 +241,7 @@ export default async function InwestycjePage() {
             <p className="eyebrow">Opinie inwestorów</p>
             <h2 className="section-title">Doświadczenia klientów inwestycyjnych po współpracy</h2>
             <div className="sale-social-proof-grid">
-              {(cmsTestimonials.length ? cmsTestimonials : [
-                { quote: "Dostaliśmy jasny plan inwestycyjny i szybsze decyzje zakupowe.", authorName: "Inwestor prywatny", city: "Warszawa" },
-                { quote: "Największa wartość to selekcja okazji i spokojna kontrola ryzyka.", authorName: "Klient inwestycyjny", city: "Śródmieście" },
-              ]).map((item, idx) => (
+              {cmsTestimonials.map((item, idx) => (
                 <article key={`${item.authorName ?? "testimonial"}-${idx}`} className="sale-social-proof-card">
                   <p className="stars">★★★★★</p>
                   <blockquote>{item.quote}</blockquote>
@@ -253,6 +251,11 @@ export default async function InwestycjePage() {
                   </footer>
                 </article>
               ))}
+              {cmsTestimonials.length === 0 ? (
+                <article className="sale-social-proof-card">
+                  <p>Brak opinii w CMS dla tej sekcji. Dodaj rekordy `Testimonial`, aby je wyświetlić.</p>
+                </article>
+              ) : null}
             </div>
           </div>
         </section>
@@ -261,25 +264,17 @@ export default async function InwestycjePage() {
           <div className="container">
             <div className="surface faq-box">
               <h2>FAQ inwestycyjne</h2>
-              {(cmsFaqItems.length ? cmsFaqItems : [
-                {
-                  question: "Od jakiego budżetu warto zaczynać inwestowanie w nieruchomości?",
-                  answer: "To zależy od strategii, ale kluczowe jest dopasowanie modelu inwestowania do kapitału, celu i tolerancji ryzyka.",
-                },
-                {
-                  question: "Czy flipy w Warszawie nadal mają potencjał?",
-                  answer: "Tak, pod warunkiem dobrej selekcji okazji i realistycznego scenariusza kosztów oraz wyjścia z inwestycji.",
-                },
-                {
-                  question: "Czy mogę zacząć od konsultacji bez decyzji zakupowej?",
-                  answer: "Tak. Konsultacja jest pierwszym krokiem do ustalenia strategii, zanim podejmiesz decyzję o wejściu w projekt.",
-                },
-              ]).map((item, idx) => (
+              {cmsFaqItems.map((item, idx) => (
                 <article key={`${item.question ?? "faq"}-${idx}`} className="faq-item">
                   <h3>{item.question}</h3>
                   <p>{item.answer}</p>
                 </article>
               ))}
+              {cmsFaqItems.length === 0 ? (
+                <article className="faq-item">
+                  <p>Brak pytań FAQ w CMS dla strony inwestycji. Dodaj rekordy `FAQItem` z `pageType=inwestycje`.</p>
+                </article>
+              ) : null}
             </div>
           </div>
         </section>

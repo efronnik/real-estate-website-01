@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
 import { HomePageClient } from "@/components/home-page-client";
-import { fetchCmsPageBySlug, getHomePageMetadataFromCms } from "@/lib/cms";
+import {
+  fetchCmsFeaturedTestimonials,
+  fetchCmsPageBySlug,
+  getHomePageMetadataFromCms,
+  safeCmsCall,
+} from "@/lib/cms";
 
 const fallbackMetadata: Metadata = {
   title: "FIND - Sprzedaj mieszkanie",
@@ -8,7 +13,7 @@ const fallbackMetadata: Metadata = {
 };
 
 export async function generateMetadata(): Promise<Metadata> {
-  const cmsMetadata = await getHomePageMetadataFromCms();
+  const cmsMetadata = await safeCmsCall(getHomePageMetadataFromCms, null);
   if (!cmsMetadata) {
     return fallbackMetadata;
   }
@@ -16,6 +21,9 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Home() {
-  const cmsPage = await fetchCmsPageBySlug("glowna");
-  return <HomePageClient cmsPage={cmsPage} />;
+  const [cmsPage, cmsTestimonials] = await Promise.all([
+    safeCmsCall(() => fetchCmsPageBySlug("glowna"), null),
+    safeCmsCall(fetchCmsFeaturedTestimonials, []),
+  ]);
+  return <HomePageClient cmsPage={cmsPage} cmsTestimonials={cmsTestimonials} />;
 }

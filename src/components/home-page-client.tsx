@@ -7,7 +7,7 @@ import { Prefooter } from "@/components/prefooter";
 import { LeadContactSection } from "@/components/lead-contact-section";
 import { ScrollToTopButton } from "@/components/scroll-to-top-button";
 import { ROUTE_PATHS } from "@/config/navigation";
-import type { CmsPageRecord } from "@/lib/cms";
+import type { CmsPageRecord, CmsTestimonialRecord } from "@/lib/cms";
 
 const valueSteps = [
   {
@@ -51,22 +51,17 @@ const results = [
   { title: "Więcej jakościowych zapytań", desc: "Problem: słaba prezentacja mieszkania. Działanie: profesjonalna sesja i dopracowany opis oferty.", image: "https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=1800" },
 ];
 
-const reviews = [
-  { quote: "W końcu mieliśmy plan. Sprzedaż przestała być chaosem i domknęła się szybciej, niż zakładaliśmy.", author: "Daniela A." },
-  { quote: "Największa różnica? Spokój i konkretne decyzje na każdym etapie. Czuć, że proces jest pod kontrolą.", author: "Tina H." },
-  { quote: "Profesjonalna prezentacja i bardzo dobrze poprowadzone negocjacje. Finalna cena była wyższa niż zakładałam.", author: "Sandra D." },
-];
-
 type HomePageClientProps = {
   cmsPage: CmsPageRecord | null;
+  cmsTestimonials: CmsTestimonialRecord[];
 };
 
-export function HomePageClient({ cmsPage }: HomePageClientProps) {
+export function HomePageClient({ cmsPage, cmsTestimonials }: HomePageClientProps) {
   const year = new Date().getFullYear();
   const [heroReady, setHeroReady] = useState(false);
   const [activeValue, setActiveValue] = useState(0);
   const [activeResult, setActiveResult] = useState(0);
-  const [reviewIndex, setReviewIndex] = useState(1);
+  const [reviewIndex, setReviewIndex] = useState(0);
   const valueRefs = useRef<Array<HTMLElement | null>>([]);
   const resultRefs = useRef<Array<HTMLElement | null>>([]);
 
@@ -113,7 +108,18 @@ export function HomePageClient({ cmsPage }: HomePageClientProps) {
     };
   }, []);
 
+  const reviews = cmsTestimonials
+    .filter((item) => Boolean(item.quote))
+    .map((item) => ({
+      quote: item.quote as string,
+      author: item.authorName ?? "Klient",
+    }));
+
+  const hasReviews = reviews.length > 0;
   const reviewAt = (offset: number) => {
+    if (!hasReviews) {
+      return null;
+    }
     const len = reviews.length;
     return reviews[(reviewIndex + offset + len) % len];
   };
@@ -187,7 +193,7 @@ export function HomePageClient({ cmsPage }: HomePageClientProps) {
           </div>
         </section>
 
-        <section className="section trust"><div className="container"><div className="trust-shell"><div className="trust-head"><p className="eyebrow">Dlaczego klienci ufają</p><h2 className="section-title">Dowody, nie obietnice</h2></div><div className="trust-stats"><article className="stat"><strong>100+</strong><p>przeprowadzonych procesów sprzedaży</p></article><article className="stat"><strong>4.9/5</strong><p>średnia ocena współpracy klientów</p></article><article className="stat"><strong>1:1</strong><p>opiekun prowadzący od diagnozy do finału</p></article></div><div className="trust-slider"><div className="slider-head"><h3>Opinie klientów</h3><div className="controls"><button onClick={() => setReviewIndex((prev) => (prev - 1 + reviews.length) % reviews.length)}>←</button><button onClick={() => setReviewIndex((prev) => (prev + 1) % reviews.length)}>→</button></div></div><div className="track"><article className="quote-card side"><p className="stars">★★★★★</p><blockquote>{reviewAt(-1).quote}</blockquote><footer><strong>{reviewAt(-1).author}</strong><span>Zweryfikowana opinia</span></footer></article><article className="quote-card center"><p className="stars">★★★★★</p><blockquote>{reviewAt(0).quote}</blockquote><footer><strong>{reviewAt(0).author}</strong><span>Zweryfikowana opinia</span></footer></article><article className="quote-card side"><p className="stars">★★★★★</p><blockquote>{reviewAt(1).quote}</blockquote><footer><strong>{reviewAt(1).author}</strong><span>Zweryfikowana opinia</span></footer></article></div></div></div></div></section>
+        <section className="section trust"><div className="container"><div className="trust-shell"><div className="trust-head"><p className="eyebrow">Dlaczego klienci ufają</p><h2 className="section-title">Dowody, nie obietnice</h2></div><div className="trust-stats"><article className="stat"><strong>100+</strong><p>przeprowadzonych procesów sprzedaży</p></article><article className="stat"><strong>4.9/5</strong><p>średnia ocena współpracy klientów</p></article><article className="stat"><strong>1:1</strong><p>opiekun prowadzący od diagnozy do finału</p></article></div><div className="trust-slider"><div className="slider-head"><h3>Opinie klientów</h3><div className="controls"><button onClick={() => setReviewIndex((prev) => (prev - 1 + reviews.length) % reviews.length)} disabled={!hasReviews}>←</button><button onClick={() => setReviewIndex((prev) => (prev + 1) % reviews.length)} disabled={!hasReviews}>→</button></div></div>{hasReviews ? (<div className="track"><article className="quote-card side"><p className="stars">★★★★★</p><blockquote>{reviewAt(-1)?.quote}</blockquote><footer><strong>{reviewAt(-1)?.author}</strong><span>Zweryfikowana opinia</span></footer></article><article className="quote-card center"><p className="stars">★★★★★</p><blockquote>{reviewAt(0)?.quote}</blockquote><footer><strong>{reviewAt(0)?.author}</strong><span>Zweryfikowana opinia</span></footer></article><article className="quote-card side"><p className="stars">★★★★★</p><blockquote>{reviewAt(1)?.quote}</blockquote><footer><strong>{reviewAt(1)?.author}</strong><span>Zweryfikowana opinia</span></footer></article></div>) : (<article className="quote-card center"><p>Brak opinii w CMS. Dodaj rekordy `Testimonial`, aby je wyświetlić.</p></article>)}</div></div></div></section>
 
         <section className="section process"><div className="container"><header className="process-head"><p className="eyebrow">Proces pracy</p><h2 className="section-title">Jak prowadzimy sprzedaż od strategii do podpisu</h2></header></div><div className="service-board">{processSteps.map((step) => (<article key={step.title} className="service-row" style={{ ["--bg" as string]: `url(${step.image})` }}><div className="service-info"><p className="idx"><span className="idx-text">{step.label}</span></p><h3>{step.title}</h3><p>{step.text}</p></div><div className="service-word"><span>{step.hero}</span></div></article>))}</div></section>
 

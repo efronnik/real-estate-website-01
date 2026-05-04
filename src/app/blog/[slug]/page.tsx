@@ -387,7 +387,7 @@ export default function BlogArticlePage() {
     ? {
         title: cmsArticle.title ?? "Artykuł",
         lead: cmsArticle.excerpt ?? "Treść artykułu z CMS.",
-        category: "Blog / CMS",
+        category: cmsArticle.category?.name ?? cmsArticle.category?.attributes?.name ?? "Blog / CMS",
         readTime: "5 min czytania",
         points: [],
         checklist: [],
@@ -642,6 +642,50 @@ export default function BlogArticlePage() {
             )}
 
             {!!article.closing && <p className="article-closing">{article.closing}</p>}
+
+            <div className="surface faq-box">
+              <h2>Co zrobić po przeczytaniu artykułu</h2>
+              <h3>Wybierz odpowiednią ścieżkę i przejdź do formularza</h3>
+              <p>
+                Jeśli temat dotyczy sprzedaży mieszkania, przejdź do formularza wyceny. Jeśli
+                planujesz inwestowanie, wybierz ścieżkę inwestycyjną i umów rozmowę.
+              </p>
+              <p className="section-copy">
+                Powiązane ścieżki:
+                {" "}
+                <a href={`${ROUTE_PATHS.sprzedaz}#wycena`}>Sprzedaż / Wycena</a>
+                {" | "}
+                <a href={ROUTE_PATHS.inwestycje}>Inwestycje</a>
+                {" | "}
+                <a href={`${ROUTE_PATHS.kontakt}#kontakt`}>Kontakt / Konsultacja</a>
+              </p>
+              <div className="sale-cta-actions">
+                <a href={`${ROUTE_PATHS.sprzedaz}#wycena`} className="prefooter-btn">
+                  <span className="prefooter-btn-text-wrap" aria-hidden="true">
+                    <span className="prefooter-btn-text prefooter-btn-text-top">Przejdź do wyceny</span>
+                    <span className="prefooter-btn-text prefooter-btn-text-bottom">Przejdź do wyceny</span>
+                  </span>
+                  <span className="sr-only">Przejdź do wyceny</span>
+                  <span className="prefooter-btn-arrow" aria-hidden="true">→</span>
+                </a>
+                <a href={`${ROUTE_PATHS.kontakt}#kontakt`} className="prefooter-btn">
+                  <span className="prefooter-btn-text-wrap" aria-hidden="true">
+                    <span className="prefooter-btn-text prefooter-btn-text-top">Umów konsultację</span>
+                    <span className="prefooter-btn-text prefooter-btn-text-bottom">Umów konsultację</span>
+                  </span>
+                  <span className="sr-only">Umów konsultację</span>
+                  <span className="prefooter-btn-arrow" aria-hidden="true">→</span>
+                </a>
+                <a href={ROUTE_PATHS.inwestycje} className="prefooter-btn">
+                  <span className="prefooter-btn-text-wrap" aria-hidden="true">
+                    <span className="prefooter-btn-text prefooter-btn-text-top">Przejdź do inwestycji</span>
+                    <span className="prefooter-btn-text prefooter-btn-text-bottom">Przejdź do inwestycji</span>
+                  </span>
+                  <span className="sr-only">Przejdź do inwestycji</span>
+                  <span className="prefooter-btn-arrow" aria-hidden="true">→</span>
+                </a>
+              </div>
+            </div>
           </div>
         </section>
       </main>
@@ -650,7 +694,7 @@ export default function BlogArticlePage() {
         <Prefooter
           kicker="Koniec przewijania? Zróbmy pierwszy krok."
           title="Sprzedaj mieszkanie spokojnie i na dobrych warunkach."
-          buttons={[{ href: "/kontakt", label: "Umów konsultację" }]}
+          buttons={[{ href: `${ROUTE_PATHS.kontakt}#kontakt`, label: "Umów konsultację" }]}
         />
         <SiteFooter year={year} />
       </div>
