@@ -64,6 +64,7 @@ type LeadPayload = {
   phone: string;
   leadType: "kontakt" | "inwestor" | "wycena";
   sourcePage: string;
+  website?: string;
   email?: string;
   message?: string;
   city?: string;
@@ -87,6 +88,7 @@ function buildLeadPayload(form: HTMLFormElement): LeadPayload {
     phone: asText(formData, "phone"),
     leadType: (leadType || "kontakt") as LeadPayload["leadType"],
     sourcePage: asText(formData, "source_page"),
+    website: asText(formData, "website") || undefined,
     email: asText(formData, "email") || undefined,
     message: asText(formData, "message") || undefined,
     city: asText(formData, "city") || asText(formData, "city_or_district") || undefined,
@@ -99,8 +101,7 @@ function buildLeadPayload(form: HTMLFormElement): LeadPayload {
 
 export async function submitLeadForm(form: HTMLFormElement) {
   const payload = buildLeadPayload(form);
-  const strapiUrl = process.env.NEXT_PUBLIC_STRAPI_URL ?? "http://localhost:1337";
-  const response = await fetch(`${strapiUrl}/api/leads`, {
+  const response = await fetch("/api/leads", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -109,6 +110,17 @@ export async function submitLeadForm(form: HTMLFormElement) {
   });
 
   if (!response.ok) {
-    throw new Error(`Lead submit failed: ${response.status}`);
+    let errorText = `Lead submit failed: ${response.status}`;
+    try {
+      const body = (await response.json()) as { error?: string; details?: string[] };
+      if (body?.details?.length) {
+        errorText = body.details.join(" ");
+      } else if (body?.error) {
+        errorText = body.error;
+      }
+    } catch {
+      // ignore JSON parse errors and keep fallback message
+    }
+    throw new Error(errorText);
   }
 }

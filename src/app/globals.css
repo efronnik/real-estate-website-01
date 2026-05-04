@@ -1242,6 +1242,16 @@ a {
   line-height: 1.4;
 }
 
+.form-honeypot {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
 .required-mark {
   color: var(--gold);
   font-weight: 700;

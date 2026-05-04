@@ -49,7 +49,7 @@
     "utmCampaign": {
       "type": "string"
     },
-    "status": {
+    "leadStatus": {
       "type": "enumeration",
       "enum": [
         "new",

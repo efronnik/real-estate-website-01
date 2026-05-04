@@ -34,6 +34,7 @@ export function LeadForm({
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    const form = event.currentTarget;
     const hasInvalidFields = handleInvalidSubmit(event);
     if (hasInvalidFields) return;
 
@@ -42,12 +43,13 @@ export function LeadForm({
     setStatusType(null);
 
     try {
-      await submitLeadForm(event.currentTarget);
-      event.currentTarget.reset();
+      await submitLeadForm(form);
+      form.reset();
       setStatusMessage(successMessage);
       setStatusType("success");
-    } catch {
-      setStatusMessage(errorMessage);
+    } catch (error) {
+      const detail = error instanceof Error && error.message ? error.message : errorMessage;
+      setStatusMessage(`${errorMessage} (${detail})`);
       setStatusType("error");
     } finally {
       setIsSubmitting(false);
@@ -55,6 +57,10 @@ export function LeadForm({
   };
 
   const handleFieldInput = (event: FormEvent<HTMLFormElement>) => {
+    if (statusMessage) {
+      setStatusMessage(null);
+      setStatusType(null);
+    }
     handleFieldValidationOnInput(event);
   };
 
@@ -66,6 +72,14 @@ export function LeadForm({
       <input type="hidden" name="utm_source" value="" />
       <input type="hidden" name="utm_medium" value="" />
       <input type="hidden" name="utm_campaign" value="" />
+      <input
+        type="text"
+        name="website"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        className="form-honeypot"
+      />
 
       <p className="form-helper">
         {helperText} Pola oznaczone <span className="required-mark">*</span> sa wymagane.

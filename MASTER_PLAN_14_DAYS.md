@@ -92,14 +92,14 @@
 - SEO-структура страницы Kontakt + корректные точки входа в формы из обоих lejki: DONE
 
 ## Day 9 — Backend обработки лидов
-- Server-side validation + sanitization
-- Сохранение лидов в `Lead` (Strapi/DB)
-- Антиспам (honeypot/reCAPTCHA по необходимости)
-- Логи и диагностика ошибок
-- Базовая безопасность API (rate limit, CORS, защита endpoint-ов)
-- Ограничения и защита payload: лимиты размера тела запроса, whitelisting полей, нормализация/очистка входных данных
-- Политика PII в логах: персональные данные не пишутся в открытые логи, только технические идентификаторы и коды ошибок
-- Проверка доставки лида end-to-end (форма -> backend -> `Lead`/уведомление)
+- Server-side validation + sanitization: DONE
+- Сохранение лидов в `Lead` (Strapi/DB): DONE
+- Антиспам (honeypot/reCAPTCHA по необходимости): DONE
+- Логи и диагностика ошибок: DONE
+- Базовая безопасность API (rate limit, CORS, защита endpoint-ов): DONE
+- Ограничения и защита payload: лимиты размера тела запроса, whitelisting полей, нормализация/очистка входных данных: DONE
+- Политика PII в логах: персональные данные не пишутся в открытые логи, только технические идентификаторы и коды ошибок: DONE
+- <span style="color: #facc15">Проверка доставки лида end-to-end (форма -> backend -> `Lead`/уведомление): PROCESSED</span>
 
 ## Day 10 — Blog (listing + slug)
 - Листинг статей + страница статьи по slug
