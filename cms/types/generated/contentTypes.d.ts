@@ -556,12 +556,20 @@ export interface ApiLeadLead extends Struct.CollectionTypeSchema {
     draftAndPublish: false;
   };
   attributes: {
+    areaM2: Schema.Attribute.Decimal;
+    buildingType: Schema.Attribute.String;
     city: Schema.Attribute.String;
+    condition: Schema.Attribute.Enumeration<
+      ['do_remontu', 'dobry', 'bardzo_dobry', 'premium']
+    >;
     consentData: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    district: Schema.Attribute.String;
     email: Schema.Attribute.Email;
+    expectedPrice: Schema.Attribute.String;
+    floor: Schema.Attribute.String;
     fullName: Schema.Attribute.String & Schema.Attribute.Required;
     leadType: Schema.Attribute.Enumeration<['kontakt', 'inwestor', 'wycena']> &
       Schema.Attribute.Required;
@@ -570,10 +578,14 @@ export interface ApiLeadLead extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     message: Schema.Attribute.Text;
     phone: Schema.Attribute.String & Schema.Attribute.Required;
+    preferredContactTime: Schema.Attribute.String;
+    propertyType: Schema.Attribute.Enumeration<['mieszkanie', 'dom', 'lokal']>;
     publishedAt: Schema.Attribute.DateTime;
+    rooms: Schema.Attribute.Integer;
     sourcePage: Schema.Attribute.String & Schema.Attribute.Required;
     status: Schema.Attribute.Enumeration<['new', 'contacted', 'closed']> &
       Schema.Attribute.DefaultTo<'new'>;
+    timeline: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
