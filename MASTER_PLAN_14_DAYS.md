@@ -112,10 +112,35 @@
 - SEO-структура list/detail (H1/H2/H3), внутренние ссылки из статей в lejki и CTA на лид-формы: DONE
 
 ## Day 11 — GA4 и события конверсии
-- Интеграция GA4
-- События: submit `kontakt`, submit `wycena`, клики CTA, contact-click
-- Тесты Realtime/DebugView
-- Маркировка ключевых событий как conversions
+- Подготовить GA4 property + Web Data Stream, зафиксировать Measurement ID (`G-XXXXXXXXXX`) и хранение через env
+- Подключить `gtag`/Google tag в Next.js layout (без дублей), включать только при наличии GA ID
+- Проверить корректный `page_view` на SSR + client navigation (App Router), без повторной отправки
+- Внедрить события конверсии:
+  - `lead_form_submit` (успешная отправка `kontakt`/`wycena`)
+  - `lead_form_error` (ошибка отправки формы)
+  - `cta_click` (ключевые CTA в hero/sections/prefooter/blog)
+  - `contact_click` (tel/email/мессенджеры при наличии)
+- Для каждого события передавать обязательные параметры:
+  - `form_type` (`kontakt`/`wycena`)
+  - `lead_type` (`sprzedaz`/`inwestor`/`kontakt`)
+  - `source_page`
+  - `cta_id` и/или `placement`
+  - `status` (`success`/`error`) для форм
+- Синхронизировать UTM-атрибуцию в аналитике (`utm_source`, `utm_medium`, `utm_campaign`) для lead-событий
+- Настроить privacy/consent-логику:
+  - не отправлять marketing analytics до согласия (если consent-баннер включен)
+  - проверить, что в GA не уходит PII
+- Тесты Realtime/DebugView:
+  - ручной чеклист по всем событиям и параметрам
+  - проверка отсутствия дублей при повторных рендерах/навигации
+- Пометить ключевые события как conversions в GA4:
+  - минимум `lead_form_submit`
+  - опционально `contact_click` (по бизнес-решению)
+- Добавить короткий QA-протокол в проект (что, где и как проверять в GA4 после релиза)
+- Критерий DONE Day 11:
+  - события стабильно видны в DebugView с корректными параметрами
+  - conversion events отмечены и подтверждены
+  - нет дублей `page_view` и нет отправки PII
 
 ## Day 12 — Техническое SEO
 - Metadata, canonical, OpenGraph, robots, sitemap
