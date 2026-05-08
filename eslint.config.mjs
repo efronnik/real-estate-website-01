@@ -12,6 +12,11 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Strapi build/cache output (huge bundles — linting causes OOM / long runs)
+    "cms/dist/**",
+    "cms/build/**",
+    "cms/.cache/**",
+    "cms/.tmp/**",
   ]),
 ]);
 

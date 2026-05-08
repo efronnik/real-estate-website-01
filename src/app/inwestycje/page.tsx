@@ -5,6 +5,7 @@ import { Prefooter } from "@/components/prefooter";
 import { LeadContactSection } from "@/components/lead-contact-section";
 import { PageIntroSection } from "@/components/page-intro-section";
 import { ROUTE_PATHS } from "@/config/navigation";
+import { CtaClickLink } from "@/components/cta-click-link";
 import {
   fetchCmsFaqByPageType,
   fetchCmsFeaturedTestimonials,
@@ -140,8 +141,12 @@ export default async function InwestycjePage() {
               <article className="lane-check"><strong>03</strong><p>Zależy Ci na konkretnych krokach zamiast przypadkowych ruchów.</p></article>
             </div>
             <div className="lane-actions">
-              <a href={ROUTE_PATHS.sprzedaz} className="link-arrow">Masz nieruchomość do sprzedaży? Przejdź do sprzedaży</a>
-              <a href={`${ROUTE_PATHS.sprzedaz}#wycena`} className="link-arrow">Chcesz najpierw wycenić aktywo? Przejdź do formularza wyceny</a>
+              <CtaClickLink href={ROUTE_PATHS.sprzedaz} className="link-arrow" ctaLocation="inwestycje_lane" ctaLabel="sprzedaz_z_lane">
+                Masz nieruchomość do sprzedaży? Przejdź do sprzedaży
+              </CtaClickLink>
+              <CtaClickLink href={`${ROUTE_PATHS.sprzedaz}#wycena`} className="link-arrow" ctaLocation="inwestycje_lane" ctaLabel="wycena_z_lane">
+                Chcesz najpierw wycenić aktywo? Przejdź do formularza wyceny
+              </CtaClickLink>
             </div>
           </div>
         </section>
@@ -166,7 +171,10 @@ export default async function InwestycjePage() {
             <p className="section-copy">
               Jeśli rozważasz sprzedaż aktywa przed reinwestycją, przejdź do
               {" "}
-              <a href={ROUTE_PATHS.sprzedaz}>ścieżki sprzedaży</a>.
+              <CtaClickLink href={ROUTE_PATHS.sprzedaz} ctaLocation="inwestycje_pillars" ctaLabel="sciezka_sprzedazy">
+                ścieżki sprzedaży
+              </CtaClickLink>
+              .
             </p>
           </div>
         </section>
@@ -285,30 +293,35 @@ export default async function InwestycjePage() {
             <h2>Chcesz sprawdzić, która strategia inwestowania będzie najlepsza dla Ciebie?</h2>
             <p>Umów konsultację inwestycyjną i otrzymaj konkretny plan działania dla Twojego kapitału.</p>
             <div className="sale-cta-actions">
-              <a href={`${ROUTE_PATHS.kontakt}?lane=inwestycje#kontakt`} className="prefooter-btn">
+              <CtaClickLink
+                href={`${ROUTE_PATHS.kontakt}?lane=inwestycje#kontakt`}
+                className="prefooter-btn"
+                ctaLocation="inwestycje_strip"
+                ctaLabel="Umów konsultację inwestycyjną"
+              >
                 <span className="prefooter-btn-text-wrap" aria-hidden="true">
                   <span className="prefooter-btn-text prefooter-btn-text-top">Umów konsultację inwestycyjną</span>
                   <span className="prefooter-btn-text prefooter-btn-text-bottom">Umów konsultację inwestycyjną</span>
                 </span>
                 <span className="sr-only">Umów konsultację inwestycyjną</span>
                 <span className="prefooter-btn-arrow" aria-hidden="true">→</span>
-              </a>
-              <a href={ROUTE_PATHS.kalkulator} className="prefooter-btn">
+              </CtaClickLink>
+              <CtaClickLink href={ROUTE_PATHS.kalkulator} className="prefooter-btn" ctaLocation="inwestycje_strip" ctaLabel="Przejdź do kalkulatora">
                 <span className="prefooter-btn-text-wrap" aria-hidden="true">
                   <span className="prefooter-btn-text prefooter-btn-text-top">Przejdź do kalkulatora</span>
                   <span className="prefooter-btn-text prefooter-btn-text-bottom">Przejdź do kalkulatora</span>
                 </span>
                 <span className="sr-only">Przejdź do kalkulatora</span>
                 <span className="prefooter-btn-arrow" aria-hidden="true">→</span>
-              </a>
-              <a href={ROUTE_PATHS.blog} className="prefooter-btn">
+              </CtaClickLink>
+              <CtaClickLink href={ROUTE_PATHS.blog} className="prefooter-btn" ctaLocation="inwestycje_strip" ctaLabel="Zobacz materiały edukacyjne">
                 <span className="prefooter-btn-text-wrap" aria-hidden="true">
                   <span className="prefooter-btn-text prefooter-btn-text-top">Zobacz materiały edukacyjne</span>
                   <span className="prefooter-btn-text prefooter-btn-text-bottom">Zobacz materiały edukacyjne</span>
                 </span>
                 <span className="sr-only">Zobacz materiały edukacyjne</span>
                 <span className="prefooter-btn-arrow" aria-hidden="true">→</span>
-              </a>
+              </CtaClickLink>
             </div>
           </div>
         </section>

@@ -21,6 +21,7 @@ Frontend env keys:
 - `NEXT_PUBLIC_STRAPI_URL` (default local CMS URL)
 - `NEXT_PUBLIC_SITE_URL` (default local frontend URL)
 - `NEXT_PUBLIC_GA_MEASUREMENT_ID` (GA4 Measurement ID, for example `G-XXXXXXXXXX`)
+- `NEXT_PUBLIC_ANALYTICS_CONSENT_BANNER` (`true` to require consent before analytics, default `false`)
 
 ### CMS
 
@@ -72,3 +73,7 @@ curl http://localhost:1337/api/pages
 ```
 
 Expected: JSON with `data` array (it may be empty before content is added).
+
+## Analytics QA
+
+- Post-release GA4 checks: `GA4_QA_PROTOCOL.md`

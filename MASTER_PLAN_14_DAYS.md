@@ -111,7 +111,7 @@
 - Fallback-поведение при недоступности CMS (без падения страницы): DONE
 - SEO-структура list/detail (H1/H2/H3), внутренние ссылки из статей в lejki и CTA на лид-формы: DONE
 
-## Day 11 — GA4 и события конверсии
+## Day 11 — GA4 и события конверсии: DONE
 - Подготовить GA4 property + Web Data Stream, зафиксировать Measurement ID (`G-XXXXXXXXXX`) и хранение через env
 - Подключить `gtag`/Google tag в Next.js layout (без дублей), включать только при наличии GA ID
 - Проверить корректный `page_view` на SSR + client navigation (App Router), без повторной отправки
@@ -130,6 +130,12 @@
 - Настроить privacy/consent-логику:
   - не отправлять marketing analytics до согласия (если consent-баннер включен)
   - проверить, что в GA не уходит PII
+  - TODO (перед production): включить consent-баннер (`NEXT_PUBLIC_ANALYTICS_CONSENT_BANNER=true`) и пройти ручной smoke-тест Accept/Reject
+- Отдельно проверить cookie-настройку перед production (чтобы корректно работало согласие):
+  - включить `NEXT_PUBLIC_ANALYTICS_CONSENT_BANNER=true` в production env
+  - убедиться, что баннер показывается новым пользователям
+  - убедиться, что выбор пользователя сохраняется (localStorage) и повторно баннер не мешает
+  - проверить сценарии: до Accept нет analytics, после Accept есть, после Reject нет
 - Тесты Realtime/DebugView:
   - ручной чеклист по всем событиям и параметрам
   - проверка отсутствия дублей при повторных рендерах/навигации

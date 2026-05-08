@@ -6,6 +6,7 @@ import { SiteTopbar } from "@/components/site-topbar";
 import { Prefooter } from "@/components/prefooter";
 import { ScrollToTopButton } from "@/components/scroll-to-top-button";
 import { ROUTE_PATHS } from "@/config/navigation";
+import { CtaClickLink } from "@/components/cta-click-link";
 
 const MIN_AREA = 15;
 const MAX_AREA = 300;
@@ -119,7 +120,9 @@ export default function KalkulatorPage() {
                 <p><span>Stan</span><strong>{conditionFactor.toFixed(2)}x</strong></p>
                 <p><span>Lokalizacja</span><strong>{districtFactor.toFixed(2)}x</strong></p>
               </div>
-              <a href={ROUTE_PATHS.kontakt} className="link-arrow">Umów dokładną wycenę</a>
+              <CtaClickLink href={ROUTE_PATHS.kontakt} className="link-arrow" ctaLocation="kalkulator_result" ctaLabel="Umów dokładną wycenę">
+                Umów dokładną wycenę
+              </CtaClickLink>
             </aside>
           </div>
         </div>
@@ -129,7 +132,7 @@ export default function KalkulatorPage() {
         <Prefooter
           kicker="Koniec przewijania? Zróbmy pierwszy krok."
           title="Sprzedaj mieszkanie spokojnie i na dobrych warunkach."
-          buttons={[{ href: "/kontakt", label: "Umów konsultację" }]}
+          buttons={[{ href: ROUTE_PATHS.kontakt, label: "Umów konsultację" }]}
         />
         <SiteFooter year={year} />
       </div>

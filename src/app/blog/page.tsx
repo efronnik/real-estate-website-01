@@ -6,6 +6,7 @@ import { SiteTopbar } from "@/components/site-topbar";
 import { Prefooter } from "@/components/prefooter";
 import { ScrollToTopButton } from "@/components/scroll-to-top-button";
 import { ROUTE_PATHS } from "@/config/navigation";
+import { CtaClickLink } from "@/components/cta-click-link";
 import { fetchCmsBlogPosts, type CmsBlogPostRecord, fetchCmsPageBySlug } from "@/lib/cms";
 
 const blogPaths = [
@@ -149,7 +150,14 @@ export default function BlogPage() {
                   <h3>{featuredPost?.title ?? "Brak artykułów"}</h3>
                   <p>{featuredPost?.excerpt ?? "Dodaj pierwszy wpis w Strapi, aby wyświetlić go na stronie."}</p>
                   {featuredPost?.slug ? (
-                    <a href={`/blog/${featuredPost.slug}`} className="link-arrow">{featuredPost.cta}</a>
+                    <CtaClickLink
+                      href={`/blog/${featuredPost.slug}`}
+                      className="link-arrow"
+                      ctaLocation="blog_index_hero"
+                      ctaLabel={featuredPost.cta}
+                    >
+                      {featuredPost.cta}
+                    </CtaClickLink>
                   ) : null}
                 </article>
                 <div className="dock">
@@ -159,7 +167,9 @@ export default function BlogPage() {
                       <div className="dock-copy">
                         <p className="meta">{post.meta}</p>
                         <h4>{post.title}</h4>
-                        <a href={`/blog/${post.slug}`} className="link-arrow">{post.cta}</a>
+                        <CtaClickLink href={`/blog/${post.slug}`} className="link-arrow" ctaLocation="blog_index_dock" ctaLabel={post.cta}>
+                          {post.cta}
+                        </CtaClickLink>
                       </div>
                     </article>
                   ))}
@@ -204,11 +214,17 @@ export default function BlogPage() {
                 Po lekturze artykułów możesz od razu przejść do odpowiedniego lejka i zostawić lead.
               </p>
               <p className="section-copy">
-                <a href={`${ROUTE_PATHS.sprzedaz}#wycena`}>Sprzedaż: formularz wyceny</a>
+                <CtaClickLink href={`${ROUTE_PATHS.sprzedaz}#wycena`} ctaLocation="blog_index_funnel" ctaLabel="Sprzedaż: formularz wyceny">
+                  Sprzedaż: formularz wyceny
+                </CtaClickLink>
                 {" | "}
-                <a href={`${ROUTE_PATHS.kontakt}#kontakt`}>Kontakt: konsultacja 1:1</a>
+                <CtaClickLink href={`${ROUTE_PATHS.kontakt}#kontakt`} ctaLocation="blog_index_funnel" ctaLabel="Kontakt: konsultacja 1:1">
+                  Kontakt: konsultacja 1:1
+                </CtaClickLink>
                 {" | "}
-                <a href={ROUTE_PATHS.inwestycje}>Inwestycje: ścieżka inwestora</a>
+                <CtaClickLink href={ROUTE_PATHS.inwestycje} ctaLocation="blog_index_funnel" ctaLabel="Inwestycje: ścieżka inwestora">
+                  Inwestycje: ścieżka inwestora
+                </CtaClickLink>
               </p>
             </div>
           </div>

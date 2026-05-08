@@ -1,3 +1,5 @@
+import { CtaClickLink } from "@/components/cta-click-link";
+
 type PrefooterButton = {
   href: string;
   label: string;
@@ -42,7 +44,13 @@ export function Prefooter({
           {copy ? <p className="prefooter-copy">{copy}</p> : null}
           <div className="prefooter-actions">
             {buttons.map((button) => (
-              <a key={`${button.href}-${button.label}`} href={button.href} className="prefooter-btn">
+              <CtaClickLink
+                key={`${button.href}-${button.label}`}
+                href={button.href}
+                ctaLocation="prefooter"
+                ctaLabel={button.label}
+                className="prefooter-btn"
+              >
                 <span className="prefooter-btn-text-wrap" aria-hidden="true">
                   <span className="prefooter-btn-text prefooter-btn-text-top">{button.label}</span>
                   <span className="prefooter-btn-text prefooter-btn-text-bottom">{button.label}</span>
@@ -51,7 +59,7 @@ export function Prefooter({
                 <span className="prefooter-btn-arrow" aria-hidden="true">
                   →
                 </span>
-              </a>
+              </CtaClickLink>
             ))}
           </div>
         </div>

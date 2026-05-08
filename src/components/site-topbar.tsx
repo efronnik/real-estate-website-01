@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useId, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { ROUTE_PATHS, getTopbarLinks } from "@/config/navigation";
+import { CtaClickLink } from "@/components/cta-click-link";
 
 type SiteTopbarProps = {
   variant?: "site" | "cp";
@@ -24,13 +25,43 @@ export function SiteTopbar({
   const closeTimeoutRef = useRef<number | null>(null);
   const menuId = useId();
 
+  const closeMenu = useCallback(() => {
+    setMenuOpen(false);
+    if (closeTimeoutRef.current) {
+      window.clearTimeout(closeTimeoutRef.current);
+    }
+    closeTimeoutRef.current = window.setTimeout(() => {
+      setMenuVisible(false);
+      closeTimeoutRef.current = null;
+    }, CLOSE_ANIMATION_MS);
+  }, []);
+
+  const openMenu = useCallback(() => {
+    if (closeTimeoutRef.current) {
+      window.clearTimeout(closeTimeoutRef.current);
+      closeTimeoutRef.current = null;
+    }
+    setMenuVisible(true);
+    window.requestAnimationFrame(() => setMenuOpen(true));
+  }, []);
+
+  const toggleMenu = useCallback(() => {
+    if (menuOpen || menuVisible) {
+      closeMenu();
+      return;
+    }
+    openMenu();
+  }, [menuOpen, menuVisible, closeMenu, openMenu]);
+
   useEffect(() => {
+    /* eslint-disable react-hooks/set-state-in-effect -- reset mobile menu on client navigation */
     if (closeTimeoutRef.current) {
       window.clearTimeout(closeTimeoutRef.current);
       closeTimeoutRef.current = null;
     }
     setMenuOpen(false);
     setMenuVisible(false);
+    /* eslint-enable react-hooks/set-state-in-effect */
   }, [pathname]);
 
   useEffect(() => {
@@ -50,7 +81,7 @@ export function SiteTopbar({
       document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [menuVisible]);
+  }, [menuVisible, closeMenu]);
 
   useEffect(() => {
     return () => {
@@ -59,34 +90,6 @@ export function SiteTopbar({
       }
     };
   }, []);
-
-  const openMenu = () => {
-    if (closeTimeoutRef.current) {
-      window.clearTimeout(closeTimeoutRef.current);
-      closeTimeoutRef.current = null;
-    }
-    setMenuVisible(true);
-    window.requestAnimationFrame(() => setMenuOpen(true));
-  };
-
-  const closeMenu = () => {
-    setMenuOpen(false);
-    if (closeTimeoutRef.current) {
-      window.clearTimeout(closeTimeoutRef.current);
-    }
-    closeTimeoutRef.current = window.setTimeout(() => {
-      setMenuVisible(false);
-      closeTimeoutRef.current = null;
-    }, CLOSE_ANIMATION_MS);
-  };
-
-  const toggleMenu = () => {
-    if (menuOpen || menuVisible) {
-      closeMenu();
-      return;
-    }
-    openMenu();
-  };
 
   return (
     <header className={`${isCp ? "cp-topbar" : "site-topbar"} ${menuOpen ? "topbar--menu-open" : ""}`}>
@@ -108,13 +111,13 @@ export function SiteTopbar({
       </nav>
 
       {ctaHref ? (
-        <a href={ctaHref} className="cp-sign">
+        <CtaClickLink href={ctaHref} className="cp-sign" ctaLocation="topbar_desktop" ctaLabel={ctaLabel}>
           <span className="prefooter-btn-text-wrap" aria-hidden="true">
             <span className="prefooter-btn-text prefooter-btn-text-top">{ctaLabel}</span>
             <span className="prefooter-btn-text prefooter-btn-text-bottom">{ctaLabel}</span>
           </span>
           <span className="sr-only">{ctaLabel}</span>
-        </a>
+        </CtaClickLink>
       ) : (
         <div className="site-spacer" aria-hidden="true"></div>
       )}
@@ -149,9 +152,15 @@ export function SiteTopbar({
               </a>
             ))}
             {ctaHref ? (
-              <a href={ctaHref} className="topbar-mobile-cta" onClick={closeMenu}>
+              <CtaClickLink
+                href={ctaHref}
+                className="topbar-mobile-cta"
+                ctaLocation="topbar_mobile"
+                ctaLabel={ctaLabel}
+                onClick={closeMenu}
+              >
                 {ctaLabel}
-              </a>
+              </CtaClickLink>
             ) : null}
           </nav>
         </div>

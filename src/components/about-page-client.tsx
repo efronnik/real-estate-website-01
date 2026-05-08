@@ -6,6 +6,7 @@ import { SiteTopbar } from "@/components/site-topbar";
 import { Prefooter } from "@/components/prefooter";
 import { ScrollToTopButton } from "@/components/scroll-to-top-button";
 import { ROUTE_PATHS } from "@/config/navigation";
+import { CtaClickLink } from "@/components/cta-click-link";
 
 const portfolioCases = [
   {
@@ -208,11 +209,16 @@ export function AboutPageClient({ cmsHeadline, cmsLead, cmsContent }: AboutPageC
             <p className="section-copy">
               Przejdź bezpośrednio do odpowiedniej ścieżki:
               {" "}
-              <a href={ROUTE_PATHS.sprzedaz}>sprzedaż nieruchomości</a>
+              <CtaClickLink href={ROUTE_PATHS.sprzedaz} ctaLocation="about_scan" ctaLabel="sprzedaz">
+                sprzedaż nieruchomości
+              </CtaClickLink>
               {" "}
               lub
               {" "}
-              <a href={ROUTE_PATHS.inwestycje}>inwestowanie w nieruchomości</a>.
+              <CtaClickLink href={ROUTE_PATHS.inwestycje} ctaLocation="about_scan" ctaLabel="inwestycje">
+                inwestowanie w nieruchomości
+              </CtaClickLink>
+              .
             </p>
             <div className="about-scan-grid">{quickScanBlocks.map((block) => (<article key={block.title} className="about-scan-card"><h3>{block.title}</h3><ul>{block.points.map((point) => (<li key={point}>{point}</li>))}</ul></article>))}</div>
           </div>
@@ -224,9 +230,9 @@ export function AboutPageClient({ cmsHeadline, cmsLead, cmsContent }: AboutPageC
             <h2>Wybierz kierunek, który najlepiej odpowiada Twojej sytuacji.</h2>
             <p>Możesz od razu wybrać ścieżkę sprzedaży, inwestowania albo umówić krótką konsultację 1:1.</p>
             <div className="sale-cta-actions">
-              <a href={ROUTE_PATHS.sprzedaz} className="prefooter-btn"><span className="prefooter-btn-text-wrap" aria-hidden="true"><span className="prefooter-btn-text prefooter-btn-text-top">Ścieżka sprzedaży</span><span className="prefooter-btn-text prefooter-btn-text-bottom">Ścieżka sprzedaży</span></span><span className="sr-only">Ścieżka sprzedaży</span><span className="prefooter-btn-arrow" aria-hidden="true">→</span></a>
-              <a href={ROUTE_PATHS.inwestycje} className="prefooter-btn"><span className="prefooter-btn-text-wrap" aria-hidden="true"><span className="prefooter-btn-text prefooter-btn-text-top">Ścieżka inwestycyjna</span><span className="prefooter-btn-text prefooter-btn-text-bottom">Ścieżka inwestycyjna</span></span><span className="sr-only">Ścieżka inwestycyjna</span><span className="prefooter-btn-arrow" aria-hidden="true">→</span></a>
-              <a href={ROUTE_PATHS.kontakt} className="prefooter-btn"><span className="prefooter-btn-text-wrap" aria-hidden="true"><span className="prefooter-btn-text prefooter-btn-text-top">Umów konsultację</span><span className="prefooter-btn-text prefooter-btn-text-bottom">Umów konsultację</span></span><span className="sr-only">Umów konsultację</span><span className="prefooter-btn-arrow" aria-hidden="true">→</span></a>
+              <CtaClickLink href={ROUTE_PATHS.sprzedaz} className="prefooter-btn" ctaLocation="about_cta_strip" ctaLabel="Ścieżka sprzedaży"><span className="prefooter-btn-text-wrap" aria-hidden="true"><span className="prefooter-btn-text prefooter-btn-text-top">Ścieżka sprzedaży</span><span className="prefooter-btn-text prefooter-btn-text-bottom">Ścieżka sprzedaży</span></span><span className="sr-only">Ścieżka sprzedaży</span><span className="prefooter-btn-arrow" aria-hidden="true">→</span></CtaClickLink>
+              <CtaClickLink href={ROUTE_PATHS.inwestycje} className="prefooter-btn" ctaLocation="about_cta_strip" ctaLabel="Ścieżka inwestycyjna"><span className="prefooter-btn-text-wrap" aria-hidden="true"><span className="prefooter-btn-text prefooter-btn-text-top">Ścieżka inwestycyjna</span><span className="prefooter-btn-text prefooter-btn-text-bottom">Ścieżka inwestycyjna</span></span><span className="sr-only">Ścieżka inwestycyjna</span><span className="prefooter-btn-arrow" aria-hidden="true">→</span></CtaClickLink>
+              <CtaClickLink href={ROUTE_PATHS.kontakt} className="prefooter-btn" ctaLocation="about_cta_strip" ctaLabel="Umów konsultację"><span className="prefooter-btn-text-wrap" aria-hidden="true"><span className="prefooter-btn-text prefooter-btn-text-top">Umów konsultację</span><span className="prefooter-btn-text prefooter-btn-text-bottom">Umów konsultację</span></span><span className="sr-only">Umów konsultację</span><span className="prefooter-btn-arrow" aria-hidden="true">→</span></CtaClickLink>
             </div>
           </div>
         </section>
@@ -241,11 +247,17 @@ export function AboutPageClient({ cmsHeadline, cmsLead, cmsContent }: AboutPageC
               <p>
                 Jeśli chcesz zobaczyć szczegółowy proces sprzedaży, przejdź do
                 {" "}
-                <a href={ROUTE_PATHS.sprzedaz}>strony Sprzedaż</a>.
+                <CtaClickLink href={ROUTE_PATHS.sprzedaz} ctaLocation="about_value_copy" ctaLabel="strona Sprzedaż">
+                  strony Sprzedaż
+                </CtaClickLink>
+                .
                 {" "}
                 Jeśli interesuje Cię praca z kapitałem i analiza okazji, zobacz
                 {" "}
-                <a href={ROUTE_PATHS.inwestycje}>stronę Inwestycje</a>.
+                <CtaClickLink href={ROUTE_PATHS.inwestycje} ctaLocation="about_value_copy" ctaLabel="strona Inwestycje">
+                  stronę Inwestycje
+                </CtaClickLink>
+                .
               </p>
               <blockquote>"Dobrze sprzedana nieruchomość to wynik decyzji podjętych we właściwej kolejności."</blockquote>
             </aside>

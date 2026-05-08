@@ -563,6 +563,8 @@ export interface ApiLeadLead extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     email: Schema.Attribute.Email;
     fullName: Schema.Attribute.String & Schema.Attribute.Required;
+    leadStatus: Schema.Attribute.Enumeration<['new', 'contacted', 'closed']> &
+      Schema.Attribute.DefaultTo<'new'>;
     leadType: Schema.Attribute.Enumeration<['kontakt', 'inwestor', 'wycena']> &
       Schema.Attribute.Required;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
@@ -572,8 +574,6 @@ export interface ApiLeadLead extends Struct.CollectionTypeSchema {
     phone: Schema.Attribute.String & Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
     sourcePage: Schema.Attribute.String & Schema.Attribute.Required;
-    status: Schema.Attribute.Enumeration<['new', 'contacted', 'closed']> &
-      Schema.Attribute.DefaultTo<'new'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;

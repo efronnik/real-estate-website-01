@@ -5,6 +5,7 @@ import { WycenaSection } from "@/components/wycena-section";
 import { Prefooter } from "@/components/prefooter";
 import { PageIntroSection } from "@/components/page-intro-section";
 import { ROUTE_PATHS } from "@/config/navigation";
+import { CtaClickLink } from "@/components/cta-click-link";
 import {
   fetchCmsFaqByPageType,
   fetchCmsFeaturedTestimonials,
@@ -131,15 +132,17 @@ export default async function SprzedazPage() {
               <article className="lane-check"><strong>03</strong><p>Chcesz mieć jedną osobę odpowiedzialną od planu do finalizacji.</p></article>
             </div>
             <div className="lane-actions">
-              <a href="#wycena" className="prefooter-btn" data-conversion-point="sprzedaz_lane_wycena">
+              <CtaClickLink href="#wycena" className="prefooter-btn" ctaLocation="sprzedaz_lane" ctaLabel="Przejdź do wyceny" data-conversion-point="sprzedaz_lane_wycena">
                 <span className="prefooter-btn-text-wrap" aria-hidden="true">
                   <span className="prefooter-btn-text prefooter-btn-text-top">Przejdź do wyceny</span>
                   <span className="prefooter-btn-text prefooter-btn-text-bottom">Przejdź do wyceny</span>
                 </span>
                 <span className="sr-only">Przejdź do wyceny</span>
                 <span className="prefooter-btn-arrow" aria-hidden="true">→</span>
-              </a>
-              <a href={ROUTE_PATHS.inwestycje} className="link-arrow">Szukasz ścieżki inwestycyjnej? Przejdź do inwestycji</a>
+              </CtaClickLink>
+              <CtaClickLink href={ROUTE_PATHS.inwestycje} className="link-arrow" ctaLocation="sprzedaz_lane" ctaLabel="inwestycje_link">
+                Szukasz ścieżki inwestycyjnej? Przejdź do inwestycji
+              </CtaClickLink>
             </div>
           </div>
         </section>
@@ -237,22 +240,28 @@ export default async function SprzedazPage() {
               bezpośrednio do formularza wyceny nieruchomości.
             </p>
             <div className="sale-cta-actions">
-              <a href={`${ROUTE_PATHS.kontakt}?lane=sprzedaz#kontakt`} className="prefooter-btn" data-conversion-point="sprzedaz_strip_kontakt">
+              <CtaClickLink
+                href={`${ROUTE_PATHS.kontakt}?lane=sprzedaz#kontakt`}
+                className="prefooter-btn"
+                ctaLocation="sprzedaz_strip"
+                ctaLabel="Umów konsultację"
+                data-conversion-point="sprzedaz_strip_kontakt"
+              >
                 <span className="prefooter-btn-text-wrap" aria-hidden="true">
                   <span className="prefooter-btn-text prefooter-btn-text-top">Umów konsultację</span>
                   <span className="prefooter-btn-text prefooter-btn-text-bottom">Umów konsultację</span>
                 </span>
                 <span className="sr-only">Umów konsultację</span>
                 <span className="prefooter-btn-arrow" aria-hidden="true">→</span>
-              </a>
-              <a href="#wycena" className="prefooter-btn" data-conversion-point="sprzedaz_strip_wycena">
+              </CtaClickLink>
+              <CtaClickLink href="#wycena" className="prefooter-btn" ctaLocation="sprzedaz_strip" ctaLabel="Przejdź do formularza wyceny" data-conversion-point="sprzedaz_strip_wycena">
                 <span className="prefooter-btn-text-wrap" aria-hidden="true">
                   <span className="prefooter-btn-text prefooter-btn-text-top">Przejdź do formularza wyceny</span>
                   <span className="prefooter-btn-text prefooter-btn-text-bottom">Przejdź do formularza wyceny</span>
                 </span>
                 <span className="sr-only">Przejdź do formularza wyceny</span>
                 <span className="prefooter-btn-arrow" aria-hidden="true">→</span>
-              </a>
+              </CtaClickLink>
             </div>
           </div>
         </section>

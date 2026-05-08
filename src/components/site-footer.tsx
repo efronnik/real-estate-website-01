@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { ROUTE_PATHS, getFooterLinks } from "@/config/navigation";
+import { ContactClickLink } from "@/components/contact-click-link";
 
 type SiteFooterProps = {
   year: number;
@@ -32,7 +33,7 @@ export function SiteFooter({ year }: SiteFooterProps) {
         </div>
 
         <div className="footer-social">
-          <a href="#" aria-label="Instagram">
+          <ContactClickLink href="#" aria-label="Instagram">
             <span className="social-ico" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none">
                 <rect x="3.5" y="3.5" width="17" height="17" rx="5"></rect>
@@ -41,16 +42,16 @@ export function SiteFooter({ year }: SiteFooterProps) {
               </svg>
             </span>
             Instagram
-          </a>
-          <a href="#" aria-label="Facebook">
+          </ContactClickLink>
+          <ContactClickLink href="#" aria-label="Facebook">
             <span className="social-ico" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none">
                 <path d="M14.2 8.1h2.2V4.5h-2.6c-3 0-4.6 1.8-4.6 4.9v2H6.8v3.7h2.4V20h3.8v-4.9h2.9l.5-3.7h-3.4V9.8c0-1 .4-1.7 1.6-1.7Z"></path>
               </svg>
             </span>
             Facebook
-          </a>
-          <a href="#" aria-label="LinkedIn">
+          </ContactClickLink>
+          <ContactClickLink href="#" aria-label="LinkedIn">
             <span className="social-ico" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none">
                 <rect x="4" y="9.2" width="3.4" height="10.8"></rect>
@@ -59,7 +60,7 @@ export function SiteFooter({ year }: SiteFooterProps) {
               </svg>
             </span>
             LinkedIn
-          </a>
+          </ContactClickLink>
         </div>
       </div>
       <div className="container footer-bottom">

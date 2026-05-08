@@ -7,6 +7,7 @@ import { Prefooter } from "@/components/prefooter";
 import { LeadContactSection } from "@/components/lead-contact-section";
 import { ScrollToTopButton } from "@/components/scroll-to-top-button";
 import { ROUTE_PATHS } from "@/config/navigation";
+import { CtaClickLink } from "@/components/cta-click-link";
 import type { CmsPageRecord, CmsTestimonialRecord } from "@/lib/cms";
 
 const valueSteps = [
@@ -143,17 +144,30 @@ export function HomePageClient({ cmsPage, cmsTestimonials }: HomePageClientProps
             <h1 className={`hero-title ${heroReady ? "ready" : ""}`}><span className="hero-word-mask"><span className="hero-word">Sprzedaj</span></span><span className="hero-word-mask"><span className="hero-word">mieszkanie</span></span></h1>
             <p className={`hero-subtitle ${heroReady ? "ready" : ""}`}>{heroSubtitle}</p>
             <div className={`hero-cta-row ${heroReady ? "ready" : ""}`}>
-              <a href={ROUTE_PATHS.sprzedaz} className="cp-btn hero-cta hero-cta-primary"><span className="prefooter-btn-text-wrap" aria-hidden="true"><span className="prefooter-btn-text prefooter-btn-text-top">Sprzedaj</span><span className="prefooter-btn-text prefooter-btn-text-bottom">Sprzedaj</span></span><span className="sr-only">Sprzedaj</span><span className="prefooter-btn-arrow" aria-hidden="true">→</span></a>
-              <a href={ROUTE_PATHS.inwestycje} className="cp-btn hero-cta hero-cta-secondary"><span className="prefooter-btn-text-wrap" aria-hidden="true"><span className="prefooter-btn-text prefooter-btn-text-top">Inwestuj</span><span className="prefooter-btn-text prefooter-btn-text-bottom">Inwestuj</span></span><span className="sr-only">Inwestuj</span><span className="prefooter-btn-arrow" aria-hidden="true">→</span></a>
+              <CtaClickLink href={ROUTE_PATHS.sprzedaz} className="cp-btn hero-cta hero-cta-primary" ctaLocation="home_hero" ctaLabel="Sprzedaj">
+                <span className="prefooter-btn-text-wrap" aria-hidden="true"><span className="prefooter-btn-text prefooter-btn-text-top">Sprzedaj</span><span className="prefooter-btn-text prefooter-btn-text-bottom">Sprzedaj</span></span><span className="sr-only">Sprzedaj</span><span className="prefooter-btn-arrow" aria-hidden="true">→</span>
+              </CtaClickLink>
+              <CtaClickLink href={ROUTE_PATHS.inwestycje} className="cp-btn hero-cta hero-cta-secondary" ctaLocation="home_hero" ctaLabel="Inwestuj">
+                <span className="prefooter-btn-text-wrap" aria-hidden="true"><span className="prefooter-btn-text prefooter-btn-text-top">Inwestuj</span><span className="prefooter-btn-text prefooter-btn-text-bottom">Inwestuj</span></span><span className="sr-only">Inwestuj</span><span className="prefooter-btn-arrow" aria-hidden="true">→</span>
+              </CtaClickLink>
             </div>
             <p className="hero-internal-links">
               Popularne ścieżki:
               {" "}
-              <a href={ROUTE_PATHS.sprzedaz}>sprzedaż nieruchomości</a>,
+              <CtaClickLink href={ROUTE_PATHS.sprzedaz} ctaLocation="home_hero_links" ctaLabel="sprzedaz">
+                sprzedaż nieruchomości
+              </CtaClickLink>
+              ,
               {" "}
-              <a href={ROUTE_PATHS.inwestycje}>inwestowanie w nieruchomości</a>,
+              <CtaClickLink href={ROUTE_PATHS.inwestycje} ctaLocation="home_hero_links" ctaLabel="inwestycje">
+                inwestowanie w nieruchomości
+              </CtaClickLink>
+              ,
               {" "}
-              <a href="#kontakt">konsultacja 1:1</a>.
+              <CtaClickLink href="#kontakt" ctaLocation="home_hero_links" ctaLabel="konsultacja_1_1">
+                konsultacja 1:1
+              </CtaClickLink>
+              .
             </p>
           </div>
         </section>
@@ -164,7 +178,7 @@ export function HomePageClient({ cmsPage, cmsTestimonials }: HomePageClientProps
               <p className="eyebrow">Oferta współpracy</p>
               <h2 className="offer-title">{offerTitle}</h2>
               <p className="offer-desc">{offerDescription}</p>
-              <a href="#kontakt" className="prefooter-btn offer-btn"><span className="prefooter-btn-text-wrap" aria-hidden="true"><span className="prefooter-btn-text prefooter-btn-text-top">Umów konsultację</span><span className="prefooter-btn-text prefooter-btn-text-bottom">Umów konsultację</span></span><span className="sr-only">Umów konsultację</span><span className="prefooter-btn-arrow" aria-hidden="true">→</span></a>
+              <CtaClickLink href="#kontakt" className="prefooter-btn offer-btn" ctaLocation="home_offer" ctaLabel="Umów konsultację"><span className="prefooter-btn-text-wrap" aria-hidden="true"><span className="prefooter-btn-text prefooter-btn-text-top">Umów konsultację</span><span className="prefooter-btn-text prefooter-btn-text-bottom">Umów konsultację</span></span><span className="sr-only">Umów konsultację</span><span className="prefooter-btn-arrow" aria-hidden="true">→</span></CtaClickLink>
             </div>
             <div className="offer-points">{offerPoints.map((point, idx) => (<article key={point} className="offer-point"><p className="offer-point-index">0{idx + 1}</p><p>{point}</p></article>))}</div>
           </div>
@@ -180,14 +194,14 @@ export function HomePageClient({ cmsPage, cmsTestimonials }: HomePageClientProps
                 <h3>Chcę sprzedać nieruchomość.</h3>
                 <p>Przejdź do strategii sprzedaży, wyceny i procesu finalizacji krok po kroku.</p>
                 <ul className="funnel-points"><li>Masz nieruchomość i chcesz sprzedać ją na dobrych warunkach.</li><li>Potrzebujesz planu, negocjacji i domknięcia formalności.</li></ul>
-                <a href={ROUTE_PATHS.sprzedaz} className="prefooter-btn"><span className="prefooter-btn-text-wrap" aria-hidden="true"><span className="prefooter-btn-text prefooter-btn-text-top">Przejdź do Sprzedaży</span><span className="prefooter-btn-text prefooter-btn-text-bottom">Przejdź do Sprzedaży</span></span><span className="sr-only">Przejdź do Sprzedaży</span><span className="prefooter-btn-arrow" aria-hidden="true">→</span></a>
+                <CtaClickLink href={ROUTE_PATHS.sprzedaz} className="prefooter-btn" ctaLocation="home_funnel" ctaLabel="Przejdź do Sprzedaży"><span className="prefooter-btn-text-wrap" aria-hidden="true"><span className="prefooter-btn-text prefooter-btn-text-top">Przejdź do Sprzedaży</span><span className="prefooter-btn-text prefooter-btn-text-bottom">Przejdź do Sprzedaży</span></span><span className="sr-only">Przejdź do Sprzedaży</span><span className="prefooter-btn-arrow" aria-hidden="true">→</span></CtaClickLink>
               </article>
               <article className="funnel-card">
                 <p className="funnel-card-kicker">Dla inwestorów</p>
                 <h3>Chcę inwestować kapitał.</h3>
                 <p>Przejdź do ścieżki inwestycyjnej, analizy opcji i wsparcia przy podejmowaniu decyzji.</p>
                 <ul className="funnel-points"><li>Masz kapitał i szukasz strategii inwestowania w nieruchomości.</li><li>Chcesz lepiej oceniać ryzyko i wybierać właściwe okazje.</li></ul>
-                <a href={ROUTE_PATHS.inwestycje} className="prefooter-btn"><span className="prefooter-btn-text-wrap" aria-hidden="true"><span className="prefooter-btn-text prefooter-btn-text-top">Przejdź do Inwestycji</span><span className="prefooter-btn-text prefooter-btn-text-bottom">Przejdź do Inwestycji</span></span><span className="sr-only">Przejdź do Inwestycji</span><span className="prefooter-btn-arrow" aria-hidden="true">→</span></a>
+                <CtaClickLink href={ROUTE_PATHS.inwestycje} className="prefooter-btn" ctaLocation="home_funnel" ctaLabel="Przejdź do Inwestycji"><span className="prefooter-btn-text-wrap" aria-hidden="true"><span className="prefooter-btn-text prefooter-btn-text-top">Przejdź do Inwestycji</span><span className="prefooter-btn-text prefooter-btn-text-bottom">Przejdź do Inwestycji</span></span><span className="sr-only">Przejdź do Inwestycji</span><span className="prefooter-btn-arrow" aria-hidden="true">→</span></CtaClickLink>
               </article>
             </div>
           </div>
@@ -197,7 +211,7 @@ export function HomePageClient({ cmsPage, cmsTestimonials }: HomePageClientProps
 
         <section className="section process"><div className="container"><header className="process-head"><p className="eyebrow">Proces pracy</p><h2 className="section-title">Jak prowadzimy sprzedaż od strategii do podpisu</h2></header></div><div className="service-board">{processSteps.map((step) => (<article key={step.title} className="service-row" style={{ ["--bg" as string]: `url(${step.image})` }}><div className="service-info"><p className="idx"><span className="idx-text">{step.label}</span></p><h3>{step.title}</h3><p>{step.text}</p></div><div className="service-word"><span>{step.hero}</span></div></article>))}</div></section>
 
-        <section className="section process-cta"><div className="container process-cta-shell"><p className="eyebrow">Następny krok</p><h2>Wybierz najbliższy krok i przejdź dalej bez zgadywania.</h2><p>Możesz od razu wejść w ścieżkę sprzedaży, inwestowania albo umówić krótką konsultację.</p><div className="process-cta-actions"><a href={ROUTE_PATHS.sprzedaz} className="prefooter-btn"><span className="prefooter-btn-text-wrap" aria-hidden="true"><span className="prefooter-btn-text prefooter-btn-text-top">Sprzedaż nieruchomości</span><span className="prefooter-btn-text prefooter-btn-text-bottom">Sprzedaż nieruchomości</span></span><span className="sr-only">Sprzedaż nieruchomości</span><span className="prefooter-btn-arrow" aria-hidden="true">→</span></a><a href={ROUTE_PATHS.inwestycje} className="prefooter-btn"><span className="prefooter-btn-text-wrap" aria-hidden="true"><span className="prefooter-btn-text prefooter-btn-text-top">Inwestowanie kapitału</span><span className="prefooter-btn-text prefooter-btn-text-bottom">Inwestowanie kapitału</span></span><span className="sr-only">Inwestowanie kapitału</span><span className="prefooter-btn-arrow" aria-hidden="true">→</span></a><a href="#kontakt" className="prefooter-btn"><span className="prefooter-btn-text-wrap" aria-hidden="true"><span className="prefooter-btn-text prefooter-btn-text-top">Przejdź do konsultacji</span><span className="prefooter-btn-text prefooter-btn-text-bottom">Przejdź do konsultacji</span></span><span className="sr-only">Przejdź do konsultacji</span><span className="prefooter-btn-arrow" aria-hidden="true">→</span></a></div></div></section>
+        <section className="section process-cta"><div className="container process-cta-shell"><p className="eyebrow">Następny krok</p><h2>Wybierz najbliższy krok i przejdź dalej bez zgadywania.</h2><p>Możesz od razu wejść w ścieżkę sprzedaży, inwestowania albo umówić krótką konsultację.</p><div className="process-cta-actions"><CtaClickLink href={ROUTE_PATHS.sprzedaz} className="prefooter-btn" ctaLocation="home_process_cta" ctaLabel="Sprzedaż nieruchomości"><span className="prefooter-btn-text-wrap" aria-hidden="true"><span className="prefooter-btn-text prefooter-btn-text-top">Sprzedaż nieruchomości</span><span className="prefooter-btn-text prefooter-btn-text-bottom">Sprzedaż nieruchomości</span></span><span className="sr-only">Sprzedaż nieruchomości</span><span className="prefooter-btn-arrow" aria-hidden="true">→</span></CtaClickLink><CtaClickLink href={ROUTE_PATHS.inwestycje} className="prefooter-btn" ctaLocation="home_process_cta" ctaLabel="Inwestowanie kapitału"><span className="prefooter-btn-text-wrap" aria-hidden="true"><span className="prefooter-btn-text prefooter-btn-text-top">Inwestowanie kapitału</span><span className="prefooter-btn-text prefooter-btn-text-bottom">Inwestowanie kapitału</span></span><span className="sr-only">Inwestowanie kapitału</span><span className="prefooter-btn-arrow" aria-hidden="true">→</span></CtaClickLink><CtaClickLink href="#kontakt" className="prefooter-btn" ctaLocation="home_process_cta" ctaLabel="Przejdź do konsultacji"><span className="prefooter-btn-text-wrap" aria-hidden="true"><span className="prefooter-btn-text prefooter-btn-text-top">Przejdź do konsultacji</span><span className="prefooter-btn-text prefooter-btn-text-bottom">Przejdź do konsultacji</span></span><span className="sr-only">Przejdź do konsultacji</span><span className="prefooter-btn-arrow" aria-hidden="true">→</span></CtaClickLink></div></div></section>
 
         <section className="section results"><div className="container results-layout"><div className="results-visuals">{results.map((item, idx) => (<article key={item.title} ref={(el) => { resultRefs.current[idx] = el; }} className={`result-card ${idx === activeResult ? "active" : ""}`}><img src={item.image} alt={item.title} /></article>))}</div><aside className="results-copy"><p className="eyebrow">Rezultaty</p><h2 className="results-title">Przykłady efektów współpracy</h2><div className="results-progress">{activeResult + 1} / {results.length}</div><p className="results-lead">{results[activeResult]?.title}</p><p className="results-desc">{results[activeResult]?.desc}</p></aside></div></section>
 

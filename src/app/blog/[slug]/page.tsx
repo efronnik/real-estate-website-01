@@ -7,6 +7,7 @@ import { SiteTopbar } from "@/components/site-topbar";
 import { Prefooter } from "@/components/prefooter";
 import { ScrollToTopButton } from "@/components/scroll-to-top-button";
 import { ROUTE_PATHS } from "@/config/navigation";
+import { CtaClickLink } from "@/components/cta-click-link";
 import { fetchCmsBlogPostBySlug, type CmsBlogPostRecord } from "@/lib/cms";
 
 type Article = {
@@ -513,7 +514,9 @@ export default function BlogArticlePage() {
             <p className="eyebrow">Blog</p>
             <h1 className="section-title">Artykuł nie został znaleziony</h1>
             <p className="section-copy">Sprawdź listę materiałów na stronie bloga.</p>
-            <a href={ROUTE_PATHS.blog} className="link-arrow">Wróć do bloga</a>
+            <CtaClickLink href={ROUTE_PATHS.blog} className="link-arrow" ctaLocation="blog_article_back" ctaLabel="Wróć do bloga">
+              Wróć do bloga
+            </CtaClickLink>
           </div>
         </section>
       </main>
@@ -653,37 +656,43 @@ export default function BlogArticlePage() {
               <p className="section-copy">
                 Powiązane ścieżki:
                 {" "}
-                <a href={`${ROUTE_PATHS.sprzedaz}#wycena`}>Sprzedaż / Wycena</a>
+                <CtaClickLink href={`${ROUTE_PATHS.sprzedaz}#wycena`} ctaLocation="blog_article_faq" ctaLabel="Sprzedaż / Wycena">
+                  Sprzedaż / Wycena
+                </CtaClickLink>
                 {" | "}
-                <a href={ROUTE_PATHS.inwestycje}>Inwestycje</a>
+                <CtaClickLink href={ROUTE_PATHS.inwestycje} ctaLocation="blog_article_faq" ctaLabel="Inwestycje">
+                  Inwestycje
+                </CtaClickLink>
                 {" | "}
-                <a href={`${ROUTE_PATHS.kontakt}#kontakt`}>Kontakt / Konsultacja</a>
+                <CtaClickLink href={`${ROUTE_PATHS.kontakt}#kontakt`} ctaLocation="blog_article_faq" ctaLabel="Kontakt / Konsultacja">
+                  Kontakt / Konsultacja
+                </CtaClickLink>
               </p>
               <div className="sale-cta-actions">
-                <a href={`${ROUTE_PATHS.sprzedaz}#wycena`} className="prefooter-btn">
+                <CtaClickLink href={`${ROUTE_PATHS.sprzedaz}#wycena`} className="prefooter-btn" ctaLocation="blog_article_cta" ctaLabel="Przejdź do wyceny">
                   <span className="prefooter-btn-text-wrap" aria-hidden="true">
                     <span className="prefooter-btn-text prefooter-btn-text-top">Przejdź do wyceny</span>
                     <span className="prefooter-btn-text prefooter-btn-text-bottom">Przejdź do wyceny</span>
                   </span>
                   <span className="sr-only">Przejdź do wyceny</span>
                   <span className="prefooter-btn-arrow" aria-hidden="true">→</span>
-                </a>
-                <a href={`${ROUTE_PATHS.kontakt}#kontakt`} className="prefooter-btn">
+                </CtaClickLink>
+                <CtaClickLink href={`${ROUTE_PATHS.kontakt}#kontakt`} className="prefooter-btn" ctaLocation="blog_article_cta" ctaLabel="Umów konsultację">
                   <span className="prefooter-btn-text-wrap" aria-hidden="true">
                     <span className="prefooter-btn-text prefooter-btn-text-top">Umów konsultację</span>
                     <span className="prefooter-btn-text prefooter-btn-text-bottom">Umów konsultację</span>
                   </span>
                   <span className="sr-only">Umów konsultację</span>
                   <span className="prefooter-btn-arrow" aria-hidden="true">→</span>
-                </a>
-                <a href={ROUTE_PATHS.inwestycje} className="prefooter-btn">
+                </CtaClickLink>
+                <CtaClickLink href={ROUTE_PATHS.inwestycje} className="prefooter-btn" ctaLocation="blog_article_cta" ctaLabel="Przejdź do inwestycji">
                   <span className="prefooter-btn-text-wrap" aria-hidden="true">
                     <span className="prefooter-btn-text prefooter-btn-text-top">Przejdź do inwestycji</span>
                     <span className="prefooter-btn-text prefooter-btn-text-bottom">Przejdź do inwestycji</span>
                   </span>
                   <span className="sr-only">Przejdź do inwestycji</span>
                   <span className="prefooter-btn-arrow" aria-hidden="true">→</span>
-                </a>
+                </CtaClickLink>
               </div>
             </div>
           </div>

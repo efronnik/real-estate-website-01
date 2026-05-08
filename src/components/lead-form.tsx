@@ -1,10 +1,12 @@
 "use client";
 
 import type { FormEvent, ReactNode } from "react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { ROUTE_PATHS } from "@/config/navigation";
 import { handleFieldValidationOnInput, handleInvalidSubmit, submitLeadForm } from "@/lib/form-validation";
+import { normalizeLeadSubmitError, trackLeadFormError, trackLeadFormSubmit } from "@/lib/ga4";
+import { applyUtmToLeadFormFields, resolveCurrentUtm } from "@/lib/utm-attribution";
 
 type StatusType = "success" | "error" | null;
 type LeadType = "kontakt" | "inwestor" | "wycena";
@@ -28,15 +30,24 @@ export function LeadForm({
   errorMessage = "Nie udalo sie wyslac formularza. Sprawdz pola i sprobuj ponownie za chwile.",
   children,
 }: LeadFormProps) {
+  const formRef = useRef<HTMLFormElement>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
   const [statusType, setStatusType] = useState<StatusType>(null);
+
+  useEffect(() => {
+    const form = formRef.current;
+    if (!form) return;
+    applyUtmToLeadFormFields(form, resolveCurrentUtm());
+  }, []);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = event.currentTarget;
     const hasInvalidFields = handleInvalidSubmit(event);
     if (hasInvalidFields) return;
+
+    applyUtmToLeadFormFields(form, resolveCurrentUtm());
 
     setIsSubmitting(true);
     setStatusMessage(null);
@@ -45,12 +56,15 @@ export function LeadForm({
     try {
       await submitLeadForm(form);
       form.reset();
+      applyUtmToLeadFormFields(form, resolveCurrentUtm());
       setStatusMessage(successMessage);
       setStatusType("success");
+      trackLeadFormSubmit(leadType, sourcePage);
     } catch (error) {
       const detail = error instanceof Error && error.message ? error.message : errorMessage;
       setStatusMessage(`${errorMessage} (${detail})`);
       setStatusType("error");
+      trackLeadFormError(leadType, sourcePage, normalizeLeadSubmitError(detail));
     } finally {
       setIsSubmitting(false);
     }
@@ -65,7 +79,7 @@ export function LeadForm({
   };
 
   return (
-    <form className="form" noValidate onSubmit={handleSubmit} onInput={handleFieldInput}>
+    <form ref={formRef} className="form" noValidate onSubmit={handleSubmit} onInput={handleFieldInput}>
       <input type="hidden" name="lead_type" value={leadType} />
       <input type="hidden" name="source_page" value={sourcePage} />
       <input type="hidden" name="language" value="pl" />
