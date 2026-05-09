@@ -23,6 +23,9 @@ export function SiteTopbar({
   const [menuOpen, setMenuOpen] = useState(false);
   const [menuVisible, setMenuVisible] = useState(false);
   const closeTimeoutRef = useRef<number | null>(null);
+  const burgerButtonRef = useRef<HTMLButtonElement | null>(null);
+  const mobileMenuRef = useRef<HTMLElement | null>(null);
+  const closeButtonRef = useRef<HTMLButtonElement | null>(null);
   const menuId = useId();
 
   const closeMenu = useCallback(() => {
@@ -68,20 +71,51 @@ export function SiteTopbar({
     if (!menuVisible) return;
 
     const previousOverflow = document.body.style.overflow;
+    const trapFocus = (event: KeyboardEvent) => {
+      if (event.key !== "Tab" || !mobileMenuRef.current) return;
+      const focusableElements = mobileMenuRef.current.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      );
+      if (!focusableElements.length) return;
+
+      const first = focusableElements[0];
+      const last = focusableElements[focusableElements.length - 1];
+      const activeElement = document.activeElement;
+
+      if (event.shiftKey && activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         closeMenu();
+        burgerButtonRef.current?.focus();
+        return;
       }
+      trapFocus(event);
     };
 
     document.body.style.overflow = "hidden";
     window.addEventListener("keydown", handleKeyDown);
+    // Move focus into the dialog-like mobile navigation for keyboard users.
+    closeButtonRef.current?.focus();
 
     return () => {
       document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [menuVisible, closeMenu]);
+
+  useEffect(() => {
+    if (!menuVisible && !menuOpen) {
+      burgerButtonRef.current?.focus();
+    }
+  }, [menuVisible, menuOpen]);
 
   useEffect(() => {
     return () => {
@@ -125,6 +159,7 @@ export function SiteTopbar({
       <button
         type="button"
         className="topbar-burger"
+        ref={burgerButtonRef}
         aria-label={menuOpen ? "Zamknij menu" : "Otwórz menu"}
         aria-expanded={menuOpen}
         aria-controls={menuId}
@@ -139,11 +174,18 @@ export function SiteTopbar({
         <div className={`topbar-mobile-overlay ${menuOpen ? "is-open" : ""}`} onClick={closeMenu}>
           <nav
             id={menuId}
+            ref={mobileMenuRef}
             className={`topbar-mobile-menu ${menuOpen ? "is-open" : ""}`}
             aria-label="Mobile navigation"
             onClick={(event) => event.stopPropagation()}
           >
-            <button type="button" className="topbar-mobile-close" aria-label="Zamknij menu" onClick={closeMenu}>
+            <button
+              type="button"
+              ref={closeButtonRef}
+              className="topbar-mobile-close"
+              aria-label="Zamknij menu"
+              onClick={closeMenu}
+            >
               <span aria-hidden="true">×</span>
             </button>
             {topbarLinks.map((link) => (

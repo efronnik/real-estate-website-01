@@ -3,21 +3,12 @@ import { HomePageClient } from "@/components/home-page-client";
 import {
   fetchCmsFeaturedTestimonials,
   fetchCmsPageBySlug,
-  getHomePageMetadataFromCms,
   safeCmsCall,
 } from "@/lib/cms";
-
-const fallbackMetadata: Metadata = {
-  title: "FIND - Sprzedaj mieszkanie",
-  description: "Sprzedaż mieszkania bez chaosu, z planem i pełnym wsparciem.",
-};
+import { resolveKeyPageMetadata } from "@/lib/page-metadata";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const cmsMetadata = await safeCmsCall(getHomePageMetadataFromCms, null);
-  if (!cmsMetadata) {
-    return fallbackMetadata;
-  }
-  return cmsMetadata;
+  return resolveKeyPageMetadata("glowna");
 }
 
 export default async function Home() {

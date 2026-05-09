@@ -149,17 +149,18 @@
   - нет дублей `page_view` и нет отправки PII
 
 ## Day 12 — Техническое SEO
-- Metadata, canonical, OpenGraph, robots, sitemap
-- Проверка индексации и URL
-- Проверка заголовков и семантики
-- Schema (LocalBusiness + дополнительные поля)
-- Единый SEO-mapping: все ключевые страницы берут metadata из CMS (`SEO`) без ручных дублей в коде
-- SEO-matrix приемки по всем страницам scope: для каждой страницы проверены `title`, `description`, `canonical`, `OG`, `robots`, `H1`, релевантные internal links
-- Базовая accessibility-проверка (контраст, фокус, клавиатура, labels/aria)
-- A11y-проверка burger menu: фокус-менеджмент, `aria-expanded`, `aria-controls`, keyboard navigation
-- Подключение Google Search Console и Bing Webmaster
-- Отправка sitemap в GSC/Bing
-- Проверка noindex-гигиены (staging/preview закрыты, prod открыт)
+- **DONE** — Metadata, canonical, OpenGraph, robots, sitemap (реализация в коде, сборка ок)
+- **PROCESSED** — Проверка индексации и URL (полная проверка в поиске и на боевом домене — после prod)
+- **PROCESSED** — Проверка заголовков и семантики (ручная приёмка по контенту/CMS на ключевых страницах; при необходимости повтор на prod)
+- **DONE** — Schema (LocalBusiness + дополнительные поля)
+- **DONE** — Единый SEO-mapping: все ключевые страницы берут metadata из CMS (`SEO`) без ручных дублей в коде
+- **PROCESSED** — SEO-matrix приемки по всем страницам scope (`title`, `description`, `canonical`, `OG`, `robots`, `H1`, internal links): структура и код готовы; финальная матрица по факту на prod-URL вручную
+- **DONE** — Базовая accessibility-проверка (фокус, клавиатура, labels/aria; усиления в коде; контраст — без автотеста, при желании докрутить вручную)
+- **DONE** — A11y-проверка burger menu: фокус-менеджмент, `aria-expanded`, `aria-controls`, keyboard navigation
+- **PROCESSED** — Подключение Google Search Console и Bing Webmaster (верификация и работа в консолях — после выдачи домена)
+- **PROCESSED** — Отправка sitemap в GSC/Bing (после верификации: `https://<домен>/sitemap.xml` в обеих консолях)
+- **DONE** — Проверка noindex-гигиены: реализация в коде (`NEXT_PUBLIC_SITE_INDEXABLE`, `VERCEL_ENV=preview`, `robots.txt`, `X-Robots-Tag`, layout `robots`)
+- **PROCESSED** — Проверка noindex-гигиены: подтвердить env и ответы (`/robots.txt`, заголовки) на prod и staging вручную
 
 ## Day 13 — Performance, стабильность, QA
 - Оптимизация изображений/video/lazy-load

@@ -11,6 +11,9 @@ type SiteFooterProps = {
 export function SiteFooter({ year }: SiteFooterProps) {
   const pathname = usePathname();
   const visibleFooterLinks = getFooterLinks(pathname);
+  const instagramHref = process.env.NEXT_PUBLIC_SOCIAL_INSTAGRAM_URL?.trim() || ROUTE_PATHS.kontakt;
+  const facebookHref = process.env.NEXT_PUBLIC_SOCIAL_FACEBOOK_URL?.trim() || ROUTE_PATHS.kontakt;
+  const linkedInHref = process.env.NEXT_PUBLIC_SOCIAL_LINKEDIN_URL?.trim() || ROUTE_PATHS.kontakt;
 
   return (
     <footer className="site-footer">
@@ -33,7 +36,7 @@ export function SiteFooter({ year }: SiteFooterProps) {
         </div>
 
         <div className="footer-social">
-          <ContactClickLink href="#" aria-label="Instagram">
+          <ContactClickLink href={instagramHref} aria-label="Instagram">
             <span className="social-ico" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none">
                 <rect x="3.5" y="3.5" width="17" height="17" rx="5"></rect>
@@ -43,7 +46,7 @@ export function SiteFooter({ year }: SiteFooterProps) {
             </span>
             Instagram
           </ContactClickLink>
-          <ContactClickLink href="#" aria-label="Facebook">
+          <ContactClickLink href={facebookHref} aria-label="Facebook">
             <span className="social-ico" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none">
                 <path d="M14.2 8.1h2.2V4.5h-2.6c-3 0-4.6 1.8-4.6 4.9v2H6.8v3.7h2.4V20h3.8v-4.9h2.9l.5-3.7h-3.4V9.8c0-1 .4-1.7 1.6-1.7Z"></path>
@@ -51,7 +54,7 @@ export function SiteFooter({ year }: SiteFooterProps) {
             </span>
             Facebook
           </ContactClickLink>
-          <ContactClickLink href="#" aria-label="LinkedIn">
+          <ContactClickLink href={linkedInHref} aria-label="LinkedIn">
             <span className="social-ico" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none">
                 <rect x="4" y="9.2" width="3.4" height="10.8"></rect>

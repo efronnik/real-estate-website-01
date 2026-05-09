@@ -1,18 +1,10 @@
 import type { Metadata } from "next";
 import { AboutPageClient } from "@/components/about-page-client";
-import { fetchCmsPageBySlug, getPageMetadataFromCms, safeCmsCall } from "@/lib/cms";
-
-const fallbackMetadata: Metadata = {
-  title: "O mnie | FIND",
-  description: "Ekspercki profil i podejście do sprzedaży nieruchomości: strategia, negocjacje i bezpieczna finalizacja procesu.",
-};
+import { fetchCmsPageBySlug, safeCmsCall } from "@/lib/cms";
+import { resolveKeyPageMetadata } from "@/lib/page-metadata";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const cmsMetadata = await safeCmsCall(() => getPageMetadataFromCms("o-mnie", "/o-mnie"), null);
-  if (!cmsMetadata) {
-    return fallbackMetadata;
-  }
-  return cmsMetadata;
+  return resolveKeyPageMetadata("o-mnie");
 }
 
 export default async function AboutPage() {

@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ROUTE_PATHS } from "@/config/navigation";
+import { buildStaticMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildStaticMetadata({
   title: "RODO - informacja o przetwarzaniu danych",
   description: "Informacja o prawach i zasadach przetwarzania danych zgodnie z RODO.",
-};
+  path: "/rodo",
+});
 
 export default function RodoPage() {
   return (

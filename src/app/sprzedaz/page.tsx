@@ -10,9 +10,9 @@ import {
   fetchCmsFaqByPageType,
   fetchCmsFeaturedTestimonials,
   fetchCmsPageBySlug,
-  getPageMetadataFromCms,
   safeCmsCall,
 } from "@/lib/cms";
+import { resolveKeyPageMetadata } from "@/lib/page-metadata";
 
 const saleProcessSteps = [
   {
@@ -87,17 +87,8 @@ const salePillars = [
   },
 ];
 
-const fallbackMetadata: Metadata = {
-  title: "Sprzedaz nieruchomosci | FIND",
-  description: "Proces sprzedaży nieruchomości krok po kroku: wycena, marketing, selekcja leadów i bezpieczna finalizacja.",
-};
-
 export async function generateMetadata(): Promise<Metadata> {
-  const cmsMetadata = await safeCmsCall(() => getPageMetadataFromCms("sprzedaz", "/sprzedaz"), null);
-  if (!cmsMetadata) {
-    return fallbackMetadata;
-  }
-  return cmsMetadata;
+  return resolveKeyPageMetadata("sprzedaz");
 }
 
 export default async function SprzedazPage() {

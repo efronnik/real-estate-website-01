@@ -10,9 +10,9 @@ import {
   fetchCmsFaqByPageType,
   fetchCmsFeaturedTestimonials,
   fetchCmsPageBySlug,
-  getPageMetadataFromCms,
   safeCmsCall,
 } from "@/lib/cms";
+import { resolveKeyPageMetadata } from "@/lib/page-metadata";
 
 const investorLandingSections = [
   {
@@ -95,18 +95,8 @@ const inwestycjeSeoImages = [
   },
 ];
 
-const fallbackMetadata: Metadata = {
-  title: "Inwestycje nieruchomosci Warszawa | FIND",
-  description:
-    "Strategia inwestowania i flipy w Warszawie: selekcja okazji, ocena ryzyka, negocjacje i bezpieczna finalizacja inwestycji.",
-};
-
 export async function generateMetadata(): Promise<Metadata> {
-  const cmsMetadata = await safeCmsCall(() => getPageMetadataFromCms("inwestycje", "/inwestycje"), null);
-  if (!cmsMetadata) {
-    return fallbackMetadata;
-  }
-  return cmsMetadata;
+  return resolveKeyPageMetadata("inwestycje");
 }
 
 export default async function InwestycjePage() {

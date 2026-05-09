@@ -4,7 +4,8 @@ import { SiteTopbar } from "@/components/site-topbar";
 import { Prefooter } from "@/components/prefooter";
 import { LeadContactSection } from "@/components/lead-contact-section";
 import { ScrollToTopButton } from "@/components/scroll-to-top-button";
-import { fetchCmsPageBySlug, getPageMetadataFromCms, safeCmsCall } from "@/lib/cms";
+import { fetchCmsPageBySlug, safeCmsCall } from "@/lib/cms";
+import { resolveKeyPageMetadata } from "@/lib/page-metadata";
 import { ROUTE_PATHS } from "@/config/navigation";
 
 const kontaktFinalBlocks = [
@@ -34,17 +35,8 @@ const kontaktFinalBlocks = [
   },
 ];
 
-const fallbackMetadata: Metadata = {
-  title: "Kontakt | FIND",
-  description: "Skontaktuj sie, aby omowic sprzedaz lub inwestowanie w nieruchomosci. Krotka konsultacja i konkretny plan dalszych dzialan.",
-};
-
 export async function generateMetadata(): Promise<Metadata> {
-  const cmsMetadata = await safeCmsCall(() => getPageMetadataFromCms("kontakt", "/kontakt"), null);
-  if (!cmsMetadata) {
-    return fallbackMetadata;
-  }
-  return cmsMetadata;
+  return resolveKeyPageMetadata("kontakt");
 }
 
 type KontaktPageProps = {

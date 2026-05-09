@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ROUTE_PATHS } from "@/config/navigation";
+import { buildStaticMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildStaticMetadata({
   title: "Polityka prywatnosci",
   description: "Zasady przetwarzania danych osobowych i kontaktowych.",
-};
+  path: "/polityka-prywatnosci",
+});
 
 export default function PolitykaPrywatnosciPage() {
   return (

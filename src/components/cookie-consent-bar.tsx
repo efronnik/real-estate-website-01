@@ -36,10 +36,20 @@ export function CookieConsentBar() {
   };
 
   return (
-    <div className="cookie-consent-bar" role="dialog" aria-labelledby="cookie-consent-title" aria-live="polite">
+    <div
+      className="cookie-consent-bar"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="cookie-consent-title"
+      aria-describedby="cookie-consent-description"
+      aria-live="polite"
+    >
       <div className="cookie-consent-inner container">
         <p id="cookie-consent-title" className="cookie-consent-text">
           Używamy Google Analytics, aby rozumieć ruch na stronie. Dane są przetwarzane zgodnie z{" "}
+          <span id="cookie-consent-description" className="sr-only">
+            Baner zgody na analityke. Wybierz akceptacje lub odrzucenie analityki.
+          </span>
           <Link href={ROUTE_PATHS.politykaPrywatnosci}>Polityką prywatności</Link>. Możesz zaakceptować analitykę lub
           odrzucić — wtedy nie ładujemy skryptów pomiarowych.
         </p>
