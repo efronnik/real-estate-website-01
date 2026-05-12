@@ -1,5 +1,22 @@
 import type { NextConfig } from "next";
 
+function getCspOrigin(rawUrl: string | undefined): string | null {
+  if (!rawUrl) return null;
+
+  try {
+    return new URL(rawUrl).origin;
+  } catch {
+    return null;
+  }
+}
+
+function cspSources(sources: Array<string | null | undefined>): string {
+  return Array.from(new Set(sources.filter((source): source is string => Boolean(source)))).join(" ");
+}
+
+const defaultDevStrapiUrl = process.env.NODE_ENV === "production" ? undefined : "http://localhost:1337";
+const strapiConnectSource = getCspOrigin(process.env.NEXT_PUBLIC_STRAPI_URL ?? defaultDevStrapiUrl);
+
 const cspDirectives = [
   "default-src 'self'",
   "base-uri 'self'",
@@ -9,7 +26,13 @@ const cspDirectives = [
   "img-src 'self' data: blob: https://images.unsplash.com https://images.pexels.com",
   "media-src 'self' blob:",
   "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com",
-  "connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com",
+  `connect-src ${cspSources([
+    "'self'",
+    strapiConnectSource,
+    "https://www.google-analytics.com",
+    "https://region1.google-analytics.com",
+    "https://www.googletagmanager.com",
+  ])}`,
   "style-src 'self' 'unsafe-inline'",
   "font-src 'self' data:",
 ].join("; ");
