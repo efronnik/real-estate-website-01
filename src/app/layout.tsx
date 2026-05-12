@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Playfair_Display } from "next/font/google";
 import { Suspense } from "react";
 import "./globals.css";
 import { CookieConsentBar } from "@/components/cookie-consent-bar";
@@ -10,6 +11,14 @@ import { getLocalBusinessSchema } from "@/lib/schema";
 import { isSiteIndexable } from "@/lib/site-indexable";
 
 const indexable = isSiteIndexable();
+
+const playfair = Playfair_Display({
+  subsets: ["latin", "latin-ext"],
+  weight: ["400", "500", "600", "700", "800"],
+  display: "swap",
+  variable: "--font-playfair",
+  adjustFontFallback: true,
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(getSiteUrl()),
@@ -50,7 +59,7 @@ export default function RootLayout({
   const localBusinessSchema = getLocalBusinessSchema();
 
   return (
-    <html lang="pl" className="h-full">
+    <html lang="pl" className={`h-full ${playfair.variable}`}>
       <body className="min-h-full flex flex-col">
         <script
           type="application/ld+json"

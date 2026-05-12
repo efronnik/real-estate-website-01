@@ -58,6 +58,18 @@ Admin URL: `http://localhost:1337/admin`
 
 > If `cms:dev` (`strapi develop`) hits local file watcher limits (`EMFILE`), use `cms:start` after `cms:build`.
 
+## Tests
+
+```bash
+npm run test          # Vitest (unit + API integration)
+npm run test:e2e      # Playwright: build + start on E2E port (burger, critical paths, full QA)
+npm run test:e2e:failover # Playwright: Strapi unavailable (fallback + critical CTA/forms)
+npm run release:check # Full pre-release gate (lint + tests + e2e + failover)
+```
+
+See `MASTER_PLAN_14_DAYS.md` (Day 13) for what is covered automatically vs manual QA before production.
+Use `UAT_CHECKLIST.md` for business acceptance (pages, forms, analytics) and `GA4_QA_PROTOCOL.md` for post-release analytics validation.
+
 ## Frontend <-> CMS contract
 
 - Frontend reads public CMS content via Strapi REST API (`/api/*`), for example `/api/pages`

@@ -8,6 +8,8 @@ import { Prefooter } from "@/components/prefooter";
 import { ScrollToTopButton } from "@/components/scroll-to-top-button";
 import { ROUTE_PATHS } from "@/config/navigation";
 import { CtaClickLink } from "@/components/cta-click-link";
+import { HeroBackgroundVideo } from "@/components/hero-background-video";
+import { RemoteFillImage } from "@/components/remote-fill-image";
 import { fetchCmsBlogPostBySlug, type CmsBlogPostRecord } from "@/lib/cms";
 
 type Article = {
@@ -384,8 +386,9 @@ export default function BlogArticlePage() {
   const slug = String(params.slug);
   const [cmsArticle, setCmsArticle] = useState<CmsBlogPostRecord | null>(null);
   const fallbackArticle = articles[slug];
-  const article = cmsArticle
-    ? {
+  const article = useMemo(() => {
+    if (cmsArticle) {
+      return {
         title: cmsArticle.title ?? "Artykuł",
         lead: cmsArticle.excerpt ?? "Treść artykułu z CMS.",
         category: cmsArticle.category?.name ?? cmsArticle.category?.attributes?.name ?? "Blog / CMS",
@@ -395,8 +398,10 @@ export default function BlogArticlePage() {
         showFramework: false,
         showMistakes: false,
         closing: cmsArticle.content ?? "",
-      }
-    : fallbackArticle;
+      };
+    }
+    return fallbackArticle;
+  }, [cmsArticle, fallbackArticle]);
   const year = new Date().getFullYear();
   const hasHero = heroSlugs.includes(slug);
 
@@ -537,9 +542,7 @@ export default function BlogArticlePage() {
 
         {hasHero && (
           <section className="section article-hero">
-            <video className="article-hero-video" autoPlay muted loop playsInline preload="metadata" aria-hidden="true">
-              <source src="/Hero-7.mp4" type="video/mp4" />
-            </video>
+            <HeroBackgroundVideo className="article-hero-video" src="/Hero-7.mp4" />
             <div className="article-hero-overlay" aria-hidden="true"></div>
             <div className="container article-hero-shell">
               <p className="eyebrow">{article.category}</p>
@@ -609,7 +612,7 @@ export default function BlogArticlePage() {
                   <div className="article-mistakes-grid">
                     {mistakeCards.map((item, idx) => (
                       <article key={item.text} ref={(el) => { mistakeCardRefs.current[idx] = el; }} className={`article-mistake-item ${idx === activeMistakeIndex ? "active" : ""}`}>
-                        <img src={item.image} alt={item.text} />
+                        <RemoteFillImage src={item.image} alt={item.text} sizes="(max-width: 900px) 100vw, 40vw" />
                         <p>{item.text}</p>
                       </article>
                     ))}

@@ -17,6 +17,8 @@ const eslintConfig = defineConfig([
     "cms/build/**",
     "cms/.cache/**",
     "cms/.tmp/**",
+    // Strapi lives under `cms/` with its own toolchain; root ESLint targets the Next app.
+    "cms/**",
   ]),
 ]);
 

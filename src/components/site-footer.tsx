@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { ROUTE_PATHS, getFooterLinks } from "@/config/navigation";
 import { ContactClickLink } from "@/components/contact-click-link";
@@ -20,7 +21,7 @@ export function SiteFooter({ year }: SiteFooterProps) {
       <div className="container footer-shell">
         <div className="footer-brand">
           <a href={ROUTE_PATHS.home} className="footer-logo" aria-label="FIND home">
-            <img src="/LOGO.png" alt="FIND" />
+            <Image src="/LOGO.png" alt="FIND" width={256} height={74} className="block h-auto w-full" loading="lazy" />
           </a>
           <p className="footer-copy">
             Eksperckie wsparcie właściciela mieszkania: od strategii ceny po bezpieczny podpis.

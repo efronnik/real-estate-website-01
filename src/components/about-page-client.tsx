@@ -7,6 +7,7 @@ import { Prefooter } from "@/components/prefooter";
 import { ScrollToTopButton } from "@/components/scroll-to-top-button";
 import { ROUTE_PATHS } from "@/config/navigation";
 import { CtaClickLink } from "@/components/cta-click-link";
+import { RemoteFillImage } from "@/components/remote-fill-image";
 
 const portfolioCases = [
   {
@@ -190,7 +191,14 @@ export function AboutPageClient({ cmsHeadline, cmsLead, cmsContent }: AboutPageC
               <p className="section-copy">{cmsLead ?? "Nazywam się [Twoje imię]. Pracuję z właścicielami mieszkań, którzy chcą sprzedać świadomie: z planem, kontrolą procesu i wynikiem finansowym, który ma uzasadnienie rynkowe."}</p>
               <p className="section-copy">{cmsContent ?? "Łączę doświadczenie negocjacyjne, przygotowanie oferty i estetykę prezentacji. Dzięki temu sprzedaż jest uporządkowana, przewidywalna i bez chaosu."}</p>
             </div>
-            <figure className="hero-photo"><img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=1800&q=80" alt="Portret eksperta nieruchomości" /></figure>
+            <figure className="hero-photo">
+              <RemoteFillImage
+                src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=1800&q=80"
+                alt="Portret eksperta nieruchomości"
+                sizes="(max-width: 900px) 100vw, 45vw"
+                priority
+              />
+            </figure>
           </div>
         </section>
 
@@ -259,9 +267,9 @@ export function AboutPageClient({ cmsHeadline, cmsLead, cmsContent }: AboutPageC
                 </CtaClickLink>
                 .
               </p>
-              <blockquote>"Dobrze sprzedana nieruchomość to wynik decyzji podjętych we właściwej kolejności."</blockquote>
+              <blockquote>„Dobrze sprzedana nieruchomość to wynik decyzji podjętych we właściwej kolejności.”</blockquote>
             </aside>
-            <div className="about-value-visuals"><div className="value-points"><h3>Co jest dla mnie ważne</h3><div className="value-image-grid">{valueCards.map((item, idx) => (<article key={item.text} ref={(el) => { valueCardRefs.current[idx] = el; }} className={`value-image-item ${idx === activeValueIndex ? "active" : ""}`}><img src={item.image} alt={item.text} /><p>{item.text}</p></article>))}</div></div></div>
+            <div className="about-value-visuals"><div className="value-points"><h3>Co jest dla mnie ważne</h3><div className="value-image-grid">{valueCards.map((item, idx) => (<article key={item.text} ref={(el) => { valueCardRefs.current[idx] = el; }} className={`value-image-item ${idx === activeValueIndex ? "active" : ""}`}><RemoteFillImage src={item.image} alt={item.text} sizes="(max-width: 900px) 100vw, 45vw" /><p>{item.text}</p></article>))}</div></div></div>
           </div>
         </section>
 
@@ -274,7 +282,7 @@ export function AboutPageClient({ cmsHeadline, cmsLead, cmsContent }: AboutPageC
 
         <section className="section">
           <div className="container process-layout">
-            <div className="process-visuals">{process.map((item, idx) => (<article key={`img-${item.step}`} ref={(el) => { processCardRefs.current[idx] = el; }} className={`process-image-item ${idx === activeProcessIndex ? "active" : ""}`}><img src={item.image} alt={item.title} /></article>))}</div>
+            <div className="process-visuals">{process.map((item, idx) => (<article key={`img-${item.step}`} ref={(el) => { processCardRefs.current[idx] = el; }} className={`process-image-item ${idx === activeProcessIndex ? "active" : ""}`}><RemoteFillImage src={item.image} alt={item.title} sizes="(max-width: 900px) 100vw, 45vw" /></article>))}</div>
             <aside className="process-copy"><p className="eyebrow">Proces</p><h2 className="section-title">Model współpracy krok po kroku</h2><p className="process-progress">{activeProcessIndex + 1} / {process.length}</p><p className="process-lead">{process[activeProcessIndex]?.title}</p><p className="process-desc">{process[activeProcessIndex]?.text}</p></aside>
           </div>
         </section>

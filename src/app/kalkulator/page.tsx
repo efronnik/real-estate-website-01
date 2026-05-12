@@ -7,6 +7,7 @@ import { Prefooter } from "@/components/prefooter";
 import { ScrollToTopButton } from "@/components/scroll-to-top-button";
 import { ROUTE_PATHS } from "@/config/navigation";
 import { CtaClickLink } from "@/components/cta-click-link";
+import { HeroBackgroundVideo } from "@/components/hero-background-video";
 
 const MIN_AREA = 15;
 const MAX_AREA = 300;
@@ -53,9 +54,7 @@ export default function KalkulatorPage() {
 
         <div className="container calc-shell">
           <section className="calc-hero">
-            <video className="calculator-video-bg" autoPlay muted loop playsInline preload="metadata" aria-hidden="true">
-              <source src="/Hero-Calculator.mp4" type="video/mp4" />
-            </video>
+            <HeroBackgroundVideo className="calculator-video-bg" src="/Hero-Calculator.mp4" />
             <div className="calculator-video-overlay" aria-hidden="true"></div>
             <header className="calc-head">
               <p className="eyebrow">Kalkulator</p>

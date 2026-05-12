@@ -6,6 +6,7 @@ import { LeadContactSection } from "@/components/lead-contact-section";
 import { PageIntroSection } from "@/components/page-intro-section";
 import { ROUTE_PATHS } from "@/config/navigation";
 import { CtaClickLink } from "@/components/cta-click-link";
+import { RemoteFillImage } from "@/components/remote-fill-image";
 import {
   fetchCmsFaqByPageType,
   fetchCmsFeaturedTestimonials,
@@ -197,7 +198,7 @@ export default async function InwestycjePage() {
             <div className="inwestycje-seo-gallery-grid">
               {inwestycjeSeoImages.map((item) => (
                 <figure key={item.src} className="inwestycje-seo-gallery-item">
-                  <img src={item.src} alt={item.alt} />
+                  <RemoteFillImage src={item.src} alt={item.alt} sizes="(max-width: 768px) 100vw, 33vw" />
                 </figure>
               ))}
             </div>

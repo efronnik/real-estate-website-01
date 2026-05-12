@@ -5,6 +5,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { SiteTopbar } from "@/components/site-topbar";
 import { Prefooter } from "@/components/prefooter";
 import { ScrollToTopButton } from "@/components/scroll-to-top-button";
+import { HeroBackgroundVideo } from "@/components/hero-background-video";
 
 const problems = [
   {
@@ -142,9 +143,7 @@ export default function BledyPage() {
         <SiteTopbar />
 
         <section className="section mistakes-hero">
-          <video className="mistakes-hero-video" autoPlay muted loop playsInline preload="metadata" aria-hidden="true">
-            <source src="/Hero-Fail.mp4" type="video/mp4" />
-          </video>
+          <HeroBackgroundVideo className="mistakes-hero-video" src="/Hero-Fail.mp4" />
           <div className="mistakes-hero-overlay" aria-hidden="true"></div>
           <div className="container mistakes-hero-shell">
             <p className="eyebrow">Błędy</p>

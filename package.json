@@ -7,6 +7,12 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "test:e2e:failover": "playwright test --config=playwright.failover.config.ts",
+    "release:check": "npm run lint && npm run test && npm run test:e2e && npm run test:e2e:failover",
+    "perf:lighthouse": "npx --yes lighthouse@11 http://127.0.0.1:3000 --preset=mobile --only-categories=performance --quiet --chrome-flags=\"--headless=new\"",
     "cms:dev": "npm --prefix ./cms run develop",
     "cms:start": "npm --prefix ./cms run start",
     "cms:build": "npm --prefix ./cms run build"
@@ -17,6 +23,7 @@
     "react-dom": "19.2.4"
   },
   "devDependencies": {
+    "@playwright/test": "^1.51.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
@@ -24,6 +31,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.2",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^3.0.0"
   }
 }

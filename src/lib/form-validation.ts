@@ -78,8 +78,7 @@ function asText(formData: FormData, key: string): string {
   return String(formData.get(key) ?? "").trim();
 }
 
-function buildLeadPayload(form: HTMLFormElement): LeadPayload {
-  const formData = new FormData(form);
+export function buildLeadPayloadFromFormData(formData: FormData): LeadPayload {
   const leadType = asText(formData, "lead_type");
   const consentRaw = formData.get("consent_data");
 
@@ -97,6 +96,10 @@ function buildLeadPayload(form: HTMLFormElement): LeadPayload {
     utmCampaign: asText(formData, "utm_campaign") || undefined,
     consentData: consentRaw === "on" || consentRaw === "true",
   };
+}
+
+function buildLeadPayload(form: HTMLFormElement): LeadPayload {
+  return buildLeadPayloadFromFormData(new FormData(form));
 }
 
 export async function submitLeadForm(form: HTMLFormElement) {

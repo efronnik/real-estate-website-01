@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { isSiteIndexable } from "@/lib/site-indexable";
 
 export function middleware(_request: NextRequest) {
+  void _request;
   const response = NextResponse.next();
   if (!isSiteIndexable()) {
     response.headers.set("X-Robots-Tag", "noindex, nofollow");

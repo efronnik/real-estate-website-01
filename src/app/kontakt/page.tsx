@@ -6,6 +6,7 @@ import { LeadContactSection } from "@/components/lead-contact-section";
 import { ScrollToTopButton } from "@/components/scroll-to-top-button";
 import { fetchCmsPageBySlug, safeCmsCall } from "@/lib/cms";
 import { resolveKeyPageMetadata } from "@/lib/page-metadata";
+import { HeroBackgroundVideo } from "@/components/hero-background-video";
 import { ROUTE_PATHS } from "@/config/navigation";
 
 const kontaktFinalBlocks = [
@@ -71,9 +72,7 @@ export default async function KontaktPage({ searchParams }: KontaktPageProps) {
         <SiteTopbar />
 
         <section className="section kontakt-hero">
-          <video className="kontakt-hero-video" autoPlay muted loop playsInline preload="metadata" aria-hidden="true">
-            <source src="/Hero-Kontakt.mp4" type="video/mp4" />
-          </video>
+          <HeroBackgroundVideo className="kontakt-hero-video" src="/Hero-Kontakt.mp4" />
           <div className="kontakt-hero-overlay" aria-hidden="true"></div>
           <div className="container kontakt-hero-shell">
             <p className="eyebrow">Kontakt</p>

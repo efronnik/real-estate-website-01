@@ -163,26 +163,27 @@
 - **PROCESSED** — Проверка noindex-гигиены: подтвердить env и ответы (`/robots.txt`, заголовки) на prod и staging вручную
 
 ## Day 13 — Performance, стабильность, QA
-- Оптимизация изображений/video/lazy-load
-- Core Web Vitals с порогами приемки:
-  - LCP < 2.5s (mobile, ключевые страницы)
-  - CLS < 0.1
-  - INP < 200ms
-  - TTFB в пределах целевого окружения хостинга
-- Автоматизированные тесты:
-  - Unit: утилиты, валидация форм, маппинг CMS-данных
-  - Integration: форма -> API -> сохранение лида в `Lead`
-  - E2E: критические пути `Glowna -> Sprzedaz/Kontakt`, `Glowna -> Inwestycje/Kontakt`, `Blog list -> Blog detail -> CTA`
-- CI/CD quality gate:
-  - запуск lint + tests + build на каждый PR
-  - merge запрещен при падении хотя бы одного обязательного шага
-- Полный QA: навигация, формы, блог, SEO, analytics, адаптив
-- QA burger menu на mobile/tablet: открытия/закрытия, активные ссылки, переходы между страницами, отсутствие визуальных сдвигов layout
-- Сценарий отказа CMS (failover): Strapi недоступен -> страницы не падают, отрабатывает fallback, формы и критические CTA доступны
-- Исправление багов и release checklist
-- UAT-чеклист приемки (по страницам, формам, аналитике)
-- Страницы ошибок и сценарии отказа: `404`, `500`, ошибки API
-- Проверка security headers: `HSTS`, `CSP` (базовый), `X-Content-Type-Options`, `Referrer-Policy`
+- **DONE** — Оптимизация изображений/video/lazy-load: `next/image` (Unsplash/Pexels + логотип), отложенная загрузка фоновых MP4 (`HeroBackgroundVideo`), правки CSS под `fill`; декоративные ряды с `--bg` в CSS пока без изменений (отдельный шаг при необходимости)
+- Core Web Vitals с порогами приемки (LCP / CLS / INP / TTFB):
+  - **DONE (сейчас, без prod):** шрифты через `next/font` (меньше CLS, без блокирующего Google Fonts CSS); локальный замер: `npm run dev` в одном терминале, затем `npm run perf:lighthouse` (mobile preset, только Performance) — ориентир, не замена PSI
+  - **PROCESSED (после хостинга):** подтвердить пороги на боевом URL через PageSpeed Insights / Search Console (полевые данные), отдельно TTFB по факту хостинга
+- **DONE** — Автоматизированные тесты (базовый каркас в репозитории):
+  - **Unit (Vitest):** `lead-validation`, `buildLeadPayloadFromFormData`, `KEY_SEO_PAGE_MAPPING`
+  - **Integration:** `POST /api/leads` с моком Strapi (валидация, honeypot, неизвестные поля)
+  - **E2E (Playwright):** `e2e/critical-paths.spec.ts` + `e2e/full-qa.spec.ts`; перед прогоном `npm run test:e2e` выполняется `next build` и `next start` на порту E2E (см. `playwright.config.ts`), не `next dev`
+  - **Расширение позже:** больше кейсов валидации UI, контрактные тесты CMS, стабильные сиды для блога в E2E если контент полностью из CMS
+- **DONE (код):** CI/CD quality gate — `.github/workflows/ci.yml`: `lint`, `test` (Vitest), `test:e2e` (Playwright: внутри поднимается `next build` + `next start` на порту E2E, отдельный `build` в job не дублируется)
+  - **PROCESSED (орг.):** в настройках репозитория включить обязательный статус CI для merge в `main`
+- **DONE (авто) + PROCESSED (ручная приёмка)** — Полный QA: навигация, формы, блог, SEO, analytics, адаптив
+  - **Автоматически (`e2e/full-qa.spec.ts`, `e2e/burger-menu.spec.ts` + CI):** `robots.txt` / `sitemap.xml`, заголовок + `h1` на ключевых путях, JSON-LD `LocalBusiness` на главной, топбар desktop (4 маршрута), форма Kontakt (успех с моком `POST /api/leads`, пустая отправка → фокус на поле), блог: список → статья → видимость CTA wyceny; бургер — см. отдельный spec
+  - **Вручную перед prod:** контраст/читабельность, реальная отправка лида в Strapi, GA4 DebugView после согласия cookie (`NEXT_PUBLIC_GA_MEASUREMENT_ID`), матрица metadata/canonical/OG по страницам на боевом URL, tablet + реальные устройства, регресс после смены контента в CMS
+- **DONE (авто + UI)** — QA burger menu mobile/tablet: `e2e/burger-menu.spec.ts` (viewports 390×844 и 820×1100) — открытие/закрытие на `/sprzedaz` (×, клик по overlay, Escape); на artykule blogowym — `aria-current="page"` + `nav-link-active` у «Blog», переход в listing и в «Sprzedaz»; прокси layout-shift: ширина viewport не меняется при открытии, `overflow: hidden` на `body` снимается после закрытия. В коде: `isRouteActive` + стили активной ссылки в desktop- и mobile-меню
+  - **PROCESSED (визуал):** осмотреть вручную отсутствие «прыжков» контента и артефактов анимации на реальных устройствах / BrowserStack
+- **DONE (авто)** — Сценарий отказа CMS (failover): `e2e/cms-failover.spec.ts` + `playwright.failover.config.ts` поднимают приложение с недоступным Strapi (`NEXT_PUBLIC_STRAPI_URL`/`STRAPI_URL` -> `127.0.0.1:9`) и проверяют: `/sprzedaz`, `/kontakt`, `/blog` рендерят fallback-контент; форма контакта доступна и отправляется при моке `/api/leads`; критические CTA видимы
+- **DONE** — Исправление багов и release checklist: стабилизирован `blog/[slug]` (мемоизация `article`, убраны предупреждения по зависимостям хуков); добавлен `RELEASE_CHECKLIST.md` + команда `npm run release:check` (lint + unit/integration + e2e + failover)
+- **DONE** — UAT-чеклист приемки (по страницам, формам, аналитике): добавлен `UAT_CHECKLIST.md` (структурированные критерии + sign-off блок)
+- **DONE (код + тесты) / PROCESSED (ручной триггер `500`)** — Страницы ошибок и сценарии отказа: добавлены `src/app/not-found.tsx` (кастомная `404`) и `src/app/error.tsx` (`500`-экран c `reset`/контактом); расширены тесты API и E2E: `e2e/full-qa.spec.ts` покрывает `404` и API-ошибки (`400 invalid payload`, `403 origin`), `src/app/api/leads/route.integration.test.ts` покрывает `502` (Strapi unreachable) и `OPTIONS 403` для чужого origin
+- **DONE (код + e2e)** — Проверка security headers: `HSTS`, `CSP` (базовый), `X-Content-Type-Options`, `Referrer-Policy` заданы глобально в `next.config.ts` (`headers()`), проверяются автотестом `e2e/full-qa.spec.ts` (`security headers present on homepage response`)
 
 ## Day 14 — Deploy и передача
 - Deploy frontend + CMS

@@ -7,6 +7,7 @@ import { Prefooter } from "@/components/prefooter";
 import { ScrollToTopButton } from "@/components/scroll-to-top-button";
 import { ROUTE_PATHS } from "@/config/navigation";
 import { CtaClickLink } from "@/components/cta-click-link";
+import { HeroBackgroundVideo } from "@/components/hero-background-video";
 import { fetchCmsBlogPosts, type CmsBlogPostRecord, fetchCmsPageBySlug } from "@/lib/cms";
 
 const blogPaths = [
@@ -124,9 +125,7 @@ export default function BlogPage() {
         <SiteTopbar />
 
         <section className="section blog-hero">
-          <video className="blog-hero-video" autoPlay muted loop playsInline preload="metadata" aria-hidden="true">
-            <source src="/Hero-Blog.mp4" type="video/mp4" />
-          </video>
+          <HeroBackgroundVideo className="blog-hero-video" src="/Hero-Blog.mp4" />
           <div className="blog-hero-overlay" aria-hidden="true"></div>
           <div className="container blog-hero-shell">
             <p className="eyebrow">Blog</p>

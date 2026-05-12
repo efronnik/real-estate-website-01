@@ -1,8 +1,9 @@
 "use client";
 
+import Image from "next/image";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
-import { ROUTE_PATHS, getTopbarLinks } from "@/config/navigation";
+import { ROUTE_PATHS, getTopbarLinks, isRouteActive } from "@/config/navigation";
 import { CtaClickLink } from "@/components/cta-click-link";
 
 type SiteTopbarProps = {
@@ -133,15 +134,23 @@ export function SiteTopbar({
         aria-label="FIND home"
         onClick={closeMenu}
       >
-        <img src="/LOGO.png" alt="FIND" />
+        <Image src="/LOGO.png" alt="FIND" width={256} height={74} className="block h-auto w-full" priority />
       </a>
 
       <nav className={isCp ? "cp-nav" : "site-nav"} aria-label="Primary navigation">
-        {topbarLinks.map((link) => (
-          <a key={link.href} href={link.href}>
-            {link.label}
-          </a>
-        ))}
+        {topbarLinks.map((link) => {
+          const active = isRouteActive(pathname, link.href);
+          return (
+            <a
+              key={link.href}
+              href={link.href}
+              className={active ? "nav-link-active" : undefined}
+              aria-current={active ? "page" : undefined}
+            >
+              {link.label}
+            </a>
+          );
+        })}
       </nav>
 
       {ctaHref ? (
@@ -188,11 +197,20 @@ export function SiteTopbar({
             >
               <span aria-hidden="true">×</span>
             </button>
-            {topbarLinks.map((link) => (
-              <a key={`mobile-${link.href}`} href={link.href} onClick={closeMenu}>
-                {link.label}
-              </a>
-            ))}
+            {topbarLinks.map((link) => {
+              const active = isRouteActive(pathname, link.href);
+              return (
+                <a
+                  key={`mobile-${link.href}`}
+                  href={link.href}
+                  className={active ? "nav-link-active" : undefined}
+                  aria-current={active ? "page" : undefined}
+                  onClick={closeMenu}
+                >
+                  {link.label}
+                </a>
+              );
+            })}
             {ctaHref ? (
               <CtaClickLink
                 href={ctaHref}
