@@ -17,6 +17,7 @@ describe("POST /api/leads integration", () => {
 
   afterEach(() => {
     vi.unstubAllGlobals();
+    vi.unstubAllEnvs();
   });
 
   it("returns 201 and posts sanitized lead to Strapi", async () => {
@@ -55,6 +56,65 @@ describe("POST /api/leads integration", () => {
     };
     expect(posted.data.leadStatus).toBe("new");
     expect(posted.data.fullName).toBe("Anna Nowak");
+  });
+
+  it("accepts a production origin when NEXT_PUBLIC_SITE_URL has a trailing slash", async () => {
+    vi.stubEnv("NEXT_PUBLIC_SITE_URL", "https://find.example.com/");
+    vi.resetModules();
+    const { POST } = await import("./route");
+
+    const request = new Request("https://find.example.com/api/leads", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Origin: "https://find.example.com",
+        "x-forwarded-for": uniqueClientIp(),
+      },
+      body: JSON.stringify({
+        data: {
+          fullName: "Anna Nowak",
+          phone: "+48500111222",
+          leadType: "kontakt",
+          sourcePage: "kontakt",
+          consentData: true,
+        },
+      }),
+    });
+
+    const response = await POST(request);
+    expect(response.status).toBe(201);
+    expect(fetch).toHaveBeenCalledWith(
+      expect.stringContaining("/api/leads"),
+      expect.objectContaining({ method: "POST" }),
+    );
+  });
+
+  it("accepts explicitly configured additional lead origins", async () => {
+    vi.stubEnv("NEXT_PUBLIC_SITE_URL", "https://find.example.com");
+    vi.stubEnv("LEAD_ALLOWED_ORIGINS", "https://www.find.example.com/, https://landing.find.example.com");
+    vi.resetModules();
+    const { POST } = await import("./route");
+
+    const request = new Request("https://www.find.example.com/api/leads", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Origin: "https://www.find.example.com",
+        "x-forwarded-for": uniqueClientIp(),
+      },
+      body: JSON.stringify({
+        data: {
+          fullName: "Jan Kowalski",
+          phone: "+48500111222",
+          leadType: "wycena",
+          sourcePage: "sprzedaz",
+          consentData: true,
+        },
+      }),
+    });
+
+    const response = await POST(request);
+    expect(response.status).toBe(201);
   });
 
   it("returns 400 when validation fails", async () => {
