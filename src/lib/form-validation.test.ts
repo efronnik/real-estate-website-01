@@ -53,4 +53,62 @@ describe("buildLeadPayloadFromFormData", () => {
     );
     expect(payload.city).toBe("Warszawa");
   });
+
+  it("preserves contact-only details in the message payload", () => {
+    const payload = buildLeadPayloadFromFormData(
+      formDataFrom({
+        full_name: "Ewa Test",
+        phone: "+48600111222",
+        lead_type: "kontakt",
+        source_page: "kontakt",
+        preferred_contact_time: "10:00-12:00",
+        message: "Prosze o kontakt.",
+        consent_data: "on",
+      }),
+    );
+
+    expect(payload.message).toBe(
+      ["Prosze o kontakt.", "Dodatkowe dane z formularza:\nPreferowana godzina kontaktu: 10:00-12:00"].join(
+        "\n\n",
+      ),
+    );
+  });
+
+  it("preserves valuation details in the message payload", () => {
+    const payload = buildLeadPayloadFromFormData(
+      formDataFrom({
+        full_name: "Jan Kowalski",
+        phone: "+48 600 000 000",
+        lead_type: "wycena",
+        source_page: "sprzedaz",
+        district: "Mokotow",
+        property_type: "mieszkanie",
+        area_m2: "58",
+        rooms: "3",
+        condition: "dobry",
+        floor: "3/8",
+        building_type: "blok",
+        ownership_type: "pelna wlasnosc",
+        expected_price: "950000 PLN",
+        timeline: "1-3 miesiace",
+        consent_data: "on",
+      }),
+    );
+
+    expect(payload.message).toBe(
+      [
+        "Dodatkowe dane z formularza:",
+        "Dzielnica: Mokotow",
+        "Typ nieruchomosci: mieszkanie",
+        "Metraz (m2): 58",
+        "Liczba pokoi: 3",
+        "Stan nieruchomosci: dobry",
+        "Pietro: 3/8",
+        "Typ budynku: blok",
+        "Forma wlasnosci: pelna wlasnosc",
+        "Oczekiwana cena: 950000 PLN",
+        "Termin sprzedazy: 1-3 miesiace",
+      ].join("\n"),
+    );
+  });
 });
