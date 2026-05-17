@@ -124,6 +124,11 @@ function buildCorsHeaders(origin: string | null): HeadersInit {
   };
 }
 
+function getStrapiApiToken(): string | undefined {
+  const token = process.env.STRAPI_API_TOKEN?.trim();
+  return token || undefined;
+}
+
 function jsonResponse(
   request: Request,
   requestId: string,
@@ -267,12 +272,19 @@ export async function POST(request: Request) {
     return jsonResponse(request, requestId, { ok: true }, 200);
   }
 
+  const strapiApiToken = getStrapiApiToken();
+  if (!strapiApiToken) {
+    logLeadEvent("error", "strapi_api_token_missing", { requestId, ip: maskedIp });
+    return jsonResponse(request, requestId, { error: "Lead submit failed." }, 500);
+  }
+
   let response: Response;
   try {
     response = await fetch(`${STRAPI_URL}/api/leads`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${strapiApiToken}`,
       },
       body: JSON.stringify({ data: result.payload }),
       cache: "no-store",
