@@ -35,6 +35,7 @@ export default {
             "api::seo.seo.find",
             "api::seo.seo.findOne",
         ];
+        const publicWriteActions = ["api::lead.lead.create"];
         const existingPermissions = await strapi.db
             .query("plugin::users-permissions.permission")
             .findMany({
@@ -52,5 +53,11 @@ export default {
                 role: publicRole.id,
             },
         })));
+        await strapi.db.query("plugin::users-permissions.permission").deleteMany({
+            where: {
+                role: publicRole.id,
+                action: { $in: publicWriteActions },
+            },
+        });
     },
 };
