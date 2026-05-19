@@ -3,7 +3,7 @@ import { expect, test } from "@playwright/test";
 test.describe("critical paths", () => {
   test("Główna → Sprzedaż → Kontakt", async ({ page }) => {
     await page.goto("/");
-    await page.getByRole("link", { name: "Sprzedaz" }).first().click();
+    await page.getByRole("link", { name: "Sprzedaż" }).first().click();
     await expect(page).toHaveURL(/\/sprzedaz$/);
     await page.getByRole("link", { name: "Kontakt" }).first().click();
     await expect(page).toHaveURL(/\/kontakt/);

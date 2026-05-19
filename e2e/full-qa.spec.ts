@@ -63,7 +63,7 @@ test.describe("full QA — navigation (desktop)", () => {
 
   test("topbar primary routes load", async ({ page }) => {
     await page.goto("/");
-    for (const label of ["Sprzedaz", "Inwestycje", "Blog", "Kontakt"] as const) {
+    for (const label of ["Sprzedaż", "Inwestycje", "Blog", "Kontakt"] as const) {
       await page.getByRole("link", { name: label }).first().click();
       await expect(page.getByRole("heading", { level: 1 }).first()).toBeVisible();
       await page.goto("/");

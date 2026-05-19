@@ -4,7 +4,7 @@ test.describe("CMS failover (Strapi unavailable)", () => {
   test("key pages render fallback content and critical CTA", async ({ page }) => {
     await page.goto("/sprzedaz", { waitUntil: "domcontentloaded" });
     await expect(page.getByRole("heading", { level: 1 })).toContainText(
-      "Sprzedaz nieruchomosci to dobrze zaplanowany proces",
+      "Sprzedaj mieszkanie świadomie",
     );
     await expect(page.getByRole("link", { name: "Przejdź do wyceny" }).first()).toBeVisible();
     await expect(page.locator("#wycena")).toBeVisible();

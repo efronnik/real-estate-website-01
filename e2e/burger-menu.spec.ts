@@ -64,7 +64,7 @@ function runBurgerSuite(viewportLabel: string) {
     await expectMenuClosed(page);
 
     await openMobileMenu(page);
-    await mobileNav.getByRole("link", { name: "Sprzedaz" }).click();
+    await mobileNav.getByRole("link", { name: "Sprzedaż" }).click();
     await expect(page).toHaveURL(/\/sprzedaz/);
     await expectMenuClosed(page);
     await expect(page.getByRole("heading", { level: 1 }).first()).toBeVisible();
