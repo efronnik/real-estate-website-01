@@ -2,12 +2,48 @@
 
 import { LeadForm } from "@/components/lead-form";
 
+type WycenaStep = {
+  title: string;
+  text: string;
+};
+
 type WycenaSectionProps = {
   sourcePage: string;
   sectionId?: string;
+  eyebrow?: string;
+  title?: string;
+  lead?: string;
+  promise?: string;
+  steps?: WycenaStep[];
+  consultationNote?: string;
+  helperText?: string;
+  submitLabel?: string;
+  successMessage?: string;
 };
 
-export function WycenaSection({ sourcePage, sectionId = "wycena" }: WycenaSectionProps) {
+const defaultCopy = {
+  eyebrow: "Wycena nieruchomości",
+  title: "Zostaw dane do szybkiej wyceny",
+  lead: "Uzupełnij formularz, a przygotujemy wstępną analizę i skontaktujemy się z Tobą z kolejnym krokiem.",
+  helperText: "Wstępna wycena to pierwszy krok. Po analizie skontaktujemy się z rekomendowanym scenariuszem działania.",
+  submitLabel: "Wyślij wycenę",
+  successMessage:
+    "Dziękujemy. Formularz wyceny został wysłany. Wrócimy z odpowiedzią maksymalnie w 1 dzień roboczy.",
+};
+
+export function WycenaSection({
+  sourcePage,
+  sectionId = "wycena",
+  eyebrow = defaultCopy.eyebrow,
+  title = defaultCopy.title,
+  lead = defaultCopy.lead,
+  promise,
+  steps,
+  consultationNote,
+  helperText = defaultCopy.helperText,
+  submitLabel = defaultCopy.submitLabel,
+  successMessage = defaultCopy.successMessage,
+}: WycenaSectionProps) {
   return (
     <section className="section cta" id={sectionId}>
       <div className="container">
@@ -16,21 +52,30 @@ export function WycenaSection({ sourcePage, sectionId = "wycena" }: WycenaSectio
             <div className="map-overlay"></div>
             <p className="vertical-label">Wycena</p>
             <div className="copy-inner">
-              <p className="eyebrow">Wycena nieruchomosci</p>
-              <h2>Zostaw dane do szybkiej wyceny</h2>
-              <p>
-                Uzupelnij formularz, a przygotujemy wstepna analize i skontaktujemy sie z
-                Toba z kolejnym krokiem.
-              </p>
+              <p className="eyebrow">{eyebrow}</p>
+              <h2>{title}</h2>
+              <p>{lead}</p>
+              {promise ? <p className="wycena-promise">{promise}</p> : null}
+              {steps && steps.length > 0 ? (
+                <ol className="wycena-steps">
+                  {steps.map((step) => (
+                    <li key={step.title}>
+                      <strong>{step.title}</strong>
+                      <span>{step.text}</span>
+                    </li>
+                  ))}
+                </ol>
+              ) : null}
+              {consultationNote ? <p className="wycena-consultation">{consultationNote}</p> : null}
             </div>
           </div>
 
           <LeadForm
             sourcePage={sourcePage}
             leadType="wycena"
-            helperText="Wstepna wycena to pierwszy krok. Po analizie skontaktujemy sie z rekomendowanym scenariuszem dzialania."
-            submitLabel="Wyślij wycenę"
-            successMessage="Dziekujemy. Formularz wyceny zostal wyslany. Wrocimy z odpowiedzia maksymalnie w 1 dzien roboczy."
+            helperText={helperText}
+            submitLabel={submitLabel}
+            successMessage={successMessage}
           >
             <label>
               Imię i nazwisko <span className="required-mark">*</span>
@@ -50,10 +95,10 @@ export function WycenaSection({ sourcePage, sectionId = "wycena" }: WycenaSectio
             </label>
             <label>
               Dzielnica
-              <input type="text" name="district" placeholder="Mokotow" />
+              <input type="text" name="district" placeholder="Mokotów" />
             </label>
             <label>
-              Typ nieruchomosci <span className="required-mark">*</span>
+              Typ nieruchomości <span className="required-mark">*</span>
               <select name="property_type" required>
                 <option value="">Wybierz typ</option>
                 <option value="mieszkanie">Mieszkanie</option>
@@ -62,7 +107,7 @@ export function WycenaSection({ sourcePage, sectionId = "wycena" }: WycenaSectio
               </select>
             </label>
             <label>
-              Metraz (m2) <span className="required-mark">*</span>
+              Metraż (m²) <span className="required-mark">*</span>
               <input type="number" name="area_m2" min={10} step="1" placeholder="58" required />
             </label>
             <label>
@@ -70,7 +115,7 @@ export function WycenaSection({ sourcePage, sectionId = "wycena" }: WycenaSectio
               <input type="number" name="rooms" min={1} step="1" placeholder="3" required />
             </label>
             <label>
-              Stan nieruchomosci
+              Stan nieruchomości
               <select name="condition">
                 <option value="">Wybierz stan</option>
                 <option value="do_remontu">Do remontu</option>
@@ -80,7 +125,7 @@ export function WycenaSection({ sourcePage, sectionId = "wycena" }: WycenaSectio
               </select>
             </label>
             <label>
-              Pietro
+              Piętro
               <input type="text" name="floor" placeholder="Np. 3/8" />
             </label>
             <label>
@@ -88,23 +133,23 @@ export function WycenaSection({ sourcePage, sectionId = "wycena" }: WycenaSectio
               <input type="text" name="building_type" placeholder="Np. blok, kamienica" />
             </label>
             <label>
-              Forma wlasnosci
-              <input type="text" name="ownership_type" placeholder="Np. pelna wlasnosc" />
+              Forma własności
+              <input type="text" name="ownership_type" placeholder="Np. pełna własność" />
             </label>
             <label>
               Oczekiwana cena
               <input type="text" name="expected_price" placeholder="Np. 950000 PLN" />
             </label>
             <label>
-              Termin sprzedazy
-              <input type="text" name="timeline" placeholder="Np. 1-3 miesiace" />
+              Termin sprzedaży
+              <input type="text" name="timeline" placeholder="Np. 1–3 miesiące" />
             </label>
             <label>
               Dodatkowe informacje
               <textarea
                 name="message"
                 rows={4}
-                placeholder="Wpisz informacje o nieruchomosci i sytuacji sprzedazy."
+                placeholder="Wpisz informacje o nieruchomości i sytuacji sprzedaży."
               />
             </label>
           </LeadForm>

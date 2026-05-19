@@ -4,7 +4,6 @@ import { useMemo, useState } from "react";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteTopbar } from "@/components/site-topbar";
 import { Prefooter } from "@/components/prefooter";
-import { ScrollToTopButton } from "@/components/scroll-to-top-button";
 import { ROUTE_PATHS } from "@/config/navigation";
 import { CtaClickLink } from "@/components/cta-click-link";
 import { HeroBackgroundVideo } from "@/components/hero-background-video";
@@ -135,7 +134,6 @@ export default function KalkulatorPage() {
         />
         <SiteFooter year={year} />
       </div>
-      <ScrollToTopButton />
     </>
   );
 }

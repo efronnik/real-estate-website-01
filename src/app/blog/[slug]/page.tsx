@@ -5,12 +5,16 @@ import { useParams } from "next/navigation";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteTopbar } from "@/components/site-topbar";
 import { Prefooter } from "@/components/prefooter";
-import { ScrollToTopButton } from "@/components/scroll-to-top-button";
 import { ROUTE_PATHS } from "@/config/navigation";
 import { CtaClickLink } from "@/components/cta-click-link";
 import { HeroBackgroundVideo } from "@/components/hero-background-video";
 import { RemoteFillImage } from "@/components/remote-fill-image";
 import { fetchCmsBlogPostBySlug, type CmsBlogPostRecord } from "@/lib/cms";
+
+type ArticleSection = {
+  title: string;
+  paragraphs: string[];
+};
 
 type Article = {
   title: string;
@@ -18,6 +22,8 @@ type Article = {
   category: string;
   readTime: string;
   points: string[];
+  intro?: string[];
+  sections?: ArticleSection[];
   checklist: string[];
   frameworkEyebrow?: string;
   frameworkTitle?: string;
@@ -30,6 +36,7 @@ type Article = {
   framework?: string[];
   mistakes?: string[];
   closing?: string;
+  disclaimer?: string;
   signals?: Array<{ title: string; why: string; action: string; image: string }>;
 };
 
@@ -194,82 +201,163 @@ const articles: Record<string, Article> = {
     ],
     closing: "Premium staging nie polega na „upiększaniu”, tylko na projektowaniu odczuć: spokoju, jakości i zaufania do nieruchomości. Gdy kupujący intuicyjnie czuje porządek i proporcję, łatwiej przechodzi z fazy oglądania do fazy decyzji.",
   },
+  "jak-przygotowac-mieszkanie-do-sprzedazy": {
+    title: "Jak przygotować mieszkanie do sprzedaży, aby zwróciło uwagę nawet najbardziej wymagających klientów?",
+    lead:
+      "Prezentacja nieruchomości ma istotne znaczenie dla sukcesu transakcji. Zobacz, na czym polega home staging i od czego zacząć przygotowanie mieszkania krok po kroku.",
+    category: "Home staging / przygotowanie oferty",
+    readTime: "10 min czytania",
+    points: [],
+    intro: [
+      "Prezentacja nieruchomości ma istotne znaczenie dla sukcesu transakcji.",
+      "W tym artykule wyjaśnimy, na czym polega profesjonalny home staging i jakie elementy są decydujące, by mieszkanie prezentowało się perfekcyjnie i przyciągało zainteresowanie.",
+      "Znajomość tych zasad pomoże maksymalizować wartość oferty na rynku premium, przyspieszając proces sprzedaży i zwiększając zadowolenie potencjalnych nabywców.",
+    ],
+    sections: [
+      {
+        title: "Profesjonalne przygotowanie mieszkania do sprzedaży – sekrety home stagingu",
+        paragraphs: [
+          "Home staging to proces aranżacji wnętrz, którego celem jest zwiększenie atrakcyjności nieruchomości na rynku. Specjaliści stosują techniki takie jak odpowiednie oświetlenie, malowanie, dekorowanie oraz strategiczne rozmieszczenie mebli, aby wykreować przestrzenie zapraszające i funkcjonalne, podkreślając atuty nieruchomości.",
+          "Profesjonalne przygotowanie mieszkania do sprzedaży pozwala przyciągnąć więcej potencjalnych nabywców, zwiększyć wartość transakcyjną nieruchomości oraz skrócić czas potrzebny na jej sprzedaż.",
+        ],
+      },
+      {
+        title: "Od czego zacząć przygotowanie nieruchomości do sprzedaży?",
+        paragraphs: [
+          "Pierwszym krokiem jest ocena aktualnego stanu nieruchomości. To ważny moment, który pozwala określić zakres niezbędnych działań.",
+          "W niektórych przypadkach wystarczy gruntowne sprzątanie, usunięcie zbędnych przedmiotów i dodanie kilku dekoracji, aby wnętrze zyskało na atrakcyjności. Inne nieruchomości mogą wymagać bardziej zaawansowanych interwencji, takich jak malowanie ścian czy cyklinowanie podłóg, aby odświeżyć przestrzeń i nadać jej nowoczesny wygląd.",
+          "Dostosowanie działań do stanu nieruchomości pozwala zmaksymalizować jej wartość i przyciągnąć więcej potencjalnych kupców.",
+        ],
+      },
+      {
+        title: "Jak przygotować mieszkanie do sprzedaży krok po kroku",
+        paragraphs: [
+          "Sprzedaż mieszkania wymaga nie tylko atrakcyjnej oferty, ale także odpowiedniego przygotowania wnętrza. Poniżej przedstawiamy szczegółowy plan działania, który pomoże Ci w pełni przygotować mieszkanie do sprzedaży, krok po kroku.",
+        ],
+      },
+      {
+        title: "Krok 1. Czystość i porządek",
+        paragraphs: [
+          "Pierwszym krokiem jest dokładne sprzątanie mieszkania, z naciskiem na łazienki i kuchnie. To właśnie te pomieszczenia często decydują o pierwszym wrażeniu.",
+          "Warto zadbać o czystość wszystkich powierzchni, w tym armatury, blatów, fug i podłóg. Wszystkie ślady użytkowania, plamy czy zacieki muszą zostać usunięte.",
+          "W łazienkach i kuchniach sprawdź stan wyposażenia i usuń zbędne przedmioty, aby przestrzeń wydawała się większa i bardziej uporządkowana.",
+        ],
+      },
+      {
+        title: "Krok 2. Depersonalizacja — mniej „Twojego”, więcej przestrzeni",
+        paragraphs: [
+          "Kupujący musi móc wyobrazić sobie własne życie w mieszkaniu. Dlatego warto ograniczyć liczbę osobistych przedmiotów: rodzinne zdjęcia, pamiątki, nadmiar bibelotów i rzeczy na blatach.",
+          "Schowaj sezonowe ubrania, zabawki i wszystko, co wizualnie „zabiera” metraż. Otwarte powierzchnie i puste szafy (częściowo) sprawiają, że lokal wydaje się większy i bardziej uporządkowany.",
+        ],
+      },
+      {
+        title: "Krok 3. Drobne naprawy i odświeżenie",
+        paragraphs: [
+          "Po ocenie stanu nieruchomości zajmij się elementami, które psują odbiór jakości: pęknięte fugi, porysowane blaty, niedziałające zamki czy cienie na ścianach.",
+          "Często wystarczy odświeżające malowanie w neutralnym kolorze lub cyklinowanie podłóg, aby nadać wnętrzu nowoczesny wygląd — dokładnie tak, jak opisaliśmy w sekcji o pierwszej ocenie mieszkania.",
+          "Naprawy niewymagające remontu generalnego, ale widoczne na zdjęciach i podczas prezentacji, warto zrobić przed publikacją oferty.",
+        ],
+      },
+      {
+        title: "Krok 4. Oświetlenie i kolory",
+        paragraphs: [
+          "Home staging mocno opiera się na świetle. Doświetl ciemne kąty, wymień przepalone żarówki i ujednolić temperaturę barwową w całym mieszkaniu.",
+          "Jasne, neutralne ściany (biel, ciepła szarość, beż) pomagają podkreślić metraż i sprawiają, że wnętrze jest bardziej uniwersalne dla wymagających klientów z segmentu premium.",
+        ],
+      },
+      {
+        title: "Krok 5. Meble, dekoracje i układ przestrzeni",
+        paragraphs: [
+          "Strategiczne rozmieszczenie mebli powinno prowadzić wzrok kupującego przez najmocniejsze atuty: salon, ekspozycję okien, strefę dzienną.",
+          "Zostaw tylko niezbędne meble w proporcjach dopasowanych do pokoju. Kilka starannie dobranych dekoracji (rośliny, poduszki, obraz) wystarczy — nadmiar sprawia wrażenie chaosu.",
+          "W każdym pomieszczeniu powinna być jedna dominująca funkcja: tutaj odpoczynek, tutaj praca, tutaj jedzenie. To ułatwia szybką decyzję kupującego.",
+        ],
+      },
+      {
+        title: "Krok 6. Detale przed pokazem i zdjęciami",
+        paragraphs: [
+          "Tuż przed sesją zdjęciową lub wizytą sprawdź detale: czyste lustra, świeże ręczniki w łazience, porządek w szafach widocznych w kadrze, brak intensywnych zapachów.",
+          "Wietrz mieszkanie i unikaj agresywnych odświeżaczy — naturalny, świeży zapach buduje zaufanie lepiej niż „efekt hotelu”.",
+        ],
+      },
+      {
+        title: "Krok 7. Spójność online i na żywo",
+        paragraphs: [
+          "Zdjęcia w ogłoszeniu powinny odpowiadać temu, co zobaczy klient na prezentacji. Ten sam układ mebli, porządek i światło — bez „niespodzianek” po wejściu do drzwi.",
+          "Dobrze przygotowane wnętrze w materiałach marketingowych przyciąga bardziej świadomych nabywców i skraca drogę od oglądania do rozmowy o warunkach transakcji.",
+        ],
+      },
+    ],
+    closing:
+      "Przygotowanie mieszkania do sprzedaży to proces: od czystości i oceny stanu, przez home staging, aż po spójną prezentację w ogłoszeniu i na żywo. Im lepiej dopracujesz każdy krok, tym łatwiej wyróżnisz ofertę na rynku premium i przyspieszysz sprzedaż.",
+    checklist: [],
+    showFramework: false,
+    showMistakes: false,
+  },
   "dokumenty-do-sprzedazy-checklista-eksperta": {
-    title: "Dokumenty do sprzedaży: checklista eksperta",
-    lead: "W transakcji premium dokumenty nie są „formalnością na koniec”, tylko narzędziem budowania zaufania już od pierwszej rozmowy z kupującym.",
+    title: "Jakie dokumenty są potrzebne do sprzedaży mieszkania?",
+    lead:
+      "Sprzedaż mieszkania wymaga kompletu dokumentów — nie tylko księgi wieczystej. Zobacz, co przygotować, aby transakcja była bezpieczna prawnie i finansowo.",
     category: "Formalności / bezpieczeństwo",
-    readTime: "11 min czytania",
-    points: [
-      "Zbuduj „teczkę transakcyjną” przed publikacją: własność, obciążenia, opłaty i status lokalu w jednym pakiecie.",
-      "Sprawdź zgodność danych między dokumentami źródłowymi, księgą wieczystą i stanem faktycznym nieruchomości.",
-      "Przygotuj dokumenty pod dwa scenariusze: zakup gotówkowy i zakup kredytowy (różne tempo i wymagania banku).",
-      "Zadbaj o aktualność zaświadczeń z terminem ważności, aby nie stracić czasu przy finalizacji.",
-      "Ustal kolejność przekazywania dokumentów: które wysyłasz na etapie oferty, które dopiero po decyzji klienta.",
-      "Każdy dokument opisz po ludzku jednym zdaniem: co potwierdza i dlaczego jest ważny dla bezpieczeństwa kupującego.",
+    readTime: "12 min czytania",
+    points: [],
+    intro: [
+      "Aktualny odpis z księgi wieczystej jest ważnym elementem sprzedaży: w dziale II widać właściciela, w dziale III — roszczenia i ograniczenia (np. nierozliczona opłata przekształceniowa), w dziale IV — hipotekę i inne obciążenia. To jednak nie jedyny dokument.",
+      "Istotne są też zaświadczenie o zameldowaniu, potwierdzenie opłaty przekształceniowej (gdy w III dziale KW widnieje jeszcze roszczenie) oraz zaświadczenie z wspólnoty o wysokości opłat i braku zaległości zbywcy.",
+      "Przy sprzedaży mieszkania — własnościowego, spółdzielczego własnościowego lub nabytego na kredyt — zestaw dokumentów może się różnić.",
+      "Poniżej zestawienie dla tych trzech sytuacji. Dokumenty ułatwiają transakcję i zwiększają bezpieczeństwo prawne oraz finansowe obu stron.",
     ],
-    signals: [
+    sections: [
       {
-        title: "Rozjazd między księgą wieczystą a stanem faktycznym",
-        why: "Nawet drobna niespójność danych zwiększa ostrożność kupującego i wydłuża decyzję banku lub notariusza.",
-        action: "Przed ofertą wykonaj audyt zgodności: właściciel, udziały, obciążenia, adres, powierzchnia, podstawa nabycia.",
-        image: "https://images.pexels.com/photos/4427610/pexels-photo-4427610.jpeg?auto=compress&cs=tinysrgb&w=1800",
+        title: "Mieszkanie własnościowe — jakie dokumenty przygotować",
+        paragraphs: [
+          "Przy lokalu na prawie własności podstawą jest aktualny odpis z księgi wieczystej (najlepiej nie starszy niż kilka miesięcy). Widać w nim właściciela w dziale II, ewentualne roszczenia w dziale III oraz hipotekę w dziale IV.",
+          "Do paczki dołącz akt notarialny nabycia (zakup, spadek, darowizna lub inna podstawa) oraz zaświadczenie z urzędu gminy o osobach zameldowanych w lokalu.",
+          "Z wspólnoty mieszkaniowej (lub zarządcy) pobierz zaświadczenie o wysokości opłat eksploatacyjnych i braku zaległości po stronie sprzedającego. Często proszą też o regulamin wspólnoty i informację o funduszu remontowym.",
+          "Przy sprzedaży lokalu zwykle przekazujesz kupującemu ważne świadectwo charakterystyki energetycznej — to ustawowy obowiązek przy zbyciu budynku lub lokalu. Przygotuj też projekt protokołu zdawczo-odbiorczego: liczniki, klucze i wyposażenie.",
+        ],
       },
       {
-        title: "Brak aktualnych zaświadczeń o opłatach i braku zaległości",
-        why: "Kupujący potrzebuje pewności, że lokal nie niesie ukrytych zobowiązań wobec wspólnoty/spółdzielni i dostawców.",
-        action: "Przygotuj komplet aktualnych zaświadczeń i kontroluj ich ważność, aby nie odnawiać dokumentów na ostatniej prostej.",
-        image: "https://images.pexels.com/photos/8297474/pexels-photo-8297474.jpeg?auto=compress&cs=tinysrgb&w=1800",
+        title: "Mieszkanie spółdzielcze własnościowe — na co zwrócić uwagę",
+        paragraphs: [
+          "Lokal spółdzielczy własnościowy po przekształceniu prawa jest wpisany w księdze wieczystej jak pełna własność. Nadal warto sprawdzić dział III: czy nie widnieje roszczenie dotyczące opłaty przekształceniowej.",
+          "Jeśli roszczenie nie jest uregulowane, kupujący może żądać potwierdzenia wpłaty lub negocjować cenę. Notariusz może wstrzymać się z aktem do czasu wyjaśnienia tej kwestii.",
+          "Ze spółdzielni mieszkaniowej (jeśli lokal ma historię spółdzielczą) pobierz zaświadczenie o braku zaległości i informację, czy statut wymaga zgody spółdzielni na sprzedaż.",
+          "Dołącz dokumenty nabycia (umowy, akty przekształcenia) oraz zaświadczenie o zameldowaniu. Spójność danych między KW, aktami a stanem faktycznym ogranicza opóźnienia u notariusza i w banku kupującego.",
+        ],
       },
       {
-        title: "Niejasny status zameldowania i przekazania lokalu",
-        why: "Nieuregulowane kwestie meldunkowe i brak planu przekazania podnoszą ryzyko prawne po stronie kupującego.",
-        action: "Ustal harmonogram wymeldowania, protokół przekazania i listę elementów wyposażenia przekazywanych z lokalem.",
-        image: "https://images.pexels.com/photos/6863333/pexels-photo-6863333.jpeg?auto=compress&cs=tinysrgb&w=1800",
+        title: "Mieszkanie nabyte na kredyt — dokumenty przy sprzedaży z hipoteką",
+        paragraphs: [
+          "Gdy w dziale IV księgi wieczystej widnieje hipoteka na rzecz banku, sprzedaż wymaga koordynacji ze spłatą kredytu. Bank podaje saldo zadłużenia i warunki zamknięcia kredytu w dniu aktu notarialnego.",
+          "Najczęściej hipotekę spłaca się ze środków kupującego (gotówka lub kredyt kupującego) — notariusz lub bank prowadzi tzw. wypłatę z zabezpieczeniem. Rzadziej sprzedający spłaca kredyt wcześniej własnym kapitałem.",
+          "Po spłacie bank wydaje dokumenty do wykreślenia hipoteki z działu IV KW. Bez tego kupujący nie dostanie „czystej” własności.",
+          "Dołącz też standardowy pakiet: odpis KW, akt nabycia, zaświadczenia z wspólnoty, zameldowanie i świadectwo energetyczne. Im wcześniej ustalisz sposób spłaty hipoteki, tym krótsza droga do aktu.",
+        ],
       },
       {
-        title: "Brak dokumentów energetycznych i technicznych na czas",
-        why: "Braki formalne przy akcie powodują nerwowe przesunięcia terminów i osłabiają profesjonalny odbiór oferty.",
-        action: "Zweryfikuj obowiązki ustawowe (w tym świadectwo charakterystyki energetycznej) odpowiednio wcześniej.",
-        image: "https://images.pexels.com/photos/8292856/pexels-photo-8292856.jpeg?auto=compress&cs=tinysrgb&w=1800",
+        title: "Akt notarialny nabycia i akt sprzedaży — czym się różnią",
+        paragraphs: [
+          "Przy sprzedaży potrzebujesz dwóch odrębnych elementów: aktu notarialnego nabycia (potwierdza, skąd masz własność) oraz nowego aktu notarialnego sprzedaży (przenosi własność na kupującego).",
+          "Akt nabycia — z zakupu, spadku, darowizny lub innej czynności — to dowód, że jesteś właścicielem. Zawiera opis lokalu, dane stron i podstawę nabycia. Notariusz i kupujący weryfikują go z odpisem KW.",
+          "Brak aktu nabycia lub rozjazd między aktem a KW może zatrzymać transakcję do czasu wyjaśnienia stanu prawnego.",
+          "Akt sprzedaży (umowa sprzedaży w formie aktu notarialnego) podpisujecie w dniu transakcji. To on — wraz z wpisem w KW — przenosi własność na kupującego.",
+          "Notariusz sprawdza dokumenty, zgodność z KW i brak sprzeczności prawnych. Dopiero po spełnieniu warunków (np. spłacie hipoteki) wpisuje nowego właściciela w dziale II księgi wieczystej.",
+        ],
       },
       {
-        title: "Dokumenty wysyłane „na raty” bez logiki",
-        why: "Chaotyczny obieg dokumentów obniża zaufanie i zwiększa liczbę pytań zwrotnych od kupującego, banku i kancelarii.",
-        action: "Zrób indeks dokumentów i udostępniaj je paczkami według etapu transakcji, z krótkim komentarzem do każdego pliku.",
-        image: "https://images.pexels.com/photos/8293698/pexels-photo-8293698.jpeg?auto=compress&cs=tinysrgb&w=1800",
+        title: "Podsumowanie — uporządkuj dokumenty przed wystawieniem oferty",
+        paragraphs: [
+          "Najczęstsze opóźnienia: nieaktualny odpis KW, zaległości w wspólnocie, nierozliczona opłata przekształceniowa w dziale III albo niewykreślona hipoteka w dziale IV.",
+          "Złóż dokumenty w jednej teczce i odnawiaj zaświadczenia — większość ma krótki termin ważności. Porządek na starcie wzmacnia negocjacje i skraca drogę do aktu u notariusza.",
+        ],
       },
     ],
-    checklist: [
-      "Dokument własności + podstawa nabycia (akt, spadek, darowizna lub inne źródło prawa).",
-      "Aktualny odpis księgi wieczystej i kontrola wpisów/obciążeń.",
-      "Zaświadczenia o braku zaległości wobec wspólnoty/spółdzielni i opłat lokalowych.",
-      "Zaświadczenie o osobach zameldowanych oraz plan wymeldowania przed/po akcie.",
-      "Świadectwo charakterystyki energetycznej (jeśli wymagane dla danej transakcji).",
-      "Pakiet dla notariusza: dane stron, sposób płatności, termin wydania lokalu, elementy wyposażenia.",
-      "Wariant kredytowy: zestaw dokumentów pod analizę bankową kupującego.",
-      "Wzór protokołu zdawczo-odbiorczego i lista liczników/kluczy do przekazania.",
-    ],
-    frameworkEyebrow: "Plan formalny",
-    frameworkTitle: "Plan dokumentacyjny krok po kroku",
-    mistakesTitle: "Najczęstsze błędy formalne przy sprzedaży",
-    checklistTitle: "Checklista dokumentów i bezpieczeństwa",
-    checklistCardText: "Punkt kontrolny formalności do potwierdzenia przed kolejnym etapem transakcji.",
-    checklistMetric: "Bezpieczeństwo formalne",
-    framework: [
-      "Dzień 1-2: audyt stanu prawnego i lista braków dokumentacyjnych.",
-      "Dzień 3-4: uzupełnienie zaświadczeń i potwierdzeń opłat z terminem ważności.",
-      "Dzień 5-7: przygotowanie paczki dokumentów dla kupującego i notariusza.",
-      "Dzień 8-10: weryfikacja scenariusza kredytowego (jeśli dotyczy) i odpowiedzi na pytania banku.",
-      "Dzień 11-14: potwierdzenie warunków aktu, wydania lokalu i protokołu przekazania.",
-    ],
-    mistakes: [
-      "Przekonanie, że dokumenty „załatwi się na końcu” - to najczęstsza przyczyna opóźnień finału.",
-      "Brak jednolitej wersji danych (adres, metraż, udziały) w różnych dokumentach.",
-      "Niedoszacowanie czasu potrzebnego na uzyskanie zaświadczeń ze wspólnoty, spółdzielni i urzędów.",
-      "Brak planu pod transakcję kredytową, mimo że kupujący finansuje zakup kredytem.",
-      "Nieprzygotowany protokół wydania lokalu i zakres przekazywanego wyposażenia.",
-    ],
-    closing: "Im bardziej uporządkowana dokumentacja, tym większe poczucie bezpieczeństwa po stronie kupującego i szybsza droga do aktu. W praktyce premium formalności są częścią strategii sprzedaży, nie dodatkiem do niej.",
+    disclaimer:
+      "Artykuł ma charakter informacyjny i nie zastępuje porady notariusza, radcy prawnego ani doradcy bankowego. Szczegóły zależą od stanu prawnego lokalu i warunków umowy — w razie wątpliwości skonsultuj sprawę ze specjalistą przed podpisaniem dokumentów.",
+    checklist: [],
+    showFramework: false,
+    showMistakes: false,
   },
   "negocjacje-ceny-scenariusze-rozmowy": {
     title: "Negocjacje ceny: scenariusze rozmowy",
@@ -387,6 +475,13 @@ export default function BlogArticlePage() {
   const [cmsArticle, setCmsArticle] = useState<CmsBlogPostRecord | null>(null);
   const fallbackArticle = articles[slug];
   const article = useMemo(() => {
+    const hasProseFallback =
+      (fallbackArticle?.intro?.length ?? 0) > 0 || (fallbackArticle?.sections?.length ?? 0) > 0;
+
+    if (hasProseFallback && fallbackArticle) {
+      return fallbackArticle;
+    }
+
     if (cmsArticle) {
       return {
         title: cmsArticle.title ?? "Artykuł",
@@ -564,6 +659,26 @@ export default function BlogArticlePage() {
               </>
             )}
 
+            {(!!article.intro?.length || !!article.sections?.length) && (
+              <article className="article-prose">
+                {article.intro?.map((paragraph) => (
+                  <p key={paragraph.slice(0, 48)} className="article-prose-p">
+                    {paragraph}
+                  </p>
+                ))}
+                {article.sections?.map((section) => (
+                  <div key={section.title} className="article-prose-section">
+                    <h2 className="article-prose-h2">{section.title}</h2>
+                    {section.paragraphs.map((paragraph) => (
+                      <p key={paragraph.slice(0, 48)} className="article-prose-p">
+                        {paragraph}
+                      </p>
+                    ))}
+                  </div>
+                ))}
+              </article>
+            )}
+
             {!!article.signals?.length && (
               <div className="signals-layout">
                 <aside className="signals-copy">
@@ -649,6 +764,8 @@ export default function BlogArticlePage() {
 
             {!!article.closing && <p className="article-closing">{article.closing}</p>}
 
+            {!!article.disclaimer && <p className="article-disclaimer">{article.disclaimer}</p>}
+
             <div className="surface faq-box">
               <h2>Co zrobić po przeczytaniu artykułu</h2>
               <h3>Wybierz odpowiednią ścieżkę i przejdź do formularza</h3>
@@ -710,7 +827,6 @@ export default function BlogArticlePage() {
         />
         <SiteFooter year={year} />
       </div>
-      <ScrollToTopButton />
     </>
   );
 }

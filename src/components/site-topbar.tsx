@@ -3,8 +3,9 @@
 import Image from "next/image";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
-import { ROUTE_PATHS, getTopbarLinks, isRouteActive } from "@/config/navigation";
+import { ROUTE_PATHS, getTopbarNavItems } from "@/config/navigation";
 import { CtaClickLink } from "@/components/cta-click-link";
+import { SiteTopbarNav } from "@/components/site-topbar-nav";
 
 type SiteTopbarProps = {
   variant?: "site" | "cp";
@@ -19,7 +20,7 @@ export function SiteTopbar({
 }: SiteTopbarProps) {
   const CLOSE_ANIMATION_MS = 240;
   const isCp = variant === "cp";
-  const topbarLinks = getTopbarLinks();
+  const topbarNavItems = getTopbarNavItems();
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const [menuVisible, setMenuVisible] = useState(false);
@@ -103,7 +104,6 @@ export function SiteTopbar({
 
     document.body.style.overflow = "hidden";
     window.addEventListener("keydown", handleKeyDown);
-    // Move focus into the dialog-like mobile navigation for keyboard users.
     closeButtonRef.current?.focus();
 
     return () => {
@@ -138,19 +138,7 @@ export function SiteTopbar({
       </a>
 
       <nav className={isCp ? "cp-nav" : "site-nav"} aria-label="Primary navigation">
-        {topbarLinks.map((link) => {
-          const active = isRouteActive(pathname, link.href);
-          return (
-            <a
-              key={link.href}
-              href={link.href}
-              className={active ? "nav-link-active" : undefined}
-              aria-current={active ? "page" : undefined}
-            >
-              {link.label}
-            </a>
-          );
-        })}
+        <SiteTopbarNav items={topbarNavItems} pathname={pathname} variant="desktop" />
       </nav>
 
       {ctaHref ? (
@@ -197,20 +185,12 @@ export function SiteTopbar({
             >
               <span aria-hidden="true">×</span>
             </button>
-            {topbarLinks.map((link) => {
-              const active = isRouteActive(pathname, link.href);
-              return (
-                <a
-                  key={`mobile-${link.href}`}
-                  href={link.href}
-                  className={active ? "nav-link-active" : undefined}
-                  aria-current={active ? "page" : undefined}
-                  onClick={closeMenu}
-                >
-                  {link.label}
-                </a>
-              );
-            })}
+            <SiteTopbarNav
+              items={topbarNavItems}
+              pathname={pathname}
+              variant="mobile"
+              onNavigate={closeMenu}
+            />
             {ctaHref ? (
               <CtaClickLink
                 href={ctaHref}

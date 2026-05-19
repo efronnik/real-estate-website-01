@@ -1,7 +1,6 @@
 import { ROUTE_PATHS } from "@/config/navigation";
 import { SiteTopbar } from "@/components/site-topbar";
 import { SiteFooter } from "@/components/site-footer";
-import { ScrollToTopButton } from "@/components/scroll-to-top-button";
 
 export default function NotFoundPage() {
   const year = new Date().getFullYear();
@@ -28,7 +27,6 @@ export default function NotFoundPage() {
       <div className="footer-stack">
         <SiteFooter year={year} />
       </div>
-      <ScrollToTopButton />
     </>
   );
 }

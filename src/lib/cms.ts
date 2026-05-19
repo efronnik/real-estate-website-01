@@ -67,6 +67,21 @@ function pickRecord<T>(item: { attributes?: T } & T): T {
   return item as T;
 }
 
+/** Strapi 5 rejects `populate[field]=*` on media; use explicit relation keys. */
+function appendSeoPopulate(params: URLSearchParams) {
+  params.set("populate[seo][populate][0]", "ogImage");
+}
+
+function appendCategoryPopulate(params: URLSearchParams) {
+  params.set("populate[category][fields][0]", "name");
+  params.set("populate[category][fields][1]", "slug");
+}
+
+function mediaUrl(media: { url?: string; attributes?: { url?: string } } | null | undefined): string | undefined {
+  if (!media) return undefined;
+  return media.url ?? media.attributes?.url;
+}
+
 async function fetchStrapiList<T>(resource: string, params: URLSearchParams): Promise<T[]> {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), CMS_FETCH_TIMEOUT_MS);
@@ -100,8 +115,8 @@ export async function fetchCmsPageBySlug(slug: string): Promise<CmsPageRecord | 
   const params = new URLSearchParams({
     "filters[slug][$eq]": slug,
     "pagination[pageSize]": "1",
-    "populate[seo][populate][ogImage]": "*",
   });
+  appendSeoPopulate(params);
   const items = await fetchStrapiList<CmsPageRecord>("pages", params);
   return items[0] ?? null;
 }
@@ -110,9 +125,9 @@ export async function fetchCmsBlogPosts(): Promise<CmsBlogPostRecord[]> {
   const params = new URLSearchParams({
     "pagination[pageSize]": "50",
     sort: "publishedAt:desc",
-    "populate[seo][populate][ogImage]": "*",
-    "populate[category]": "*",
   });
+  appendSeoPopulate(params);
+  appendCategoryPopulate(params);
   return fetchStrapiList<CmsBlogPostRecord>("blog-posts", params);
 }
 
@@ -120,9 +135,9 @@ export async function fetchCmsBlogPostBySlug(slug: string): Promise<CmsBlogPostR
   const params = new URLSearchParams({
     "filters[slug][$eq]": slug,
     "pagination[pageSize]": "1",
-    "populate[seo][populate][ogImage]": "*",
-    "populate[category]": "*",
   });
+  appendSeoPopulate(params);
+  appendCategoryPopulate(params);
   const items = await fetchStrapiList<CmsBlogPostRecord>("blog-posts", params);
   return items[0] ?? null;
 }
@@ -175,7 +190,7 @@ function buildPageMetadataFromSeo(seo: CmsSeoRecord | null | undefined, fallback
   }
 
   const canonical = seo.canonicalUrl || fallbackCanonical;
-  const ogImageUrl = toAbsoluteUrl(seo.ogImage?.url);
+  const ogImageUrl = toAbsoluteUrl(mediaUrl(seo.ogImage));
 
   return {
     title: seo.metaTitle,

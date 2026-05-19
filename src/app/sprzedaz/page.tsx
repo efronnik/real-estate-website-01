@@ -52,13 +52,41 @@ const saleProcessSteps = [
   },
 ];
 
+const saleFaqFallback = [
+  {
+    question: "Skąd mam pewność, że wycenicie moją nieruchomość zgodnie z jej realną wartością?",
+    answer:
+      "Podczas wyceny nieruchomości korzystamy z autorskiego programu Wyceny 5 Kroków. Porównujemy ceny ofertowe i transakcyjne z wielu różnych źródeł, zanim przedstawimy szczegółowy raport analityczny. Dzięki temu wyceny opieramy o rzeczywiste dane oraz aktualną sytuację makroekonomiczną i trendy rynkowe.",
+  },
+  {
+    question: "Jak wygląda proces sprzedaży? Czy ktoś poprowadzi mnie krok po kroku przez wszystkie formalności?",
+    answer:
+      "Zajmujemy się całym procesem sprzedaży – od przygotowania nieruchomości, przez nowoczesny marketing, negocjacje, aż po finalizację formalności. Przeprowadzamy klientów przez każdy etap w sposób przejrzysty i profesjonalny.",
+  },
+];
+
+const defaultIntroTitle = "Sprzedaj mieszkanie świadomie — z wyceną opartą o realny rynek";
+const defaultIntroCopy =
+  "Zajmujemy się całym procesem sprzedaży – od przygotowania nieruchomości, przez nowoczesny marketing, negocjacje, aż po finalizację formalności. Przeprowadzamy klientów przez każdy etap w sposób przejrzysty i profesjonalny.";
+
+const cmsIntroPlaceholders = ["Sekcje, CTA", "szkieletem", "testow integracji", "Testowe dane"];
+
+function isCmsIntroPlaceholder(content?: string | null) {
+  if (!content?.trim()) {
+    return true;
+  }
+  return cmsIntroPlaceholders.some((snippet) => content.includes(snippet));
+}
+
 const salePillars = [
   {
-    title: "Wycena: transakcyjna vs ofertowa",
-    lead: "Rozdzielamy dwie perspektywy ceny, żeby uniknąć błędnej strategii wejścia na rynek.",
+    title: "Wycena: program Wyceny 5 Kroków",
+    lead:
+      "Ceny widoczne na portalach ogłoszeniowych to wartości ofertowe, często zawyżone nawet o 20–30% względem realnych kwot, po których nieruchomości faktycznie znajdują nabywców.",
     points: [
-      "Wycena ofertowa: cena startowa pod ekspozycję i rozmowy z kupującymi.",
-      "Wycena transakcyjna: realny przedział domknięcia na podstawie danych i dynamiki negocjacji.",
+      "W analizie bazujemy wyłącznie na cenach transakcyjnych — danych z rzeczywiście zakończonych sprzedaży.",
+      "Określisz trafną cenę ofertową i unikniesz zbyt długiego czasu sprzedaży.",
+      "Będziesz negocjować z pozycji wiedzy, nie intuicji.",
     ],
   },
   {
@@ -98,17 +126,20 @@ export default async function SprzedazPage() {
     safeCmsCall(() => fetchCmsFaqByPageType("sprzedaz"), []),
     safeCmsCall(fetchCmsFeaturedTestimonials, []),
   ]);
-  const introTitle = cmsPage?.headline ?? "Sprzedaz nieruchomosci to dobrze zaplanowany proces";
-  const introCopy =
-    cmsPage?.content ??
-    "Ta strona jest gotowym szkieletem pod oferte sprzedazy, leady i CTA. W kolejnym kroku uzupelnimy ja finalna trescia oraz formularzem wyceny.";
+  const useCmsIntro = cmsPage?.headline && !isCmsIntroPlaceholder(cmsPage.content);
+  const introTitle = useCmsIntro ? (cmsPage?.headline ?? defaultIntroTitle) : defaultIntroTitle;
+  const introCopy = useCmsIntro ? (cmsPage?.content ?? defaultIntroCopy) : defaultIntroCopy;
+  const hasOnlySeedFaq =
+    cmsFaqItems.length === 1 &&
+    (cmsFaqItems[0]?.question?.includes("Ile trwa standardowa sprzedaz") ?? false);
+  const faqItems = cmsFaqItems.length > 0 && !hasOnlySeedFaq ? cmsFaqItems : saleFaqFallback;
 
   return (
     <>
       <main>
         <SiteTopbar />
         <PageIntroSection
-          eyebrow="Sprzedaz nieruchomosci"
+          eyebrow="Sprzedaż nieruchomości"
           title={introTitle}
           copy={introCopy}
         />
@@ -143,6 +174,10 @@ export default async function SprzedazPage() {
             <header className="process-head">
               <p className="eyebrow">Proces sprzedaży</p>
               <h2 className="section-title">5 kroków do bezpiecznej i skutecznej sprzedaży nieruchomości</h2>
+              <p className="section-copy process-head-copy">
+                Prowadzimy Cię krok po kroku — od wyceny w oparciu o program Wyceny 5 Kroków, przez marketing i
+                negocjacje, aż po formalności przy finalizacji transakcji.
+              </p>
             </header>
           </div>
           <div className="service-board">
@@ -207,17 +242,12 @@ export default async function SprzedazPage() {
           <div className="container">
             <div className="surface faq-box">
               <h2>FAQ sprzedaży nieruchomości</h2>
-              {cmsFaqItems.map((item, idx) => (
+              {faqItems.map((item, idx) => (
                 <article key={`${item.question ?? "faq"}-${idx}`} className="faq-item">
                   <h3>{item.question}</h3>
                   <p>{item.answer}</p>
                 </article>
               ))}
-              {cmsFaqItems.length === 0 ? (
-                <article className="faq-item">
-                  <p>Brak pytań FAQ w CMS dla strony sprzedaży. Dodaj rekordy `FAQItem` z `pageType=sprzedaz`.</p>
-                </article>
-              ) : null}
             </div>
           </div>
         </section>
@@ -225,10 +255,10 @@ export default async function SprzedazPage() {
         <section className="section sale-cta-strip">
           <div className="container sale-cta-shell">
             <p className="eyebrow">Następny krok</p>
-            <h2>Wybierz: szybka konsultacja 1:1 albo od razu formularz wyceny.</h2>
+            <h2>Bezpłatna wycena online albo rozmowa z ekspertem.</h2>
             <p>
-              Jeśli chcesz najpierw omówić sytuację, zacznij od rozmowy. Jeśli jesteś gotowy, przejdź
-              bezpośrednio do formularza wyceny nieruchomości.
+              Dzięki bezpłatnej wycenie online sprzedajesz w cenie rynkowej, a nie poniżej realnej wartości
+              mieszkania. Możesz też najpierw umówić konsultację i omówić sytuację 1:1.
             </p>
             <div className="sale-cta-actions">
               <CtaClickLink
@@ -257,7 +287,31 @@ export default async function SprzedazPage() {
           </div>
         </section>
 
-        <WycenaSection sourcePage="sprzedaz" />
+        <WycenaSection
+          sourcePage="sprzedaz"
+          eyebrow="Bezpłatna wycena online"
+          title="Sprzedaj w cenie rynkowej, nie poniżej realnej wartości"
+          lead="Wypełnij krótki formularz — zajmie Ci to mniej niż 2 minuty. System analizuje tysiące ofert i realne ceny transakcyjne, uwzględniając lokalizację, metraż i standard."
+          promise="Otrzymujesz gotową wycenę na e-mail wraz z porównaniem ofert w okolicy."
+          steps={[
+            {
+              title: "Wypełnij formularz",
+              text: "Podaj podstawowe informacje o nieruchomości — to zajmie mniej niż 2 minuty.",
+            },
+            {
+              title: "Analiza",
+              text: "System analizuje tysiące ofert i realne ceny transakcyjne z uwzględnieniem lokalizacji, metrażu i standardu.",
+            },
+            {
+              title: "Raport na e-mail",
+              text: "W kilka chwil dostajesz raport z wyceną oraz porównaniem ofert w okolicy.",
+            },
+          ]}
+          consultationNote="Dodatkowo: bezpłatna konsultacja z ekspertem — razem z wyceną możesz porozmawiać o tym, jak sprzedać nieruchomość."
+          helperText="Po wysłaniu formularza przygotujemy wycenę i odezwiemy się z raportem oraz możliwością bezpłatnej konsultacji."
+          submitLabel="Wyślij i odbierz wycenę"
+          successMessage="Dziękujemy. Formularz wyceny został wysłany — wkrótce otrzymasz raport na e-mail."
+        />
 
       </main>
 

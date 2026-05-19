@@ -4,7 +4,6 @@ import { useEffect, useMemo, useState } from "react";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteTopbar } from "@/components/site-topbar";
 import { Prefooter } from "@/components/prefooter";
-import { ScrollToTopButton } from "@/components/scroll-to-top-button";
 import { ROUTE_PATHS } from "@/config/navigation";
 import { CtaClickLink } from "@/components/cta-click-link";
 import { HeroBackgroundVideo } from "@/components/hero-background-video";
@@ -51,17 +50,26 @@ const posts = [
     cta: "Czytaj analizę",
   },
   {
+    slug: "jak-przygotowac-mieszkanie-do-sprzedazy",
+    title: "Jak przygotować mieszkanie do sprzedaży, aby zwróciło uwagę nawet najbardziej wymagających klientów?",
+    excerpt:
+      "Home staging krok po kroku: od czystości i depersonalizacji, przez naprawy i światło, po zdjęcia i prezentację dla wymagających klientów.",
+    image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
+    meta: "home staging / przygotowanie oferty",
+    cta: "Czytaj artykuł",
+  },
+  {
     slug: "home-staging-premium-bez-przepalania-budzetu",
     title: "Home staging premium bez przepalania budżetu",
     excerpt: "Co realnie podnosi postrzeganą wartość mieszkania i pomaga szybciej domknąć decyzję klienta.",
-    image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
+    image: "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1200&q=80",
     meta: "home staging / premium",
     cta: "Zobacz checklist",
   },
   {
     slug: "dokumenty-do-sprzedazy-checklista-eksperta",
-    title: "Dokumenty do sprzedaży: checklista eksperta",
-    excerpt: "Lista formalności, która przyspiesza finał i ogranicza ryzyko zerwania transakcji.",
+    title: "Jakie dokumenty są potrzebne do sprzedaży mieszkania?",
+    excerpt: "KW, zameldowanie, wspólnota, spółdzielnia, kredyt i akt notarialny — przewodnik po dokumentach do sprzedaży mieszkania.",
     image: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=1200&q=80",
     meta: "formalności / bezpieczeństwo",
     cta: "Pobierz listę",
@@ -86,16 +94,29 @@ export default function BlogPage() {
   const [heroLead, setHeroLead] = useState<string | null>(null);
   const listPosts = useMemo(() => {
     if (!cmsPosts.length) return posts;
-    return cmsPosts
+
+    const hardcodedBySlug = Object.fromEntries(posts.map((post) => [post.slug, post]));
+
+    const merged = cmsPosts
       .filter((post) => Boolean(post.slug) && Boolean(post.title))
-      .map((post, idx) => ({
-        slug: post.slug as string,
-        title: post.title as string,
-        excerpt: post.excerpt ?? "Artykuł ekspercki o sprzedaży i inwestowaniu w nieruchomości.",
-        image: posts[idx % posts.length].image,
-        meta: getCmsCategoryLabel(post),
-        cta: "Czytaj artykuł",
-      }));
+      .map((post, idx) => {
+        const slug = post.slug as string;
+        const hardcoded = hardcodedBySlug[slug];
+        if (hardcoded) return hardcoded;
+
+        return {
+          slug,
+          title: post.title as string,
+          excerpt: post.excerpt ?? "Artykuł ekspercki o sprzedaży i inwestowaniu w nieruchomości.",
+          image: posts[idx % posts.length].image,
+          meta: getCmsCategoryLabel(post),
+          cta: "Czytaj artykuł",
+        };
+      });
+
+    const mergedSlugs = new Set(merged.map((post) => post.slug));
+    const extras = posts.filter((post) => !mergedSlugs.has(post.slug));
+    return [...merged, ...extras];
   }, [cmsPosts]);
   const featuredPost = listPosts[0];
   const sidePosts = listPosts.slice(1);
@@ -243,7 +264,6 @@ export default function BlogPage() {
         />
         <SiteFooter year={year} />
       </div>
-      <ScrollToTopButton />
     </>
   );
 }

@@ -177,9 +177,10 @@ export default {
         title: "Sprzedaz",
         slug: "sprzedaz",
         pageType: "sprzedaz",
-        headline: "Pomagamy sprzedawac szybciej",
-        lead: "Testowe dane dla lejka sprzedajacego.",
-        content: "Sekcje, CTA i copy do testow integracji frontend + CMS.",
+        headline: "Sprzedaj mieszkanie swiadomie — z wycena oparta o realny rynek",
+        lead: "Proces sprzedazy od przygotowania po finalizacje formalnosci.",
+        content:
+          "Zajmujemy sie calym procesem sprzedazy – od przygotowania nieruchomosci, przez marketing, negocjacje, az po finalizacje formalnosci.",
         seo: defaultSeo.id,
       },
     });
@@ -200,9 +201,10 @@ export default {
       data: {
         title: "Jak przygotowac mieszkanie do sprzedazy",
         slug: "jak-przygotowac-mieszkanie-do-sprzedazy",
-        excerpt: "Lista krokow, ktore poprawiaja konwersje ogloszenia.",
+        excerpt:
+          "Home staging i przygotowanie mieszkania do sprzedazy krok po kroku — od oceny stanu po czystosc w kuchni i lazience.",
         content:
-          "To jest testowy artykul blogowy nr 1. Sluzy do sprawdzenia listy i detalu wpisow.",
+          "Artykul renderowany z frontendu (prose). Pelna tresc w kodzie aplikacji.",
         seo: defaultSeo.id,
       },
     });
@@ -220,10 +222,21 @@ export default {
 
     await strapi.db.query("api::faq-item.faq-item").create({
       data: {
-        question: "Ile trwa standardowa sprzedaz nieruchomosci?",
-        answer: "To zalezy od rynku i przygotowania oferty, zwykle od kilku tygodni do kilku miesiecy.",
+        question: "Skad mam pewnosc, ze wycenicie moja nieruchomosc zgodnie z jej realna wartoscia?",
+        answer:
+          "Podczas wyceny korzystamy z autorskiego programu Wyceny 5 Krokow. Porownujemy ceny ofertowe i transakcyjne z wielu zrodel, zanim przedstawimy raport analityczny oparty o realne dane i trendy rynkowe.",
         pageType: "sprzedaz",
         order: 1,
+      },
+    });
+
+    await strapi.db.query("api::faq-item.faq-item").create({
+      data: {
+        question: "Jak wyglada proces sprzedazy? Czy ktos poprowadzi mnie krok po kroku?",
+        answer:
+          "Zajmujemy sie calym procesem sprzedazy – od przygotowania nieruchomosci, przez marketing, negocjacje, az po finalizacje formalnosci. Prowadzimy klientow przez kazdy etap przejrzyscie i profesjonalnie.",
+        pageType: "sprzedaz",
+        order: 2,
       },
     });
 

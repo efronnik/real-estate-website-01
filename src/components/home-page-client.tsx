@@ -5,7 +5,6 @@ import { SiteFooter } from "@/components/site-footer";
 import { SiteTopbar } from "@/components/site-topbar";
 import { Prefooter } from "@/components/prefooter";
 import { LeadContactSection } from "@/components/lead-contact-section";
-import { ScrollToTopButton } from "@/components/scroll-to-top-button";
 import { ROUTE_PATHS } from "@/config/navigation";
 import { CtaClickLink } from "@/components/cta-click-link";
 import { HeroBackgroundVideo } from "@/components/hero-background-video";
@@ -226,7 +225,6 @@ export function HomePageClient({ cmsPage, cmsTestimonials }: HomePageClientProps
         <Prefooter kicker="Koniec przewijania? Zróbmy pierwszy krok." title="Sprzedaj mieszkanie spokojnie i na dobrych warunkach." buttons={[{ href: "#kontakt", label: "Umów konsultację" }]} />
         <SiteFooter year={year} />
       </div>
-      <ScrollToTopButton />
     </>
   );
 }

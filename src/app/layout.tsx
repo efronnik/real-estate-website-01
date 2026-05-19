@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import "./globals.css";
 import { CookieConsentBar } from "@/components/cookie-consent-bar";
 import { GoogleAnalytics } from "@/components/google-analytics";
+import { ScrollToTopButton } from "@/components/scroll-to-top-button";
 import { UtmSessionSync } from "@/components/utm-session-sync";
 import { getGaMeasurementId } from "@/lib/ga-measurement-id";
 import { absoluteUrl, getSiteUrl } from "@/lib/seo";
@@ -14,8 +15,10 @@ const indexable = isSiteIndexable();
 
 const playfair = Playfair_Display({
   subsets: ["latin", "latin-ext"],
-  weight: ["400", "500", "600", "700", "800"],
+  // 400/500/700 cover all styles in globals.css (600→700, 800→700).
+  weight: ["400", "500", "700"],
   display: "swap",
+  preload: false,
   variable: "--font-playfair",
   adjustFontFallback: true,
 });
@@ -76,6 +79,7 @@ export default function RootLayout({
           <UtmSessionSync />
         </Suspense>
         {children}
+        <ScrollToTopButton />
       </body>
     </html>
   );

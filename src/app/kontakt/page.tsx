@@ -3,7 +3,6 @@ import { SiteFooter } from "@/components/site-footer";
 import { SiteTopbar } from "@/components/site-topbar";
 import { Prefooter } from "@/components/prefooter";
 import { LeadContactSection } from "@/components/lead-contact-section";
-import { ScrollToTopButton } from "@/components/scroll-to-top-button";
 import { fetchCmsPageBySlug, safeCmsCall } from "@/lib/cms";
 import { resolveKeyPageMetadata } from "@/lib/page-metadata";
 import { HeroBackgroundVideo } from "@/components/hero-background-video";
@@ -138,7 +137,6 @@ export default async function KontaktPage({ searchParams }: KontaktPageProps) {
         <SiteFooter year={year} />
       </div>
 
-      <ScrollToTopButton />
     </>
   );
 }

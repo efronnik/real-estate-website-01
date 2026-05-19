@@ -20,7 +20,8 @@ export const KEY_SEO_PAGE_MAPPING: Record<KeySeoPage, SeoMappingEntry> = {
     cmsSlug: "sprzedaz",
     path: "/sprzedaz",
     title: "Sprzedaz nieruchomosci | FIND",
-    description: "Proces sprzedaży nieruchomości krok po kroku: wycena, marketing, selekcja leadów i bezpieczna finalizacja.",
+    description:
+      "Sprzedaż mieszkania z wyceną opartą o ceny transakcyjne, program Wyceny 5 Kroków i bezpłatną wycenę online.",
     type: "website",
   },
   inwestycje: {

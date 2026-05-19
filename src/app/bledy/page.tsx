@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteTopbar } from "@/components/site-topbar";
 import { Prefooter } from "@/components/prefooter";
-import { ScrollToTopButton } from "@/components/scroll-to-top-button";
 import { HeroBackgroundVideo } from "@/components/hero-background-video";
 
 const problems = [
@@ -243,7 +242,6 @@ export default function BledyPage() {
         />
         <SiteFooter year={year} />
       </div>
-      <ScrollToTopButton />
     </>
   );
 }

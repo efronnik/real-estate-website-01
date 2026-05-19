@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteTopbar } from "@/components/site-topbar";
 import { Prefooter } from "@/components/prefooter";
-import { ScrollToTopButton } from "@/components/scroll-to-top-button";
 import { ROUTE_PATHS } from "@/config/navigation";
 import { CtaClickLink } from "@/components/cta-click-link";
 import { RemoteFillImage } from "@/components/remote-fill-image";
@@ -292,7 +291,6 @@ export function AboutPageClient({ cmsHeadline, cmsLead, cmsContent }: AboutPageC
         <Prefooter tall kicker="Porozmawiajmy o Twojej nieruchomości" title="Jeśli chcesz sprzedać mieszkanie z planem i spokojem, umów rozmowę." copy="Zaczniemy od krótkiej diagnozy i konkretnego kierunku działań." buttons={[{ href: ROUTE_PATHS.kontakt, label: "Umów konsultację" }, { href: ROUTE_PATHS.sprzedaz, label: "Zobacz ofertę sprzedaży" }]} />
         <SiteFooter year={year} />
       </div>
-      <ScrollToTopButton />
     </>
   );
 }
