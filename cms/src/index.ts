@@ -134,12 +134,12 @@ export default {
 
     const defaultSeo = await strapi.db.query("api::seo.seo").create({
       data: {
-        metaTitle: "FIND Nieruchomosci - test SEO",
+        metaTitle: "FIND Nieruchomosci",
         metaDescription:
-          "Testowe dane CMS dla projektu nieruchomosci. Wersja developerska do integracji frontendu.",
-        canonicalUrl: "https://example.local/",
+          "Wsparcie w sprzedazy mieszkan i inwestowaniu w nieruchomosci w Warszawie.",
+        canonicalUrl: "http://localhost:3000/",
         ogTitle: "FIND Nieruchomosci",
-        ogDescription: "Testowe dane OG z CMS",
+        ogDescription: "Sprzedaz i inwestycje nieruchomosci w Warszawie.",
       },
     });
 
@@ -147,7 +147,7 @@ export default {
       data: {
         name: "Porady",
         slug: "porady",
-        description: "Testowa kategoria poradnikowa",
+        description: "Poradniki dla sprzedajacych",
       },
     });
 
@@ -155,7 +155,7 @@ export default {
       data: {
         name: "Inwestowanie",
         slug: "inwestowanie",
-        description: "Testowa kategoria inwestycyjna",
+        description: "Materialy dla inwestorow",
       },
     });
 
@@ -165,9 +165,9 @@ export default {
         slug: "glowna",
         pageType: "glowna",
         headline: "Sprzedaj lub zainwestuj swiadomie",
-        lead: "Testowy lead z CMS dla strony glownej.",
+        lead: "Pokaze bledy i dam jasny plan sprzedazy.",
         content:
-          "To jest testowa tresc dla strony glownej. Dane sa automatycznie seedowane podczas developmentu.",
+          "Nie dostajesz przypadkowych dzialan. Dostajesz konkretny proces od pierwszej diagnozy do podpisu.",
         seo: defaultSeo.id,
       },
     });
@@ -190,9 +190,10 @@ export default {
         title: "Inwestycje",
         slug: "inwestycje",
         pageType: "inwestycje",
-        headline: "Buduj portfel nieruchomosci",
-        lead: "Testowe dane dla lejka inwestora.",
-        content: "Tresc testowa do sprawdzenia renderu dynamicznego.",
+        headline: "Inwestowanie w nieruchomosci Warszawa – flipy mieszkan",
+        lead: "Analiza okazji, remontu i wyjscia z inwestycji krok po kroku.",
+        content:
+          "Pomagam ocenic potencjal flipa, zaplanowac remont i domknac transakcje z jasnym scenariuszem finansowym.",
         seo: defaultSeo.id,
       },
     });
@@ -209,16 +210,6 @@ export default {
       },
     });
 
-    await strapi.db.query("api::blog-post.blog-post").create({
-      data: {
-        title: "5 zasad bezpiecznego inwestowania",
-        slug: "5-zasad-bezpiecznego-inwestowania",
-        excerpt: "Jak unikac typowych bledow inwestora.",
-        content:
-          "To jest testowy artykul blogowy nr 2. Dane sa wystarczajace do developmentu.",
-        seo: defaultSeo.id,
-      },
-    });
 
     await strapi.db.query("api::faq-item.faq-item").create({
       data: {
@@ -254,27 +245,11 @@ export default {
       data: {
         siteName: "FIND Nieruchomosci",
         defaultLocale: "pl",
-        contactEmail: "kontakt@example.local",
-        contactPhone: "+48 600 000 000",
+        contactEmail: "compasgroup.info@gmail.com",
+        contactPhone: "+48577154116",
         businessAddress: "Warszawa, Polska",
-        ga4MeasurementId: "G-TEST123456",
+        ga4MeasurementId: "",
         defaultSeo: defaultSeo.id,
-      },
-    });
-
-    await strapi.db.query("api::lead.lead").create({
-      data: {
-        fullName: "Jan Testowy",
-        phone: "+48 500 500 500",
-        email: "jan.testowy@example.local",
-        leadType: "kontakt",
-        sourcePage: "glowna",
-        message: "To jest testowy lead developerski.",
-        city: "Warszawa",
-        utmSource: "google",
-        utmMedium: "cpc",
-        utmCampaign: "spring-test",
-        consentData: true,
       },
     });
   },

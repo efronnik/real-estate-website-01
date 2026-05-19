@@ -157,7 +157,7 @@ function DesktopDropdown({
         aria-controls={panelId}
         onClick={() => setOpen((value) => !value)}
       >
-        {label}
+        <span className="site-nav-dropdown-label">{label}</span>
         <span className="site-nav-dropdown-caret" aria-hidden="true">
           ▾
         </span>

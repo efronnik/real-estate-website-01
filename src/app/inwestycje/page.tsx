@@ -14,85 +14,110 @@ import {
   safeCmsCall,
 } from "@/lib/cms";
 import { resolveKeyPageMetadata } from "@/lib/page-metadata";
+import { resolveCmsText } from "@/lib/cms-content";
 
-const investorLandingSections = [
+const defaultIntroTitle =
+  "Inwestowanie w Nieruchomości Warszawa – Flipy Mieszkań z Gwarantowanym Nadzorem";
+
+const defaultIntroCopy = [
+  "Szukasz bezpiecznej inwestycji w nieruchomości w Warszawie? Specjalizujemy się w flipach mieszkań – wyszukujemy Perełki z potencjałem, remontujemy i sprzedajemy z zyskiem. Sprawdź, jak możemy pomnożyć Twój kapitał.",
+  "Czy Twoje pieniądze pracują wystarczająco ciężko? Masz oszczędności, ale inflacja je zjada. Wiesz, że powinieneś inwestować – ale nie wiesz jak, nie masz czasu, albo po prostu boisz się stracić. To całkowicie normalne.",
+  "Większość osób zainteresowanych inwestowaniem w nieruchomości w Warszawie jest dokładnie w tym samym miejscu. Dobra wiadomość: my robimy to za Ciebie.",
+].join("\n\n");
+
+const flipPartnershipBullets = [
+  "Znajomość rynku nieruchomości w Warszawie i dostęp do okazji, których nie znajdziesz na portalach",
+  "Doświadczenie w negocjacjach i profesjonalnej wycenie mieszkań",
+  "Sprawdzoną ekipę remontową z wieloletnim doświadczeniem",
+  "Pełną obsługę transakcji od zakupu do sprzedaży – od A do Z",
+];
+
+const flipBenefits = [
   {
-    title: "Inwestowanie w nieruchomości Warszawa: od strategii do wykonania",
-    copy:
-      "Warszawski rynek wymaga precyzyjnego doboru strategii: inna logika działa dla mieszkań pod flip, inna dla lokalu pod stabilny najem. Dlatego zaczynamy od celu inwestora, budżetu i akceptowanego poziomu ryzyka.",
-    bullets: [
-      "Analiza lokalizacji i mikrotrendów popytu w dzielnicach Warszawy.",
-      "Dobór modelu inwestycyjnego: flip, najem długoterminowy lub hybryda.",
-    ],
+    title: "Krótki horyzont inwestycji",
+    text: "Zazwyczaj kilka miesięcy, nie lat – szybszy obrót kapitału niż w długim najmie.",
   },
   {
-    title: "Flipy Warszawa: jak selekcjonować okazje bez przepalania kapitału",
-    copy:
-      "W projektach typu flip kluczowa jest selekcja: nie każda „okazja” daje margines bezpieczeństwa. Oceniamy potencjał nieruchomości pod kątem ceny wejścia, kosztu prac i realnego czasu wyjścia.",
-    bullets: [
-      "Wstępna filtracja okazji i ocena potencjału wzrostu wartości.",
-      "Scenariusze kosztowe i plan minimalizacji ryzyka remontowego.",
-    ],
+    title: "Namacalny, fizyczny aktyw",
+    text: "Nieruchomość to konkretna wartość – nie wirtualne akcje ani kryptowaluty.",
   },
   {
-    title: "Bezpieczna finalizacja inwestycji i kontrola wyniku",
-    copy:
-      "Na końcu liczy się nie tylko zakup, ale pełny wynik inwestycji. Dlatego prowadzimy proces od analizy i negocjacji po domknięcie formalności i plan kolejnego ruchu kapitału.",
-    bullets: [
-      "Negocjacje warunków zakupu z orientacją na wynik netto inwestora.",
-      "Checklisty formalne i porządek procesu, który skraca czas decyzji.",
-    ],
+    title: "Przewidywalny model",
+    text: "Sprawdzona strategia flipa: zakup poniżej rynku, remont, sprzedaż z marżą.",
+  },
+  {
+    title: "Wysoki zwrot przy dobrym doborze",
+    text: "Przy właściwej selekcji mieszkania i budżecie remontu zwrot z inwestycji może realnie przewyższać lokaty.",
   },
 ];
 
-const inwestycjeHowItWorks = [
+const preparationSteps = [
   {
-    step: "01",
-    title: "Diagnoza celu i kapitału",
-    text: "Ustalamy, jaki wynik chcesz osiągnąć i jakie parametry ryzyka są dla Ciebie akceptowalne.",
+    title: "Patrzymy oczami kupującego, nie sprzedającego",
+    text: "Największy błąd to ocenianie nieruchomości z własnej perspektywy. Wiemy, czego szuka Twoja grupa docelowa na rynku warszawskim i pod nią przygotowujemy każdy metr kwadratowy mieszkania.",
   },
   {
-    step: "02",
-    title: "Selekcja okazji inwestycyjnych",
-    text: "Filtrujemy nieruchomości pod strategię inwestora: flip, najem lub model mieszany.",
+    title: "Oceniamy stan techniczny przed zakupem",
+    text: "Dokładnie sprawdzamy każdą nieruchomość przed zakupem, żeby nie sprawiała niespodzianek technicznych w trakcie remontu. Każda ukryta usterka to dziura w budżecie – i w Twoim zysku.",
   },
   {
-    step: "03",
-    title: "Ocena opłacalności i ryzyka",
-    text: "Liczymy scenariusze wejścia, kosztów i wyjścia, aby podejmować decyzje na danych, nie na emocjach.",
+    title: "Planujemy budżet z zapasem",
+    text: "Żeby wyjść na plus, a nie na zero – budżet musi być przemyślany zanim wbijemy pierwszy gwóźdź. Nigdy nie zaczynamy remontu bez pełnego planu finansowego.",
   },
   {
-    step: "04",
-    title: "Negocjacje i finalizacja",
-    text: "Prowadzimy proces zakupu oraz formalności tak, by chronić wynik i tempo inwestycji.",
+    title: "Celujemy w szybką sprzedaż za gotówkę",
+    text: "Gotówkowi kupujący = szybkie zamknięcie transakcji = szybszy zwrot kapitału dla inwestora. Dzięki znajomości rynku wiemy, gdzie i jak sprzedać, żeby nie czekać miesiącami.",
   },
 ];
 
 const inwestycjeMistakes = [
-  "Zakup nieruchomości bez scenariusza wyjścia i harmonogramu działań.",
-  "Niedoszacowanie kosztów remontu i bufora bezpieczeństwa.",
-  "Podejmowanie decyzji na podstawie ogólnego trendu zamiast danych mikro-lokalnych.",
-  "Brak kwalifikacji okazji pod konkretną strategię inwestora.",
+  "Strach przed inwestowaniem paraliżuje i kosztuje Cię więcej niż jakiekolwiek ryzyko",
+  "Brak umiejętności negocjacyjnych i przepłacanie za nieruchomość to najszybsza droga do straty",
+  "Ocenianie mieszkania z własnej perspektywy zamiast z perspektywy rynku i kupującego",
+  "Brak doświadczenia w wycenie nieruchomości – kupujesz za drogo, sprzedajesz za tanio",
+  "Wchodzenie bez przygotowanego budżetu na niespodzianki techniczne",
+  "Przeinwestowanie – wydawanie za dużo na remont bez analizy zwrotu",
 ];
 
 const inwestycjeForWho = [
-  "Dla inwestora, który ma kapitał i chce wejść w nieruchomości z planem.",
-  "Dla osoby, która chce ograniczyć ryzyko błędnych decyzji na starcie.",
-  "Dla właściciela kapitału, który oczekuje uporządkowanego procesu i kontroli wyniku.",
+  "Masz wolny kapitał od 100 000 zł wzwyż i chcesz go efektywnie pomnożyć",
+  "Chcesz zarabiać na nieruchomościach w Warszawie bez samodzielnego zarządzania",
+  "Zależy Ci na bezpieczeństwie i pełnej przejrzystości każdego kroku inwestycji",
+  "Myślisz o dywersyfikacji oszczędności poza lokatami i giełdą",
+  "Nie masz czasu ani ochoty na samodzielne szukanie okazji inwestycyjnych",
+  "Boisz się stracić pieniądze na nieudanej transakcji i potrzebujesz doświadczonego partnera",
+];
+
+const inwestycjeFaqFallback = [
+  {
+    question: "Ile kapitału potrzebuję, żeby wejść we współpracę inwestycyjną?",
+    answer:
+      "Zwykle rozmawiamy o projektach od ok. 100 000 zł wzwyż – dokładny model zależy od okazji, zakresu remontu i Twojego profilu ryzyka. Na bezpłatnej konsultacji ustalimy, co jest realne w Twojej sytuacji.",
+  },
+  {
+    question: "Jak długo trwa flip mieszkania w Warszawie?",
+    answer:
+      "Horyzont to zazwyczaj kilka miesięcy: zakup, remont, sprzedaż. Tempo zależy od stanu nieruchomości, budżetu i popytu w danej lokalizacji – przed startem pokazujemy scenariusz czasowy i finansowy.",
+  },
+  {
+    question: "Czy muszę sam szukać mieszkań i nadzorować remont?",
+    answer:
+      "Nie. Ty wnosisz kapitał i decyzje strategiczne na kluczowych etapach; my prowadzimy selekcję, negocjacje, remont i sprzedaż. Twój czas zaangażowania jest minimalny przy pełnej przejrzystości procesu.",
+  },
 ];
 
 const inwestycjeSeoImages = [
   {
     src: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1600&q=80",
-    alt: "Inwestowanie w nieruchomosci w Warszawie - analiza lokalizacji i potencjalu dzielnicy.",
+    alt: "Flip nieruchomości Warszawa – moderny budynek mieszkalny na tle centrum",
   },
   {
     src: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=1600&q=80",
-    alt: "Flipy Warszawa - kalkulacja kosztow, harmonogram remontu i plan wyjscia z inwestycji.",
+    alt: "Mieszkanie pod inwestycję Warszawa – analiza kosztów remontu i planu wyjścia",
   },
   {
     src: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=1600&q=80",
-    alt: "Konsultacja inwestycyjna nieruchomosci - strategia inwestora i kontrola ryzyka decyzji.",
+    alt: "Wycena mieszkania Warszawa – konsultacja inwestycyjna i ocena potencjału flipa",
   },
 ];
 
@@ -107,94 +132,102 @@ export default async function InwestycjePage() {
     safeCmsCall(() => fetchCmsFaqByPageType("inwestycje"), []),
     safeCmsCall(fetchCmsFeaturedTestimonials, []),
   ]);
-  const introTitle = cmsPage?.headline ?? "Inwestowanie w nieruchomosci w Warszawie";
-  const introCopy =
-    cmsPage?.content ??
-    "To szkielet strony pod oferte flipow, leady i tresci SEO. W kolejnym kroku uzupelnimy sekcje o finalny content, FAQ i formularz konsultacji.";
+
+  const introTitle = resolveCmsText(cmsPage?.headline, defaultIntroTitle);
+  const introCopy = resolveCmsText(cmsPage?.content, defaultIntroCopy);
+  const faqItems = cmsFaqItems.length > 0 ? cmsFaqItems : inwestycjeFaqFallback;
 
   return (
     <>
       <main>
         <SiteTopbar />
-        <PageIntroSection
-          eyebrow="Inwestycje"
-          title={introTitle}
-          copy={introCopy}
-        />
+        <PageIntroSection eyebrow="Inwestycje · flipy mieszkań Warszawa" title={introTitle} copy={introCopy} />
 
-        <section className="section lane-qualify">
-          <div className="container lane-qualify-shell">
-            <p className="eyebrow">Czy to dobry kierunek dla Ciebie?</p>
-            <h2 className="section-title">Ścieżka inwestycyjna pasuje, jeśli chcesz pomnażać kapitał na rynku nieruchomości z jasnym planem działania.</h2>
-            <div className="lane-checks">
-              <article className="lane-check"><strong>01</strong><p>Masz kapitał i chcesz dobrać strategię inwestowania do swojego celu.</p></article>
-              <article className="lane-check"><strong>02</strong><p>Potrzebujesz wsparcia w selekcji okazji i ocenie ryzyka decyzji.</p></article>
-              <article className="lane-check"><strong>03</strong><p>Zależy Ci na konkretnych krokach zamiast przypadkowych ruchów.</p></article>
-            </div>
-            <div className="lane-actions">
-              <CtaClickLink href={ROUTE_PATHS.sprzedaz} className="link-arrow" ctaLocation="inwestycje_lane" ctaLabel="sprzedaz_z_lane">
-                Masz nieruchomość do sprzedaży? Przejdź do sprzedaży
+        <section className="section">
+          <div className="container sale-pillars-shell">
+            <p className="section-copy seo-keywords-muted">
+              flip nieruchomości Warszawa · inwestowanie w nieruchomości Warszawa · mieszkania pod inwestycję
+              Warszawa ·{" "}
+              <CtaClickLink href={ROUTE_PATHS.kalkulator} ctaLocation="inwestycje_keywords" ctaLabel="wycena mieszkania Warszawa">
+                wycena mieszkania Warszawa
               </CtaClickLink>
-              <CtaClickLink href={`${ROUTE_PATHS.sprzedaz}#wycena`} className="link-arrow" ctaLocation="inwestycje_lane" ctaLabel="wycena_z_lane">
-                Chcesz najpierw wycenić aktywo? Przejdź do formularza wyceny
-              </CtaClickLink>
-            </div>
+              {" · "}
+              zwrot z inwestycji nieruchomości · zakup mieszkania pod flipa Warszawa
+            </p>
           </div>
         </section>
 
         <section className="section sale-pillars">
           <div className="container sale-pillars-shell">
-            <p className="eyebrow">SEO landing: inwestowanie/flipy Warszawa</p>
-            <h2 className="section-title">Inwestowanie w nieruchomości w Warszawie wymaga planu, nie przypadkowych decyzji.</h2>
+            <p className="eyebrow">Model współpracy</p>
+            <h2 className="section-title">Jak działa flip nieruchomości w Warszawie?</h2>
+            <p className="section-copy">
+              Specjalizujemy się w flipach nieruchomości na rynku warszawskim. Kupujemy mieszkania poniżej wartości
+              rynkowej, remontujemy je i sprzedajemy z zyskiem – zazwyczaj w ciągu kilku miesięcy. To sprawdzony,
+              powtarzalny model zarabiania na rynku nieruchomości w Warszawie.
+            </p>
             <div className="sale-pillars-grid">
-              {investorLandingSections.map((section) => (
-                <article key={section.title} className="sale-pillar-card">
-                  <h3>{section.title}</h3>
-                  <p>{section.copy}</p>
-                  <ul>
-                    {section.bullets.map((item) => (
-                      <li key={item}>{item}</li>
-                    ))}
-                  </ul>
-                </article>
-              ))}
+              <article className="sale-pillar-card">
+                <h3>Ty wnosisz kapitał</h3>
+                <p>Decyzje strategiczne i finansowanie projektu po Twojej stronie – bez codziennego zarządzania remontem.</p>
+              </article>
+              <article className="sale-pillar-card">
+                <h3>My wnosimy wykonanie</h3>
+                <ul>
+                  {flipPartnershipBullets.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </article>
             </div>
             <p className="section-copy">
-              Jeśli rozważasz sprzedaż aktywa przed reinwestycją, przejdź do
-              {" "}
-              <CtaClickLink href={ROUTE_PATHS.sprzedaz} ctaLocation="inwestycje_pillars" ctaLabel="sciezka_sprzedazy">
-                ścieżki sprzedaży
-              </CtaClickLink>
-              .
+              <strong>Twój czas zaangażowania: minimalny.</strong> <strong>Twój zysk: realny.</strong>
             </p>
           </div>
         </section>
 
-        <section className="section process">
-          <div className="container">
-            <header className="process-head">
-              <p className="eyebrow">Jak to działa</p>
-              <h2 className="section-title">Proces inwestowania w nieruchomości w Warszawie krok po kroku</h2>
-            </header>
-          </div>
-          <div className="service-board">
-            {inwestycjeHowItWorks.map((item) => (
-              <article key={item.title} className="service-row">
-                <div className="service-info">
-                  <p className="idx"><span className="idx-text">{item.step}</span></p>
+        <section className="section">
+          <div className="container sale-pillars-shell">
+            <p className="eyebrow">Dlaczego flip</p>
+            <h2 className="section-title">Dlaczego warto inwestować w flipy nieruchomości</h2>
+            <div className="sale-pillars-grid">
+              {flipBenefits.map((item) => (
+                <article key={item.title} className="sale-pillar-card">
                   <h3>{item.title}</h3>
                   <p>{item.text}</p>
-                </div>
-                <div className="service-word"><span>Etap</span></div>
-              </article>
-            ))}
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="section">
+          <div className="container sale-pillars-shell">
+            <p className="eyebrow">Przygotowanie pod sprzedaż</p>
+            <h2 className="section-title">Jak przygotowujemy nieruchomość do szybkiej sprzedaży w Warszawie?</h2>
+            <p className="section-copy">
+              To jeden z kluczowych elementów udanego flipa – i właśnie tutaj większość inwestorów traci pieniądze.
+              Wyciągamy maksymalny potencjał z każdej nieruchomości, zanim trafi na rynek. Przed zakupem korzystamy z{" "}
+              <CtaClickLink href={ROUTE_PATHS.kalkulator} ctaLocation="inwestycje_prep" ctaLabel="wycena mieszkania">
+                profesjonalnej wyceny mieszkania
+              </CtaClickLink>{" "}
+              i analizy opłacalności – żeby nie wchodzić w transakcję na ślepo.
+            </p>
+            <div className="sale-pillars-grid">
+              {preparationSteps.map((step) => (
+                <article key={step.title} className="sale-pillar-card">
+                  <h3>{step.title}</h3>
+                  <p>{step.text}</p>
+                </article>
+              ))}
+            </div>
           </div>
         </section>
 
         <section className="section inwestycje-seo-gallery">
           <div className="container sale-pillars-shell">
-            <p className="eyebrow">SEO semantyka i kontekst</p>
-            <h2 className="section-title">Inwestowanie i flipy w Warszawie: od analizy okazji po bezpieczną finalizację.</h2>
+            <p className="eyebrow">Rynek warszawski</p>
+            <h2 className="section-title">Inwestowanie i flipy w Warszawie – od okazji po bezpieczną finalizację</h2>
             <div className="inwestycje-seo-gallery-grid">
               {inwestycjeSeoImages.map((item) => (
                 <figure key={item.src} className="inwestycje-seo-gallery-item">
@@ -207,12 +240,12 @@ export default async function InwestycjePage() {
 
         <section className="section">
           <div className="container sale-pillars-shell">
-            <p className="eyebrow">Najczęstsze błędy inwestora</p>
-            <h2 className="section-title">Błędy, które najczęściej obniżają wynik inwestycji</h2>
+            <p className="eyebrow">Ryzyka, których unikasz</p>
+            <h2 className="section-title">Najczęstsze błędy inwestorów w nieruchomości – których u nas unikniesz</h2>
+            <p className="section-copy">My te błędy już popełniliśmy i nauczyliśmy się na nich. Ty nie musisz:</p>
             <div className="sale-pillars-grid">
-              {inwestycjeMistakes.map((mistake, idx) => (
+              {inwestycjeMistakes.map((mistake) => (
                 <article key={mistake} className="sale-pillar-card">
-                  <h3>Błąd {idx + 1}</h3>
                   <p>{mistake}</p>
                 </article>
               ))}
@@ -220,17 +253,36 @@ export default async function InwestycjePage() {
           </div>
         </section>
 
-        <section className="section">
-          <div className="container sale-pillars-shell">
+        <section className="section lane-qualify">
+          <div className="container lane-qualify-shell">
             <p className="eyebrow">Dla kogo</p>
-            <h2 className="section-title">Ten model współpracy będzie dobry, jeśli:</h2>
-            <div className="sale-pillars-grid">
+            <h2 className="section-title">Dla kogo jest ta współpraca?</h2>
+            <p className="section-copy">Dla Ciebie, jeśli:</p>
+            <div className="lane-checks">
               {inwestycjeForWho.map((item, idx) => (
-                <article key={item} className="sale-pillar-card">
-                  <h3>Profil {idx + 1}</h3>
+                <article key={item} className="lane-check">
+                  <strong>{String(idx + 1).padStart(2, "0")}</strong>
                   <p>{item}</p>
                 </article>
               ))}
+            </div>
+            <div className="lane-actions">
+              <CtaClickLink
+                href={`${ROUTE_PATHS.kontakt}?lane=inwestycje#kontakt`}
+                className="prefooter-btn"
+                ctaLocation="inwestycje_lane"
+                ctaLabel="Umów bezpłatną konsultację"
+              >
+                <span className="prefooter-btn-text-wrap" aria-hidden="true">
+                  <span className="prefooter-btn-text prefooter-btn-text-top">Umów bezpłatną konsultację</span>
+                  <span className="prefooter-btn-text prefooter-btn-text-bottom">Umów bezpłatną konsultację</span>
+                </span>
+                <span className="sr-only">Umów bezpłatną konsultację</span>
+                <span className="prefooter-btn-arrow" aria-hidden="true">→</span>
+              </CtaClickLink>
+              <CtaClickLink href={ROUTE_PATHS.sprzedaz} className="link-arrow" ctaLocation="inwestycje_lane" ctaLabel="sprzedaz">
+                Masz nieruchomość do sprzedaży przed reinwestycją? → Sprzedaż
+              </CtaClickLink>
             </div>
           </div>
         </section>
@@ -238,7 +290,7 @@ export default async function InwestycjePage() {
         <section className="section sale-social-proof">
           <div className="container sale-social-proof-shell">
             <p className="eyebrow">Opinie inwestorów</p>
-            <h2 className="section-title">Doświadczenia klientów inwestycyjnych po współpracy</h2>
+            <h2 className="section-title">Doświadczenia po współpracy inwestycyjnej</h2>
             <div className="sale-social-proof-grid">
               {cmsTestimonials.map((item, idx) => (
                 <article key={`${item.authorName ?? "testimonial"}-${idx}`} className="sale-social-proof-card">
@@ -252,7 +304,7 @@ export default async function InwestycjePage() {
               ))}
               {cmsTestimonials.length === 0 ? (
                 <article className="sale-social-proof-card">
-                  <p>Brak opinii w CMS dla tej sekcji. Dodaj rekordy `Testimonial`, aby je wyświetlić.</p>
+                  <p>Opinie inwestorów pojawią się tutaj po dodaniu rekordów w CMS.</p>
                 </article>
               ) : null}
             </div>
@@ -263,54 +315,44 @@ export default async function InwestycjePage() {
           <div className="container">
             <div className="surface faq-box">
               <h2>FAQ inwestycyjne</h2>
-              {cmsFaqItems.map((item, idx) => (
+              {faqItems.map((item, idx) => (
                 <article key={`${item.question ?? "faq"}-${idx}`} className="faq-item">
                   <h3>{item.question}</h3>
                   <p>{item.answer}</p>
                 </article>
               ))}
-              {cmsFaqItems.length === 0 ? (
-                <article className="faq-item">
-                  <p>Brak pytań FAQ w CMS dla strony inwestycji. Dodaj rekordy `FAQItem` z `pageType=inwestycje`.</p>
-                </article>
-              ) : null}
             </div>
           </div>
         </section>
 
         <section className="section sale-cta-strip">
           <div className="container sale-cta-shell">
-            <p className="eyebrow">CTA</p>
-            <h2>Chcesz sprawdzić, która strategia inwestowania będzie najlepsza dla Ciebie?</h2>
-            <p>Umów konsultację inwestycyjną i otrzymaj konkretny plan działania dla Twojego kapitału.</p>
+            <p className="eyebrow">Następny krok</p>
+            <h2 className="section-title">Zacznij inwestować w nieruchomości w Warszawie – porozmawiajmy</h2>
+            <p>
+              Każda współpraca zaczyna się od bezpłatnej konsultacji. Opowiedz o swoich celach inwestycyjnych – razem
+              ocenimy, czy i jak możemy pomnożyć Twój kapitał na rynku nieruchomości w Warszawie.
+            </p>
             <div className="sale-cta-actions">
               <CtaClickLink
                 href={`${ROUTE_PATHS.kontakt}?lane=inwestycje#kontakt`}
                 className="prefooter-btn"
                 ctaLocation="inwestycje_strip"
-                ctaLabel="Umów konsultację inwestycyjną"
+                ctaLabel="Umów bezpłatną konsultację"
               >
                 <span className="prefooter-btn-text-wrap" aria-hidden="true">
-                  <span className="prefooter-btn-text prefooter-btn-text-top">Umów konsultację inwestycyjną</span>
-                  <span className="prefooter-btn-text prefooter-btn-text-bottom">Umów konsultację inwestycyjną</span>
+                  <span className="prefooter-btn-text prefooter-btn-text-top">Umów bezpłatną konsultację</span>
+                  <span className="prefooter-btn-text prefooter-btn-text-bottom">Umów bezpłatną konsultację</span>
                 </span>
-                <span className="sr-only">Umów konsultację inwestycyjną</span>
+                <span className="sr-only">Umów bezpłatną konsultację</span>
                 <span className="prefooter-btn-arrow" aria-hidden="true">→</span>
               </CtaClickLink>
-              <CtaClickLink href={ROUTE_PATHS.kalkulator} className="prefooter-btn" ctaLocation="inwestycje_strip" ctaLabel="Przejdź do kalkulatora">
+              <CtaClickLink href={ROUTE_PATHS.kalkulator} className="prefooter-btn" ctaLocation="inwestycje_strip" ctaLabel="Kalkulator wyceny">
                 <span className="prefooter-btn-text-wrap" aria-hidden="true">
-                  <span className="prefooter-btn-text prefooter-btn-text-top">Przejdź do kalkulatora</span>
-                  <span className="prefooter-btn-text prefooter-btn-text-bottom">Przejdź do kalkulatora</span>
+                  <span className="prefooter-btn-text prefooter-btn-text-top">Kalkulator wyceny</span>
+                  <span className="prefooter-btn-text prefooter-btn-text-bottom">Kalkulator wyceny</span>
                 </span>
-                <span className="sr-only">Przejdź do kalkulatora</span>
-                <span className="prefooter-btn-arrow" aria-hidden="true">→</span>
-              </CtaClickLink>
-              <CtaClickLink href={ROUTE_PATHS.blog} className="prefooter-btn" ctaLocation="inwestycje_strip" ctaLabel="Zobacz materiały edukacyjne">
-                <span className="prefooter-btn-text-wrap" aria-hidden="true">
-                  <span className="prefooter-btn-text prefooter-btn-text-top">Zobacz materiały edukacyjne</span>
-                  <span className="prefooter-btn-text prefooter-btn-text-bottom">Zobacz materiały edukacyjne</span>
-                </span>
-                <span className="sr-only">Zobacz materiały edukacyjne</span>
+                <span className="sr-only">Kalkulator wyceny</span>
                 <span className="prefooter-btn-arrow" aria-hidden="true">→</span>
               </CtaClickLink>
             </div>
@@ -322,8 +364,8 @@ export default async function InwestycjePage() {
           sourcePage="inwestycje"
           leadType="inwestor"
           eyebrow="Konsultacja inwestycyjna"
-          title="Porozmawiajmy o Twoim kapitalie"
-          description="Umow bezplatna rozmowe i sprawdz, jak mozemy podejsc do inwestycji na rynku warszawskim."
+          title="Porozmawiajmy o Twoim kapitale"
+          description="Umów bezpłatną rozmowę i sprawdź, jak możemy podejść do inwestycji na rynku warszawskim."
           showMapOverlay={false}
           verticalLabel=""
         />
@@ -331,11 +373,9 @@ export default async function InwestycjePage() {
 
       <div className="footer-stack">
         <Prefooter
-          kicker="Jaki jest kolejny krok?"
-          title="Masz aktywo do sprzedaży przed reinwestycją? Przejdź do ścieżki sprzedaży."
-          buttons={[
-            { href: ROUTE_PATHS.sprzedaz, label: "Przejdz do sprzedazy" },
-          ]}
+          kicker="Ekspert w inwestowaniu i sprzedaży nieruchomości w Warszawie"
+          title="Patrycja Szewczyk · flip nieruchomości i bezpieczna finalizacja transakcji"
+          buttons={[{ href: `${ROUTE_PATHS.kontakt}?lane=inwestycje`, label: "Umów konsultację" }]}
         />
         <SiteFooter year={year} />
       </div>

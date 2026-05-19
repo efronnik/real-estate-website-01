@@ -4,6 +4,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { ROUTE_PATHS, getFooterLinks } from "@/config/navigation";
 import { ContactClickLink } from "@/components/contact-click-link";
+import { CLIENT_PROFILE } from "@/lib/client-profile";
 
 type SiteFooterProps = {
   year: number;
@@ -24,8 +25,13 @@ export function SiteFooter({ year }: SiteFooterProps) {
             <Image src="/LOGO.png" alt="FIND" width={256} height={74} className="block h-auto w-full" loading="lazy" />
           </a>
           <p className="footer-copy">
-            Eksperckie wsparcie właściciela mieszkania: od strategii ceny po bezpieczny podpis.
+            {CLIENT_PROFILE.fullName} — {CLIENT_PROFILE.tagline} · {CLIENT_PROFILE.location}
           </p>
+          <p className="footer-copy footer-copy-sub">{CLIENT_PROFILE.businessName}</p>
+          <div className="footer-contact-links">
+            <ContactClickLink href={CLIENT_PROFILE.phoneHref}>{CLIENT_PROFILE.phoneDisplay}</ContactClickLink>
+            <ContactClickLink href={CLIENT_PROFILE.emailHref}>{CLIENT_PROFILE.email}</ContactClickLink>
+          </div>
         </div>
 
         <div className="footer-links">

@@ -13,6 +13,7 @@ import {
   safeCmsCall,
 } from "@/lib/cms";
 import { resolveKeyPageMetadata } from "@/lib/page-metadata";
+import { resolveCmsText } from "@/lib/cms-content";
 
 const saleProcessSteps = [
   {
@@ -69,15 +70,6 @@ const defaultIntroTitle = "Sprzedaj mieszkanie świadomie — z wyceną opartą 
 const defaultIntroCopy =
   "Zajmujemy się całym procesem sprzedaży – od przygotowania nieruchomości, przez nowoczesny marketing, negocjacje, aż po finalizację formalności. Przeprowadzamy klientów przez każdy etap w sposób przejrzysty i profesjonalny.";
 
-const cmsIntroPlaceholders = ["Sekcje, CTA", "szkieletem", "testow integracji", "Testowe dane"];
-
-function isCmsIntroPlaceholder(content?: string | null) {
-  if (!content?.trim()) {
-    return true;
-  }
-  return cmsIntroPlaceholders.some((snippet) => content.includes(snippet));
-}
-
 const salePillars = [
   {
     title: "Wycena: program Wyceny 5 Kroków",
@@ -126,9 +118,8 @@ export default async function SprzedazPage() {
     safeCmsCall(() => fetchCmsFaqByPageType("sprzedaz"), []),
     safeCmsCall(fetchCmsFeaturedTestimonials, []),
   ]);
-  const useCmsIntro = cmsPage?.headline && !isCmsIntroPlaceholder(cmsPage.content);
-  const introTitle = useCmsIntro ? (cmsPage?.headline ?? defaultIntroTitle) : defaultIntroTitle;
-  const introCopy = useCmsIntro ? (cmsPage?.content ?? defaultIntroCopy) : defaultIntroCopy;
+  const introTitle = resolveCmsText(cmsPage?.headline, defaultIntroTitle);
+  const introCopy = resolveCmsText(cmsPage?.content, defaultIntroCopy);
   const hasOnlySeedFaq =
     cmsFaqItems.length === 1 &&
     (cmsFaqItems[0]?.question?.includes("Ile trwa standardowa sprzedaz") ?? false);

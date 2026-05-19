@@ -7,6 +7,7 @@ import { fetchCmsPageBySlug, safeCmsCall } from "@/lib/cms";
 import { resolveKeyPageMetadata } from "@/lib/page-metadata";
 import { HeroBackgroundVideo } from "@/components/hero-background-video";
 import { ROUTE_PATHS } from "@/config/navigation";
+import { resolveCmsText } from "@/lib/cms-content";
 
 const kontaktFinalBlocks = [
   {
@@ -57,13 +58,15 @@ export default async function KontaktPage({ searchParams }: KontaktPageProps) {
   const laneParam = toSingleParam(resolvedSearchParams?.lane);
   const isInvestorLane = laneParam === "inwestycje";
   const formLeadType = isInvestorLane ? "inwestor" : "kontakt";
-  const heroTitle = cmsPage?.headline ?? "Porozmawiajmy o sprzedaży Twojej nieruchomości";
-  const heroLead =
-    cmsPage?.lead ??
-    "Krótka konsultacja wystarczy, żeby ustalić kierunek działań i bezpieczny plan sprzedaży.";
-  const cmsSectionLead =
-    cmsPage?.content ??
-    "Po kontakcie dostajesz konkretny plan dalszych działań: od diagnozy sytuacji po wybór najlepszej ścieżki współpracy.";
+  const heroTitle = resolveCmsText(cmsPage?.headline, "Porozmawiajmy o sprzedaży Twojej nieruchomości");
+  const heroLead = resolveCmsText(
+    cmsPage?.lead,
+    "Krótka konsultacja wystarczy, żeby ustalić kierunek działań i bezpieczny plan sprzedaży.",
+  );
+  const cmsSectionLead = resolveCmsText(
+    cmsPage?.content,
+    "Po kontakcie dostajesz konkretny plan dalszych działań: od diagnozy sytuacji po wybór najlepszej ścieżki współpracy.",
+  );
 
   return (
     <>
@@ -114,6 +117,7 @@ export default async function KontaktPage({ searchParams }: KontaktPageProps) {
           sectionId="kontakt"
           sourcePage="kontakt"
           leadType={formLeadType}
+          showDirectContact
           eyebrow={isInvestorLane ? "Konsultacja inwestycyjna" : "Konsultacja / Współpraca"}
           title={isInvestorLane ? "Porozmawiajmy o Twoim kapitalie" : "Warszawa, Polska"}
           description={

@@ -35,7 +35,7 @@ export function getLocalBusinessSchema(): JsonValue {
       addressLocality: "Warszawa",
       addressCountry: "PL",
     },
-    knowsLanguage: ["pl-PL"],
+    knowsLanguage: ["pl-PL", "en", "de", "it"],
     sameAs,
     hasOfferCatalog: {
       "@type": "OfferCatalog",
@@ -53,7 +53,7 @@ export function getLocalBusinessSchema(): JsonValue {
           "@type": "Offer",
           itemOffered: {
             "@type": "Service",
-            name: "Inwestycje nieruchomosciowe",
+            name: "Flip nieruchomosci Warszawa – inwestycje",
             url: absoluteUrl("/inwestycje"),
           },
         },

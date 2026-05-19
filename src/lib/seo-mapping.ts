@@ -27,15 +27,17 @@ export const KEY_SEO_PAGE_MAPPING: Record<KeySeoPage, SeoMappingEntry> = {
   inwestycje: {
     cmsSlug: "inwestycje",
     path: "/inwestycje",
-    title: "Inwestycje nieruchomosci Warszawa | FIND",
-    description: "Strategia inwestowania i flipy w Warszawie: selekcja okazji, ocena ryzyka, negocjacje i bezpieczna finalizacja inwestycji.",
+    title: "Inwestowanie w nieruchomosci Warszawa – flipy mieszkan | FIND",
+    description:
+      "Flip nieruchomosci Warszawa: okazje inwestycyjne, remont, wycena mieszkania i pelna obsluga od zakupu do sprzedazy. Bezpłatna konsultacja inwestycyjna.",
     type: "website",
   },
   "o-mnie": {
     cmsSlug: "o-mnie",
     path: "/o-mnie",
-    title: "O mnie | FIND",
-    description: "Ekspercki profil i podejście do sprzedaży nieruchomości: strategia, negocjacje i bezpieczna finalizacja procesu.",
+    title: "O mnie | Patrycja Szewczyk · Kompas",
+    description:
+      "Patrycja Szewczyk — ponad 17 lat w sprzedaży i inwestowaniu w nieruchomości w Warszawie. Butikowa agencja Kompas: flipy, remonty, home staging, model 1:1.",
     type: "website",
   },
   kontakt: {

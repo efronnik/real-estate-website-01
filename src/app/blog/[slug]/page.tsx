@@ -10,6 +10,7 @@ import { CtaClickLink } from "@/components/cta-click-link";
 import { HeroBackgroundVideo } from "@/components/hero-background-video";
 import { RemoteFillImage } from "@/components/remote-fill-image";
 import { fetchCmsBlogPostBySlug, type CmsBlogPostRecord } from "@/lib/cms";
+import { isUsableCmsBlogPost } from "@/lib/cms-content";
 
 type ArticleSection = {
   title: string;
@@ -297,52 +298,56 @@ const articles: Record<string, Article> = {
   "dokumenty-do-sprzedazy-checklista-eksperta": {
     title: "Jakie dokumenty są potrzebne do sprzedaży mieszkania?",
     lead:
-      "Sprzedaż mieszkania wymaga kompletu dokumentów — nie tylko księgi wieczystej. Zobacz, co przygotować, aby transakcja była bezpieczna prawnie i finansowo.",
-    category: "Formalności / bezpieczeństwo",
-    readTime: "12 min czytania",
+      "Numer księgi wieczystej potwierdza prawo własności i obciążenia hipoteczne — ale to nie jedyny dokument. Zobacz pełny zestaw papierów przy sprzedaży mieszkania własnościowego, spółdzielczego i z kredytem.",
+    category: "Formalności / sprzedaż mieszkania",
+    readTime: "14 min czytania",
     points: [],
     intro: [
-      "Aktualny odpis z księgi wieczystej jest ważnym elementem sprzedaży: w dziale II widać właściciela, w dziale III — roszczenia i ograniczenia (np. nierozliczona opłata przekształceniowa), w dziale IV — hipotekę i inne obciążenia. To jednak nie jedyny dokument.",
-      "Istotne są też zaświadczenie o zameldowaniu, potwierdzenie opłaty przekształceniowej (gdy w III dziale KW widnieje jeszcze roszczenie) oraz zaświadczenie z wspólnoty o wysokości opłat i braku zaległości zbywcy.",
-      "Przy sprzedaży mieszkania — własnościowego, spółdzielczego własnościowego lub nabytego na kredyt — zestaw dokumentów może się różnić.",
-      "Poniżej zestawienie dla tych trzech sytuacji. Dokumenty ułatwiają transakcję i zwiększają bezpieczeństwo prawne oraz finansowe obu stron.",
+      "Numer księgi wieczystej jest ważnym elementem w procesie sprzedaży nieruchomości, ponieważ potwierdza prawo własności oraz obciążenia hipoteczne. Ale nie jedynym.",
+      "Istotne jest też zaświadczenie o zameldowaniu, potwierdzenie wniesienia opłaty przekształceniowej — jeśli nadal widnieje jako roszczenie w III dziale KW — oraz zaświadczenie ze wspólnoty o wysokości opłat miesięcznych i potwierdzające brak zaległości zbywcy w opłatach.",
+      "Przy sprzedaży mieszkania — własnościowego, spółdzielczego własnościowego lub nabytego na kredyt — zestaw wymaganych dokumentów może się różnić. Dokumenty te ułatwiają przeprowadzenie transakcji, zapewniając bezpieczeństwo prawne i finansowe obu stron.",
     ],
     sections: [
       {
+        title: "Akt notarialny potwierdzający prawo własności — fundament prawny transakcji",
+        paragraphs: [
+          "Bez względu na to, czy nieruchomość została zakupiona, otrzymana w spadku, czy jest darowizną — przy każdej transakcji sprzedaży mieszkania wymagany jest akt notarialny potwierdzający własność. Ten formalny dokument, sporządzony i podpisany w obecności notariusza, stanowi dowód prawny, że osoba sprzedająca jest rzeczywiście właścicielem nieruchomości.",
+          "Akt notarialny nabycia zawiera kluczowe informacje: opis mieszkania, lokalizację, dane właściciela oraz historię przeniesienia własności. Jest podstawą do wpisu zmian w księdze wieczystej — kolejnego kroku w prawidłowym przekazaniu tytułu własności.",
+          "Posiadanie aktualnego aktu notarialnego ułatwia legalne i bezproblemowe przejście praw własności, co zapewnia bezpieczeństwo prawne sprzedającemu i kupującemu. Brak tego dokumentu może uniemożliwić transakcję lub prowadzić do sporów prawnych.",
+          "Notariusz przed sporządzeniem aktu weryfikuje legalność dokumentów oraz zgodność danych z księgą wieczystą. Akt notarialny jest też wymagany do wpisu zmiany właściciela w KW — bez tego kupujący nie zostanie uznany za nowego właściciela.",
+        ],
+      },
+      {
         title: "Mieszkanie własnościowe — jakie dokumenty przygotować",
         paragraphs: [
-          "Przy lokalu na prawie własności podstawą jest aktualny odpis z księgi wieczystej (najlepiej nie starszy niż kilka miesięcy). Widać w nim właściciela w dziale II, ewentualne roszczenia w dziale III oraz hipotekę w dziale IV.",
-          "Do paczki dołącz akt notarialny nabycia (zakup, spadek, darowizna lub inna podstawa) oraz zaświadczenie z urzędu gminy o osobach zameldowanych w lokalu.",
-          "Z wspólnoty mieszkaniowej (lub zarządcy) pobierz zaświadczenie o wysokości opłat eksploatacyjnych i braku zaległości po stronie sprzedającego. Często proszą też o regulamin wspólnoty i informację o funduszu remontowym.",
-          "Przy sprzedaży lokalu zwykle przekazujesz kupującemu ważne świadectwo charakterystyki energetycznej — to ustawowy obowiązek przy zbyciu budynku lub lokalu. Przygotuj też projekt protokołu zdawczo-odbiorczego: liczniki, klucze i wyposażenie.",
+          "Przy lokalu na prawie własności podstawą jest aktualny odpis z księgi wieczystej (najlepiej nie starszy niż kilka miesięcy). W dziale II widać właściciela, w dziale III — roszczenia i ograniczenia, w dziale IV — hipotekę i inne obciążenia.",
+          "Do paczki dołącz akt notarialny nabycia oraz zaświadczenie z urzędu gminy o osobach zameldowanych w lokalu.",
+          "Z wspólnoty mieszkaniowej (lub zarządcy) pobierz zaświadczenie o wysokości opłat eksploatacyjnych i braku zaległości po stronie sprzedającego.",
+          "Przy sprzedaży lokalu przekazujesz ważne świadectwo charakterystyki energetycznej — to ustawowy obowiązek przy zbyciu budynku lub lokalu. Przygotuj też projekt protokołu zdawczo-odbiorczego.",
         ],
       },
       {
         title: "Mieszkanie spółdzielcze własnościowe — na co zwrócić uwagę",
         paragraphs: [
-          "Lokal spółdzielczy własnościowy po przekształceniu prawa jest wpisany w księdze wieczystej jak pełna własność. Nadal warto sprawdzić dział III: czy nie widnieje roszczenie dotyczące opłaty przekształceniowej.",
-          "Jeśli roszczenie nie jest uregulowane, kupujący może żądać potwierdzenia wpłaty lub negocjować cenę. Notariusz może wstrzymać się z aktem do czasu wyjaśnienia tej kwestii.",
-          "Ze spółdzielni mieszkaniowej (jeśli lokal ma historię spółdzielczą) pobierz zaświadczenie o braku zaległości i informację, czy statut wymaga zgody spółdzielni na sprzedaż.",
-          "Dołącz dokumenty nabycia (umowy, akty przekształcenia) oraz zaświadczenie o zameldowaniu. Spójność danych między KW, aktami a stanem faktycznym ogranicza opóźnienia u notariusza i w banku kupującego.",
+          "Lokal spółdzielczy własnościowy po przekształceniu jest wpisany w księdze wieczystej jak pełna własność. Sprawdź dział III: czy nie widnieje roszczenie dotyczące opłaty przekształceniowej.",
+          "Ze spółdzielni mieszkaniowej pobierz zaświadczenie o braku zaległości i informację, czy statut wymaga zgody spółdzielni na sprzedaż.",
+          "Dołącz dokumenty nabycia oraz zaświadczenie o zameldowaniu. Spójność danych między KW, aktami a stanem faktycznym ogranicza opóźnienia u notariusza i w banku kupującego.",
         ],
       },
       {
         title: "Mieszkanie nabyte na kredyt — dokumenty przy sprzedaży z hipoteką",
         paragraphs: [
-          "Gdy w dziale IV księgi wieczystej widnieje hipoteka na rzecz banku, sprzedaż wymaga koordynacji ze spłatą kredytu. Bank podaje saldo zadłużenia i warunki zamknięcia kredytu w dniu aktu notarialnego.",
-          "Najczęściej hipotekę spłaca się ze środków kupującego (gotówka lub kredyt kupującego) — notariusz lub bank prowadzi tzw. wypłatę z zabezpieczeniem. Rzadziej sprzedający spłaca kredyt wcześniej własnym kapitałem.",
-          "Po spłacie bank wydaje dokumenty do wykreślenia hipoteki z działu IV KW. Bez tego kupujący nie dostanie „czystej” własności.",
-          "Dołącz też standardowy pakiet: odpis KW, akt nabycia, zaświadczenia z wspólnoty, zameldowanie i świadectwo energetyczne. Im wcześniej ustalisz sposób spłaty hipoteki, tym krótsza droga do aktu.",
+          "Gdy w dziale IV księgi wieczystej widnieje hipoteka, sprzedaż wymaga koordynacji ze spłatą kredytu. Bank podaje saldo zadłużenia i warunki zamknięcia kredytu w dniu aktu notarialnego.",
+          "Najczęściej hipotekę spłaca się ze środków kupującego — notariusz lub bank prowadzi wypłatę z zabezpieczeniem.",
+          "Po spłacie bank wydaje dokumenty do wykreślenia hipoteki z działu IV KW. Dołącz standardowy pakiet: odpis KW, akt nabycia, zaświadczenia z wspólnoty, zameldowanie i świadectwo energetyczne.",
         ],
       },
       {
         title: "Akt notarialny nabycia i akt sprzedaży — czym się różnią",
         paragraphs: [
-          "Przy sprzedaży potrzebujesz dwóch odrębnych elementów: aktu notarialnego nabycia (potwierdza, skąd masz własność) oraz nowego aktu notarialnego sprzedaży (przenosi własność na kupującego).",
-          "Akt nabycia — z zakupu, spadku, darowizny lub innej czynności — to dowód, że jesteś właścicielem. Zawiera opis lokalu, dane stron i podstawę nabycia. Notariusz i kupujący weryfikują go z odpisem KW.",
-          "Brak aktu nabycia lub rozjazd między aktem a KW może zatrzymać transakcję do czasu wyjaśnienia stanu prawnego.",
-          "Akt sprzedaży (umowa sprzedaży w formie aktu notarialnego) podpisujecie w dniu transakcji. To on — wraz z wpisem w KW — przenosi własność na kupującego.",
-          "Notariusz sprawdza dokumenty, zgodność z KW i brak sprzeczności prawnych. Dopiero po spełnieniu warunków (np. spłacie hipoteki) wpisuje nowego właściciela w dziale II księgi wieczystej.",
+          "Przy sprzedaży potrzebujesz aktu notarialnego nabycia (skąd masz własność) oraz nowego aktu sprzedaży (przenosi własność na kupującego).",
+          "Akt nabycia to dowód, że jesteś właścicielem. Akt sprzedaży podpisujecie w dniu transakcji — wraz z wpisem w KW przenosi własność.",
+          "Notariusz sprawdza dokumenty, zgodność z KW i brak sprzeczności prawnych. Dopiero po spełnieniu warunków (np. spłacie hipoteki) wpisuje nowego właściciela w dziale II KW.",
         ],
       },
       {
@@ -353,8 +358,121 @@ const articles: Record<string, Article> = {
         ],
       },
     ],
+    closing:
+      "Im wcześniej ułożysz dokumenty, tym spokojniejsza sprzedaż. Chcesz oszacować wartość mieszkania przed ofertą? Skorzystaj z bezpłatnego kalkulatora wyceny.",
     disclaimer:
-      "Artykuł ma charakter informacyjny i nie zastępuje porady notariusza, radcy prawnego ani doradcy bankowego. Szczegóły zależą od stanu prawnego lokalu i warunków umowy — w razie wątpliwości skonsultuj sprawę ze specjalistą przed podpisaniem dokumentów.",
+      "Artykuł ma charakter informacyjny i nie zastępuje porady notariusza, radcy prawnego ani doradcy bankowego. Szczegóły zależą od stanu prawnego lokalu — w razie wątpliwości skonsultuj sprawę ze specjalistą.",
+    checklist: [],
+    showFramework: false,
+    showMistakes: false,
+  },
+  "jakie-dokumenty-przygotowac-dla-agencji-nieruchomosci": {
+    title: "Jakie dokumenty przygotować dla agencji nieruchomości?",
+    lead:
+      "Sprzedaż nieruchomości bądź też jej wynajem wymaga przygotowania dokumentów. Sam opis mieszkania, domu czy działki nie wystarczy pośrednikowi — poniżej znajdziesz, co przygotować dla agencji, która ma zająć się Twoją nieruchomością.",
+    category: "Formalności / agencja",
+    readTime: "20 min czytania",
+    points: [],
+    intro: [
+      "Profesjonalni pośrednicy muszą znać pełną sytuację prawną nieruchomości — nie mogą oferować lokalu bez kompletu dokumentów.",
+      "W tym artykule dowiesz się: dlaczego komplet dokumentów jest ważny dla bezpieczeństwa i szybkości sprzedaży lub wynajmu; jakie dokumenty są wymagane przy sprzedaży mieszkania z odrębną własnością oraz przy spółdzielczym prawie do lokalu; jakie formalności obowiązują przy mieszkaniu z kredytem hipotecznym; jakie dokumenty są potrzebne przy sprzedaży domu i działki; oraz co przedstawić agencji przy wynajmie.",
+    ],
+    sections: [
+      {
+        title: "Dlaczego komplet dokumentów jest tak ważny dla agencji nieruchomości?",
+        paragraphs: [
+          "Agencja, dysponując pełnym zestawem dokumentów, może od razu przygotować rzetelną ofertę, zweryfikować stan prawny i odpowiedzieć na szczegółowe pytania potencjalnych klientów. Brak istotnych zaświadczeń lub nieaktualne dokumenty często powodują przestoje — uzupełnianie ich wydłuża finalizację transakcji.",
+          "Komplet dokumentów pozwala wyeliminować zagrożenia: nieuregulowany stan własności, obciążenia hipoteczne czy roszczenia osób trzecich. Dzięki analizie dokumentacji pośrednik zabezpiecza interesy obu stron.",
+          "Weryfikacja stanu prawnego — w tym księgi wieczystej — pozwala uniknąć problemów w przyszłości i przeprowadzić transakcję zgodnie z przepisami.",
+        ],
+      },
+      {
+        title: "Dokumenty potrzebne przy sprzedaży mieszkania na rynku wtórnym",
+        paragraphs: [
+          "Aby odpowiedzieć, jakie dokumenty są potrzebne przy sprzedaży mieszkania, trzeba określić rodzaj prawa do lokalu: odrębna własność czy spółdzielcze własnościowe prawo do lokalu.",
+        ],
+      },
+      {
+        title: "Pełna własność mieszkania z księgą wieczystą",
+        paragraphs: [
+          "Akt notarialny — zgodnie z Kodeksem cywilnym sprzedaż mieszkania wymaga udziału notariusza, który weryfikuje dokumenty i poświadcza transakcję.",
+          "Księga wieczysta jest publicznym rejestrem stanu prawnego: dane właściciela, położenie nieruchomości, wpisy o prawach, roszczeniach i obciążeniach (np. hipoteka). Umożliwia sprawdzenie, kto jest właścicielem i czy lokal nie jest obciążony prawami osób trzecich.",
+          "Zaświadczenie o braku zameldowanych osób w mieszkaniu można uzyskać online lub w urzędzie gminy.",
+          "Świadectwo charakterystyki energetycznej określa m.in. roczne zapotrzebowanie na energię, emisję CO₂, izolację, systemy grzewcze i wskazówki modernizacyjne — jest wymagane przy zbyciu lokalu.",
+          "Zaświadczenie o niezaleganiu w opłatach czynszowych i eksploatacyjnych wydaje wspólnota, spółdzielnia lub zarządca i potwierdza brak zaległości z tytułu czynszu, mediów (gdy rozlicza zarządca), funduszu remontowego i innych opłat.",
+        ],
+      },
+      {
+        title: "Własność ze spadku lub darowizny — dodatkowe dokumenty",
+        paragraphs: [
+          "Potrzebne są: księga wieczysta, zaświadczenie o braku zameldowanych osób, świadectwo energetyczne oraz zaświadczenie o niezaleganiu z opłatami administracyjnymi.",
+          "Dodatkowo — podstawa nabycia: postanowienie sądu lub akt poświadczenia dziedziczenia (z protokołem).",
+          "Ważne bywa zaświadczenie z Urzędu Skarbowego o zwolnieniu lub opłaceniu podatku od spadku lub darowizny (nie jest wymagane, gdy nabycie nastąpiło na podstawie umowy w formie aktu notarialnego lub gdy było zwolnione w ramach dziedziczenia po osobach najbliższych).",
+        ],
+      },
+      {
+        title: "Spółdzielcze własnościowe prawo do lokalu z księgą wieczystą",
+        paragraphs: [
+          "Przy sprzedaży często wymagana jest zgoda spółdzielni mieszkaniowej. Oprócz numeru KW (gdy istnieje) potrzebne są: zaświadczenie ze spółdzielni do sprzedaży, podstawa nabycia (akt notarialny lub przydział), zaświadczenie o braku zameldowanych osób oraz świadectwo charakterystyki energetycznej.",
+        ],
+      },
+      {
+        title: "Spółdzielcze prawo do lokalu bez KW — z uregulowanym gruntem",
+        paragraphs: [
+          "Wymagane są dokumenty jak wyżej, z naciskiem na zaświadczenie ze spółdzielni do sprzedaży — określa właściciela. Potrzebne jest też zaświadczenie o braku przeciwwskazań do założenia księgi wieczystej, wydawane przez spółdzielnię.",
+        ],
+      },
+      {
+        title: "Spółdzielcze prawo do lokalu bez KW i bez uregulowanych gruntów",
+        paragraphs: [
+          "Potrzebne są te same zaświadczenia co wyżej. Nie ma możliwości kredytu przy zakupie — możliwa jest wyłącznie płatność gotówką.",
+        ],
+      },
+      {
+        title: "Formalności przy mieszkaniu obciążonym kredytem hipotecznym",
+        paragraphs: [
+          "Notariusz wymaga zaświadczenia z banku z informacją o: warunkach i możliwościach spłaty kredytu, pozostałej kwocie, numerze rachunku do spłaty, zgodzie na wcześniejszą spłatę, zgodzie na zwolnienie zabezpieczenia po spłacie oraz o braku umowy na podstawienie wierzytelności.",
+        ],
+      },
+      {
+        title: "Rzut mieszkania jako dodatkowy dokument",
+        paragraphs: [
+          "Rzut przedstawia układ pomieszczeń (płaski schemat lub wizualizacja 3D): elementy konstrukcyjne, instalacje, drzwi, okna, wymiary i orientację względem stron świata.",
+        ],
+      },
+      {
+        title: "Jakie dokumenty przygotować przy sprzedaży domu?",
+        paragraphs: [
+          "Dodatkowo: aktualny wyrys i wypis z rejestru gruntów; zaświadczenie o przeznaczeniu w MPZP lub o braku planu; zaświadczenie o braku zaległości w podatku od nieruchomości lub opłacie z tytułu użytkowania wieczystego; zaświadczenie o objęciu uproszczonym planem urządzenia lasu; zaświadczenie o braku osób zameldowanych w budynku.",
+        ],
+      },
+      {
+        title: "Dokumenty niezbędne przy sprzedaży działki",
+        paragraphs: [
+          "Oprócz aktu notarialnego: aktualny wypis z rejestru gruntów; zaświadczenie o przeznaczeniu w MPZP; zaświadczenie o uproszczonym planie urządzenia lasu; zaświadczenie, czy działka jest w obszarze rewitalizacji lub Specjalnej Strefie Rewitalizacji.",
+          "Gdy trzeba założyć księgę wieczystą — ważny jest wyrys z mapy ewidencji wraz z klauzulą do wpisu w KW.",
+        ],
+      },
+      {
+        title: "Jakie dokumenty przygotować dla agencji przy wynajmie?",
+        paragraphs: [
+          "Przy wynajmie bez bycia właścicielem — zaświadczenie o prawie do dysponowania nieruchomością (zgoda właściciela na wynajem).",
+          "Gdy jesteś właścicielem — podobnie jak przy sprzedaży potrzebny jest akt notarialny nabycia oraz dokumenty potwierdzające stan prawny.",
+        ],
+      },
+      {
+        title: "FAQ — najczęściej zadawane pytania",
+        paragraphs: [
+          "Czy przy sprzedaży mieszkania zawsze potrzebny jest akt notarialny? Tak — potwierdza nabycie lub zbycie i jest wymagany przy sprzedaży mieszkania.",
+          "Jakie dokumenty są potrzebne przy spółdzielczym własnościowym prawie do lokalu? M.in. zaświadczenie ze spółdzielni, podstawa nabycia, zameldowanie, świadectwo energetyczne oraz — w zależności od sytuacji — KW lub zaświadczenie o możliwości jej założenia.",
+          "Jakie dodatkowe dokumenty przy mieszkaniu z kredytem hipotecznym? Zaświadczenie banku o saldzie, warunkach spłaty i zwolnieniu hipoteki po spłacie — koordynowane z notariuszem przy akcie sprzedaży.",
+        ],
+      },
+    ],
+    closing:
+      "Uporządkuj dokumenty przed pierwszą rozmową z pośrednikiem — skrócisz czas od oferty do aktu. Chcesz oszacować wartość mieszkania? Skorzystaj z bezpłatnego kalkulatora wyceny na stronie.",
+    disclaimer:
+      "Artykuł ma charakter informacyjny i nie zastępuje porady notariusza, radcy prawnego ani doradcy bankowego. Szczegóły zależą od stanu prawnego nieruchomości i warunków umowy — w razie wątpliwości skonsultuj sprawę ze specjalistą.",
     checklist: [],
     showFramework: false,
     showMistakes: false,
@@ -442,6 +560,7 @@ const heroSlugs = [
   "7-sygnalow-ze-cena-blokuje-sprzedaz",
   "home-staging-premium-bez-przepalania-budzetu",
   "dokumenty-do-sprzedazy-checklista-eksperta",
+  "jakie-dokumenty-przygotowac-dla-agencji-nieruchomosci",
   "negocjacje-ceny-scenariusze-rozmowy",
 ];
 
@@ -482,11 +601,11 @@ export default function BlogArticlePage() {
       return fallbackArticle;
     }
 
-    if (cmsArticle) {
+    if (cmsArticle && isUsableCmsBlogPost(cmsArticle)) {
       return {
         title: cmsArticle.title ?? "Artykuł",
-        lead: cmsArticle.excerpt ?? "Treść artykułu z CMS.",
-        category: cmsArticle.category?.name ?? cmsArticle.category?.attributes?.name ?? "Blog / CMS",
+        lead: cmsArticle.excerpt ?? "",
+        category: cmsArticle.category?.name ?? cmsArticle.category?.attributes?.name ?? "Blog",
         readTime: "5 min czytania",
         points: [],
         checklist: [],

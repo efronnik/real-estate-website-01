@@ -1,4 +1,5 @@
 import { ContactForm } from "@/components/contact-form";
+import { ClientDirectContact } from "@/components/client-direct-contact";
 
 type LeadContactSectionProps = {
   sectionId?: string;
@@ -9,6 +10,7 @@ type LeadContactSectionProps = {
   description: string;
   verticalLabel?: string;
   showMapOverlay?: boolean;
+  showDirectContact?: boolean;
 };
 
 export function LeadContactSection({
@@ -20,6 +22,7 @@ export function LeadContactSection({
   description,
   verticalLabel = "Kontakt",
   showMapOverlay = true,
+  showDirectContact = false,
 }: LeadContactSectionProps) {
   return (
     <section id={sectionId} className="section cta">
@@ -32,6 +35,7 @@ export function LeadContactSection({
               <p className="eyebrow">{eyebrow}</p>
               <h2>{title}</h2>
               <p>{description}</p>
+              {showDirectContact ? <ClientDirectContact variant="light" /> : null}
             </div>
           </div>
           <ContactForm sourcePage={sourcePage} leadType={leadType} />

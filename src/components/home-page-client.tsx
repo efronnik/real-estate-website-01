@@ -10,6 +10,7 @@ import { CtaClickLink } from "@/components/cta-click-link";
 import { HeroBackgroundVideo } from "@/components/hero-background-video";
 import { RemoteFillImage } from "@/components/remote-fill-image";
 import type { CmsPageRecord, CmsTestimonialRecord } from "@/lib/cms";
+import { resolveCmsText } from "@/lib/cms-content";
 
 const valueSteps = [
   {
@@ -126,13 +127,15 @@ export function HomePageClient({ cmsPage, cmsTestimonials }: HomePageClientProps
     return reviews[(reviewIndex + offset + len) % len];
   };
 
-  const heroSubtitle = cmsPage?.lead ?? "Pokażę błędy i dam jasny plan sprzedaży.";
-  const offerTitle =
-    cmsPage?.headline ??
-    "Jedna odpowiedzialna osoba, jeden plan, jeden cel: sprzedaż na dobrych warunkach.";
-  const offerDescription =
-    cmsPage?.content ??
-    "Nie dostajesz przypadkowych działań. Dostajesz konkretny proces od pierwszej diagnozy do podpisu, z jasnymi decyzjami na każdym etapie.";
+  const heroSubtitle = resolveCmsText(cmsPage?.lead, "Pokażę błędy i dam jasny plan sprzedaży.");
+  const offerTitle = resolveCmsText(
+    cmsPage?.headline,
+    "Jedna odpowiedzialna osoba, jeden plan, jeden cel: sprzedaż na dobrych warunkach.",
+  );
+  const offerDescription = resolveCmsText(
+    cmsPage?.content,
+    "Nie dostajesz przypadkowych działań. Dostajesz konkretny proces od pierwszej diagnozy do podpisu, z jasnymi decyzjami na każdym etapie.",
+  );
 
   return (
     <>

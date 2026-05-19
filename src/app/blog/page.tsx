@@ -8,6 +8,7 @@ import { ROUTE_PATHS } from "@/config/navigation";
 import { CtaClickLink } from "@/components/cta-click-link";
 import { HeroBackgroundVideo } from "@/components/hero-background-video";
 import { fetchCmsBlogPosts, type CmsBlogPostRecord, fetchCmsPageBySlug } from "@/lib/cms";
+import { isUsableCmsBlogPost, resolveCmsText } from "@/lib/cms-content";
 
 const blogPaths = [
   {
@@ -69,10 +70,20 @@ const posts = [
   {
     slug: "dokumenty-do-sprzedazy-checklista-eksperta",
     title: "Jakie dokumenty są potrzebne do sprzedaży mieszkania?",
-    excerpt: "KW, zameldowanie, wspólnota, spółdzielnia, kredyt i akt notarialny — przewodnik po dokumentach do sprzedaży mieszkania.",
+    excerpt:
+      "KW, zameldowanie, wspólnota, spółdzielnia, kredyt i akt notarialny — przewodnik po dokumentach do sprzedaży mieszkania.",
     image: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=1200&q=80",
-    meta: "formalności / bezpieczeństwo",
-    cta: "Pobierz listę",
+    meta: "formalności / sprzedaż",
+    cta: "Czytaj przewodnik",
+  },
+  {
+    slug: "jakie-dokumenty-przygotowac-dla-agencji-nieruchomosci",
+    title: "Jakie dokumenty przygotować dla agencji nieruchomości?",
+    excerpt:
+      "Co przekazać pośrednikowi przy sprzedaży lub wynajmie: mieszkanie, dom, działka, hipoteka, spółdzielnia i FAQ.",
+    image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1200&q=80",
+    meta: "formalności / agencja",
+    cta: "Czytaj artykuł",
   },
   {
     slug: "negocjacje-ceny-scenariusze-rozmowy",
@@ -85,7 +96,8 @@ const posts = [
 ];
 
 function getCmsCategoryLabel(post: CmsBlogPostRecord): string {
-  return post.category?.name ?? post.category?.attributes?.name ?? "Blog / CMS";
+  const label = post.category?.name ?? post.category?.attributes?.name;
+  return resolveCmsText(label, "Blog");
 }
 
 export default function BlogPage() {
@@ -98,7 +110,7 @@ export default function BlogPage() {
     const hardcodedBySlug = Object.fromEntries(posts.map((post) => [post.slug, post]));
 
     const merged = cmsPosts
-      .filter((post) => Boolean(post.slug) && Boolean(post.title))
+      .filter((post) => isUsableCmsBlogPost(post))
       .map((post, idx) => {
         const slug = post.slug as string;
         const hardcoded = hardcodedBySlug[slug];
@@ -130,9 +142,9 @@ export default function BlogPage() {
         fetchCmsPageBySlug("blog"),
       ]);
       if (!mounted) return;
-      setCmsPosts(blogPosts);
-      setHeroHeadline(blogPage?.headline ?? null);
-      setHeroLead(blogPage?.lead ?? null);
+      setCmsPosts(blogPosts.filter((post) => isUsableCmsBlogPost(post)));
+      setHeroHeadline(resolveCmsText(blogPage?.headline, "") || null);
+      setHeroLead(resolveCmsText(blogPage?.lead, "") || null);
     };
     void loadCmsData();
     return () => {
@@ -150,8 +162,13 @@ export default function BlogPage() {
           <div className="blog-hero-overlay" aria-hidden="true"></div>
           <div className="container blog-hero-shell">
             <p className="eyebrow">Blog</p>
-            <h1 className="section-title">{heroHeadline ?? "Blog sprzedaży mieszkania"}</h1>
-            <p className="section-copy">{heroLead ?? "Zebrane w jednym miejscu: wycena, przygotowanie oferty, dokumenty, podatki i negocjacje. Treści ułożone tak, aby przeprowadzić Cię od decyzji o sprzedaży do bezpiecznej finalizacji."}</p>
+            <h1 className="section-title">
+              {heroHeadline || "Blog sprzedaży mieszkania"}
+            </h1>
+            <p className="section-copy">
+              {heroLead ||
+                "Zebrane w jednym miejscu: wycena, przygotowanie oferty, dokumenty, podatki i negocjacje. Treści ułożone tak, aby przeprowadzić Cię od decyzji o sprzedaży do bezpiecznej finalizacji."}
+            </p>
           </div>
         </section>
 
@@ -166,7 +183,7 @@ export default function BlogPage() {
                 <div className="scan-lines" aria-hidden="true"></div>
                 <div className="scan-lines-right" aria-hidden="true"></div>
                 <article className="featured-copy">
-                  <p className="meta">{featuredPost?.meta ?? "Blog / CMS"}</p>
+                  <p className="meta">{featuredPost?.meta ?? "Blog"}</p>
                   <h3>{featuredPost?.title ?? "Brak artykułów"}</h3>
                   <p>{featuredPost?.excerpt ?? "Dodaj pierwszy wpis w Strapi, aby wyświetlić go na stronie."}</p>
                   {featuredPost?.slug ? (
