@@ -49,12 +49,6 @@ function MobileServicesDropdown({
   const active = isUslugiNavActive(pathname);
   const [expanded, setExpanded] = useState(active);
 
-  useEffect(() => {
-    if (active) {
-      setExpanded(true);
-    }
-  }, [active, pathname]);
-
   return (
     <div className={`topbar-mobile-accordion ${expanded ? "is-expanded" : ""} ${active ? "is-active-group" : ""}`}>
       <button

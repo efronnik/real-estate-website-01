@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteTopbar } from "@/components/site-topbar";
 import { Prefooter } from "@/components/prefooter";
@@ -219,13 +220,13 @@ export default function HomeStagingPage() {
               ))}
               <p className="section-copy" style={{ marginTop: "1rem" }}>
                 Poradniki na blogu:{" "}
-                <a href="/blog/jak-przygotowac-mieszkanie-do-sprzedazy" className="link-arrow">
+                <Link href="/blog/jak-przygotowac-mieszkanie-do-sprzedazy" className="link-arrow">
                   Jak przygotować mieszkanie do sprzedaży
-                </a>
+                </Link>
                 {" · "}
-                <a href="/blog/home-staging-premium-bez-przepalania-budzetu" className="link-arrow">
+                <Link href="/blog/home-staging-premium-bez-przepalania-budzetu" className="link-arrow">
                   Home staging premium
-                </a>
+                </Link>
               </p>
             </div>
           </div>
