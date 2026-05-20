@@ -25,4 +25,14 @@ describe("cms-content", () => {
       }),
     ).toBe(false);
   });
+
+  it("keeps valid blog posts when optional excerpt is missing", () => {
+    expect(
+      isUsableCmsBlogPost({
+        slug: "nowy-artykul",
+        title: "Nowy artykul",
+        content: "Praktyczny poradnik sprzedazy mieszkania.",
+      }),
+    ).toBe(true);
+  });
 });
