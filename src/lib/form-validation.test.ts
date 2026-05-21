@@ -53,4 +53,47 @@ describe("buildLeadPayloadFromFormData", () => {
     );
     expect(payload.city).toBe("Warszawa");
   });
+
+  it("preserves valuation-specific fields in the message", () => {
+    const payload = buildLeadPayloadFromFormData(
+      formDataFrom({
+        full_name: "Anna Nowak",
+        phone: "+48600111222",
+        email: "anna@example.com",
+        lead_type: "wycena",
+        source_page: "sprzedaz",
+        city: "Warszawa",
+        district: "Mokotow",
+        property_type: "mieszkanie",
+        area_m2: "58",
+        rooms: "3",
+        condition: "dobry",
+        floor: "3/8",
+        building_type: "blok",
+        ownership_type: "pelna wlasnosc",
+        expected_price: "950000 PLN",
+        timeline: "1-3 miesiace",
+        message: "Prosze o kontakt po 16.",
+        consent_data: "on",
+      }),
+    );
+
+    expect(payload.message).toBe(
+      [
+        "Prosze o kontakt po 16.",
+        "",
+        "Szczegoly wyceny:",
+        "Dzielnica: Mokotow",
+        "Typ nieruchomosci: mieszkanie",
+        "Metraz (m2): 58",
+        "Liczba pokoi: 3",
+        "Stan nieruchomosci: dobry",
+        "Pietro: 3/8",
+        "Typ budynku: blok",
+        "Forma wlasnosci: pelna wlasnosc",
+        "Oczekiwana cena: 950000 PLN",
+        "Termin sprzedazy: 1-3 miesiace",
+      ].join("\n"),
+    );
+  });
 });

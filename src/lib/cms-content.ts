@@ -27,6 +27,8 @@ const CMS_DEV_PLACEHOLDER_SNIPPETS = [
   "jan testowy",
 ];
 
+const CMS_DEV_CANONICAL_HOSTS = new Set(["localhost", "127.0.0.1", "0.0.0.0"]);
+
 export function isCmsDevPlaceholder(value?: string | null): boolean {
   if (!value?.trim()) {
     return true;
@@ -42,6 +44,26 @@ export function resolveCmsText(cmsValue: string | null | undefined, fallback: st
   }
 
   return cmsValue!.trim();
+}
+
+export function resolveCmsCanonicalUrl(cmsValue: string | null | undefined, fallback: string): string {
+  const canonical = cmsValue?.trim();
+  if (!canonical) {
+    return fallback;
+  }
+
+  try {
+    const url = new URL(canonical);
+    if (!["http:", "https:"].includes(url.protocol)) {
+      return fallback;
+    }
+    if (CMS_DEV_CANONICAL_HOSTS.has(url.hostname)) {
+      return fallback;
+    }
+    return canonical;
+  } catch {
+    return fallback;
+  }
 }
 
 export function isUsableCmsBlogPost(post: {
