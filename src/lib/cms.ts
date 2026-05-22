@@ -1,3 +1,5 @@
+import { resolveCmsCanonicalUrl } from "@/lib/cms-content";
+
 const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL ?? "http://localhost:1337";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 const CMS_FETCH_TIMEOUT_MS = 5000;
@@ -189,7 +191,7 @@ function buildPageMetadataFromSeo(seo: CmsSeoRecord | null | undefined, fallback
     return null;
   }
 
-  const canonical = seo.canonicalUrl || fallbackCanonical;
+  const canonical = resolveCmsCanonicalUrl(seo.canonicalUrl, fallbackCanonical);
   const ogImageUrl = toAbsoluteUrl(mediaUrl(seo.ogImage));
 
   return {
