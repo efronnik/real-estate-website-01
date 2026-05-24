@@ -44,6 +44,10 @@ export function resolveCmsText(cmsValue: string | null | undefined, fallback: st
   return cmsValue!.trim();
 }
 
+function hasCmsDevPlaceholderCopy(value?: string | null): boolean {
+  return Boolean(value?.trim()) && isCmsDevPlaceholder(value);
+}
+
 export function isUsableCmsBlogPost(post: {
   title?: string;
   excerpt?: string;
@@ -54,7 +58,11 @@ export function isUsableCmsBlogPost(post: {
     return false;
   }
 
-  if (isCmsDevPlaceholder(post.title) || isCmsDevPlaceholder(post.excerpt) || isCmsDevPlaceholder(post.content)) {
+  if (
+    isCmsDevPlaceholder(post.title) ||
+    isCmsDevPlaceholder(post.content) ||
+    hasCmsDevPlaceholderCopy(post.excerpt)
+  ) {
     return false;
   }
 
