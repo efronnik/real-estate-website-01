@@ -9,6 +9,7 @@ function uniqueClientIp() {
 
 describe("POST /api/leads integration", () => {
   beforeEach(() => {
+    vi.stubEnv("STRAPI_API_TOKEN", "test-token");
     vi.stubGlobal(
       "fetch",
       vi.fn().mockResolvedValue(new Response(JSON.stringify({ data: { id: 1 } }), { status: 200 })),
@@ -17,6 +18,7 @@ describe("POST /api/leads integration", () => {
 
   afterEach(() => {
     vi.unstubAllGlobals();
+    vi.unstubAllEnvs();
   });
 
   it("returns 201 and posts sanitized lead to Strapi", async () => {
@@ -46,7 +48,7 @@ describe("POST /api/leads integration", () => {
       `${strapiBase}/api/leads`,
       expect.objectContaining({
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", Authorization: "Bearer test-token" },
       }),
     );
     const [, init] = vi.mocked(fetch).mock.calls[0];
@@ -154,6 +156,58 @@ describe("POST /api/leads integration", () => {
 
     const response = await POST(request);
     expect(response.status).toBe(502);
+  });
+
+  it("returns 502 without posting when the Strapi API token is missing", async () => {
+    vi.stubEnv("STRAPI_API_TOKEN", "");
+
+    const request = new Request("http://127.0.0.1:3000/api/leads", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Origin: "http://127.0.0.1:3000",
+        "x-forwarded-for": uniqueClientIp(),
+      },
+      body: JSON.stringify({
+        data: {
+          fullName: "Jan Kowalski",
+          phone: "+48500111222",
+          leadType: "kontakt",
+          sourcePage: "kontakt",
+          consentData: true,
+        },
+      }),
+    });
+
+    const response = await POST(request);
+    expect(response.status).toBe(502);
+    expect(fetch).not.toHaveBeenCalled();
+  });
+
+  it("accepts normalized site origin with trailing slash in env", async () => {
+    vi.stubEnv("NEXT_PUBLIC_SITE_URL", "https://example.com/");
+
+    const request = new Request("https://example.com/api/leads", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Origin: "https://example.com",
+        "x-forwarded-for": uniqueClientIp(),
+      },
+      body: JSON.stringify({
+        data: {
+          fullName: "Jan Kowalski",
+          phone: "+48500111222",
+          leadType: "kontakt",
+          sourcePage: "kontakt",
+          consentData: true,
+        },
+      }),
+    });
+
+    const response = await POST(request);
+    expect(response.status).toBe(201);
+    expect(fetch).toHaveBeenCalled();
   });
 
   it("rejects OPTIONS preflight from unknown origin", async () => {

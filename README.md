@@ -19,6 +19,7 @@ cp .env.example .env.local
 Frontend env keys:
 
 - `NEXT_PUBLIC_STRAPI_URL` (default local CMS URL)
+- `STRAPI_API_TOKEN` (server-only token with permission to create leads)
 - `NEXT_PUBLIC_SITE_URL` (default local frontend URL)
 - `NEXT_PUBLIC_GA_MEASUREMENT_ID` (GA4 Measurement ID, for example `G-XXXXXXXXXX`)
 - `NEXT_PUBLIC_ANALYTICS_CONSENT_BANNER` (`true` to require consent before analytics, default `false`)
