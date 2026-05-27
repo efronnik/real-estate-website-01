@@ -1,10 +1,10 @@
 "use client";
 
-import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { ROUTE_PATHS, getFooterLinks } from "@/config/navigation";
 import { ContactClickLink } from "@/components/contact-click-link";
-import { CLIENT_PROFILE } from "@/lib/client-profile";
+import { SiteBrandLogo } from "@/components/site-brand-logo";
+import { CLIENT_PROFILE, SITE_BRAND } from "@/lib/client-profile";
 
 type SiteFooterProps = {
   year: number;
@@ -21,8 +21,8 @@ export function SiteFooter({ year }: SiteFooterProps) {
     <footer className="site-footer">
       <div className="container footer-shell">
         <div className="footer-brand">
-          <a href={ROUTE_PATHS.home} className="footer-logo" aria-label="FIND home">
-            <Image src="/LOGO.png" alt="FIND" width={256} height={74} className="block h-auto w-full" loading="lazy" />
+          <a href={ROUTE_PATHS.home} className="footer-logo" aria-label={SITE_BRAND.homeAriaLabel}>
+            <SiteBrandLogo tone="on-light" />
           </a>
           <p className="footer-copy">
             {CLIENT_PROFILE.fullName} — {CLIENT_PROFILE.tagline} · {CLIENT_PROFILE.location}
@@ -74,7 +74,9 @@ export function SiteFooter({ year }: SiteFooterProps) {
         </div>
       </div>
       <div className="container footer-bottom">
-        <p>© {year} FIND. Wszelkie prawa zastrzeżone.</p>
+        <p>
+          © {year} {CLIENT_PROFILE.businessName}. Wszelkie prawa zastrzeżone.
+        </p>
       </div>
     </footer>
   );

@@ -138,3 +138,17 @@ export const CLIENT_METHOD_STEPS = [
     text: "Od wyceny po finalizację. Bezpośredni kontakt ze mną — nie z asystentem, nie z zespołem.",
   },
 ] as const;
+
+/** Pełne logo COMPAS (ikona + „COMPAS group NIERUCHOMOŚCI”) — `public — копия/images/compass-log.png` */
+export type SiteBrandLogoTone = "on-light" | "on-dark";
+
+export const SITE_BRAND = {
+  /** Ten sam plik co na https://compasnieruchomosci.vercel.app/ — biel w hero przez CSS filter */
+  logoSrc: "/compass-logo.png",
+  logoWidth: 2100,
+  logoHeight: 1200,
+  logoAlt: "COMPAS group NIERUCHOMOŚCI",
+  homeAriaLabel: `Strona główna – ${CLIENT_PROFILE.businessName}`,
+  faviconSrc: "/favicon.ico",
+  appleIconSrc: "/apple-icon.png",
+} as const;

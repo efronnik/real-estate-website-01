@@ -1,11 +1,12 @@
 "use client";
 
-import Image from "next/image";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { ROUTE_PATHS, getTopbarNavItems } from "@/config/navigation";
 import { CtaClickLink } from "@/components/cta-click-link";
+import { SiteBrandLogo } from "@/components/site-brand-logo";
 import { SiteTopbarNav } from "@/components/site-topbar-nav";
+import { SITE_BRAND } from "@/lib/client-profile";
 
 type SiteTopbarProps = {
   variant?: "site" | "cp";
@@ -131,10 +132,10 @@ export function SiteTopbar({
       <a
         href={ROUTE_PATHS.home}
         className={isCp ? "cp-brand" : "site-brand"}
-        aria-label="FIND home"
+        aria-label={SITE_BRAND.homeAriaLabel}
         onClick={closeMenu}
       >
-        <Image src="/LOGO.png" alt="FIND" width={256} height={74} className="block h-auto w-full" priority />
+        <SiteBrandLogo tone={isCp ? "on-dark" : "on-light"} priority />
       </a>
 
       <nav className={isCp ? "cp-nav" : "site-nav"} aria-label="Primary navigation">

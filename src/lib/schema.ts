@@ -1,3 +1,4 @@
+import { CLIENT_PROFILE, SITE_BRAND } from "@/lib/client-profile";
 import { absoluteUrl } from "@/lib/seo";
 
 type JsonPrimitive = string | number | boolean | null;
@@ -22,10 +23,10 @@ export function getLocalBusinessSchema(): JsonValue {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
     "@id": `${absoluteUrl("/")}#localbusiness`,
-    name: "FIND",
+    name: CLIENT_PROFILE.businessName,
     url: absoluteUrl("/"),
     description: "Wsparcie w sprzedazy mieszkan i analizie inwestycji nieruchomosciowych.",
-    image: absoluteUrl("/LOGO.png"),
+    image: absoluteUrl(SITE_BRAND.logoSrc),
     areaServed: {
       "@type": "City",
       name: "Warszawa",

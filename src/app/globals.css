@@ -126,10 +126,21 @@ a {
   justify-self: start;
 }
 
-.cp-brand img {
+.cp-brand img,
+.site-brand img,
+.footer-logo img,
+.site-brand-logo__img {
   display: block;
   width: 100%;
   height: auto;
+  backface-visibility: hidden;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
+
+/* Jak na compasnieruchomosci.vercel.app — ten sam PNG, biały znak w hero */
+.site-brand-logo__img--on-dark {
+  filter: brightness(0) invert(1);
 }
 
 .cp-nav {
@@ -1911,11 +1922,6 @@ a {
   width: clamp(90px, 9vw, 130px);
 }
 
-.footer-logo img {
-  display: block;
-  width: 100%;
-  height: auto;
-}
 
 .footer-copy {
   margin-top: 0.7rem;
@@ -2510,11 +2516,6 @@ a {
   justify-self: start;
 }
 
-.site-brand img {
-  display: block;
-  width: 100%;
-  height: auto;
-}
 
 .site-nav {
   display: flex;
