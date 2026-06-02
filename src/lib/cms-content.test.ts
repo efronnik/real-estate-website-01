@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { isCmsDevPlaceholder, isUsableCmsBlogPost, resolveCmsText } from "@/lib/cms-content";
+import {
+  isCmsDevPlaceholder,
+  isUsableCmsBlogPost,
+  resolveCmsCanonicalUrl,
+  resolveCmsText,
+} from "@/lib/cms-content";
 
 describe("cms-content", () => {
   it("detects seeded dev placeholder copy", () => {
@@ -14,6 +19,15 @@ describe("cms-content", () => {
   it("falls back when placeholder", () => {
     expect(resolveCmsText("Testowe dane z CMS", "Fallback")).toBe("Fallback");
     expect(resolveCmsText("Prawdziwy lead", "Fallback")).toBe("Prawdziwy lead");
+  });
+
+  it("falls back from seeded development canonicals", () => {
+    expect(resolveCmsCanonicalUrl("http://localhost:3000/", "https://find.example/sprzedaz")).toBe(
+      "https://find.example/sprzedaz",
+    );
+    expect(resolveCmsCanonicalUrl("https://find.example/inwestycje", "https://find.example/sprzedaz")).toBe(
+      "https://find.example/inwestycje",
+    );
   });
 
   it("rejects test blog posts", () => {
