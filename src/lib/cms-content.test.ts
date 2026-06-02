@@ -25,4 +25,25 @@ describe("cms-content", () => {
       }),
     ).toBe(false);
   });
+
+  it("allows CMS blog posts without an optional excerpt", () => {
+    expect(
+      isUsableCmsBlogPost({
+        slug: "realny-artykul",
+        title: "Realny artykul",
+        content: "Pelna tresc poradnika dla sprzedajacych mieszkanie.",
+      }),
+    ).toBe(true);
+  });
+
+  it("rejects CMS blog posts with placeholder excerpts", () => {
+    expect(
+      isUsableCmsBlogPost({
+        slug: "realny-artykul",
+        title: "Realny artykul",
+        excerpt: "Testowe dane z CMS",
+        content: "Pelna tresc poradnika dla sprzedajacych mieszkanie.",
+      }),
+    ).toBe(false);
+  });
 });
