@@ -167,6 +167,42 @@ function toAbsoluteUrl(raw: string | null | undefined): string | undefined {
   return `${STRAPI_URL}${raw}`;
 }
 
+function parseAbsoluteUrl(raw: string): URL | null {
+  try {
+    return new URL(raw);
+  } catch {
+    return null;
+  }
+}
+
+function isDevelopmentCanonicalHost(hostname: string): boolean {
+  return hostname === "localhost" || hostname === "127.0.0.1" || hostname === "::1" || hostname.endsWith(".local");
+}
+
+function normalizePathname(pathname: string): string {
+  if (pathname === "/") return pathname;
+  return pathname.replace(/\/+$/, "");
+}
+
+function resolveCmsCanonicalUrl(rawCanonicalUrl: string | null | undefined, fallbackCanonical: string): string | null {
+  const trimmed = rawCanonicalUrl?.trim();
+  if (!trimmed) {
+    return fallbackCanonical;
+  }
+
+  const canonical = parseAbsoluteUrl(trimmed);
+  const fallback = parseAbsoluteUrl(fallbackCanonical);
+  if (!canonical || isDevelopmentCanonicalHost(canonical.hostname)) {
+    return null;
+  }
+
+  if (fallback && normalizePathname(canonical.pathname) !== normalizePathname(fallback.pathname)) {
+    return null;
+  }
+
+  return canonical.toString();
+}
+
 type PageMetadata = {
   title: string;
   description: string;
@@ -189,7 +225,11 @@ function buildPageMetadataFromSeo(seo: CmsSeoRecord | null | undefined, fallback
     return null;
   }
 
-  const canonical = seo.canonicalUrl || fallbackCanonical;
+  const canonical = resolveCmsCanonicalUrl(seo.canonicalUrl, fallbackCanonical);
+  if (!canonical) {
+    return null;
+  }
+
   const ogImageUrl = toAbsoluteUrl(mediaUrl(seo.ogImage));
 
   return {
