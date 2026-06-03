@@ -74,8 +74,57 @@ type LeadPayload = {
   consentData?: boolean;
 };
 
+const FORM_DETAIL_FIELDS = [
+  ["preferred_contact_time", "Preferowana godzina kontaktu"],
+  ["district", "Dzielnica"],
+  ["property_type", "Typ nieruchomości"],
+  ["area_m2", "Metraż (m²)"],
+  ["rooms", "Liczba pokoi"],
+  ["condition", "Stan nieruchomości"],
+  ["floor", "Piętro"],
+  ["building_type", "Typ budynku"],
+  ["ownership_type", "Forma własności"],
+  ["expected_price", "Oczekiwana cena"],
+  ["timeline", "Termin sprzedaży"],
+] as const;
+
+const FORM_DETAIL_VALUE_LABELS: Record<string, Record<string, string>> = {
+  property_type: {
+    mieszkanie: "Mieszkanie",
+    dom: "Dom",
+    lokal: "Lokal",
+  },
+  condition: {
+    do_remontu: "Do remontu",
+    dobry: "Dobry",
+    bardzo_dobry: "Bardzo dobry",
+    premium: "Premium",
+  },
+};
+
 function asText(formData: FormData, key: string): string {
   return String(formData.get(key) ?? "").trim();
+}
+
+function detailValue(formData: FormData, key: string): string {
+  const rawValue = asText(formData, key);
+  return FORM_DETAIL_VALUE_LABELS[key]?.[rawValue] ?? rawValue;
+}
+
+function buildLeadMessage(formData: FormData): string | undefined {
+  const message = asText(formData, "message");
+  const details = FORM_DETAIL_FIELDS.map(([key, label]) => {
+    const value = detailValue(formData, key);
+    return value ? `${label}: ${value}` : null;
+  }).filter((item): item is string => Boolean(item));
+
+  if (!details.length) {
+    return message || undefined;
+  }
+
+  return ["Szczegóły formularza:", ...details, message ? `Wiadomość: ${message}` : ""]
+    .filter(Boolean)
+    .join("\n");
 }
 
 export function buildLeadPayloadFromFormData(formData: FormData): LeadPayload {
@@ -89,7 +138,7 @@ export function buildLeadPayloadFromFormData(formData: FormData): LeadPayload {
     sourcePage: asText(formData, "source_page"),
     website: asText(formData, "website") || undefined,
     email: asText(formData, "email") || undefined,
-    message: asText(formData, "message") || undefined,
+    message: buildLeadMessage(formData),
     city: asText(formData, "city") || asText(formData, "city_or_district") || undefined,
     utmSource: asText(formData, "utm_source") || undefined,
     utmMedium: asText(formData, "utm_medium") || undefined,

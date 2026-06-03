@@ -53,4 +53,36 @@ describe("buildLeadPayloadFromFormData", () => {
     );
     expect(payload.city).toBe("Warszawa");
   });
+
+  it("preserves valuation-only fields in the message sent to the lead API", () => {
+    const payload = buildLeadPayloadFromFormData(
+      formDataFrom({
+        full_name: "Anna Nowak",
+        phone: "+48600111222",
+        lead_type: "wycena",
+        source_page: "sprzedaz",
+        city: "Warszawa",
+        district: "Mokotów",
+        property_type: "mieszkanie",
+        area_m2: "58",
+        rooms: "3",
+        condition: "do_remontu",
+        floor: "3/8",
+        building_type: "blok",
+        ownership_type: "pełna własność",
+        expected_price: "950000 PLN",
+        timeline: "1-3 miesiące",
+        message: "Proszę o kontakt po 17.",
+        consent_data: "on",
+      }),
+    );
+
+    expect(payload.message).toContain("Szczegóły formularza:");
+    expect(payload.message).toContain("Dzielnica: Mokotów");
+    expect(payload.message).toContain("Typ nieruchomości: Mieszkanie");
+    expect(payload.message).toContain("Metraż (m²): 58");
+    expect(payload.message).toContain("Liczba pokoi: 3");
+    expect(payload.message).toContain("Stan nieruchomości: Do remontu");
+    expect(payload.message).toContain("Proszę o kontakt po 17.");
+  });
 });
