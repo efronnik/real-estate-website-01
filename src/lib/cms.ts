@@ -1,5 +1,7 @@
+import { resolveCmsCanonicalUrl } from "@/lib/cms-content";
+import { getSiteUrl } from "@/lib/seo";
+
 const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL ?? "http://localhost:1337";
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 const CMS_FETCH_TIMEOUT_MS = 5000;
 
 export type CmsPageRecord = {
@@ -189,7 +191,7 @@ function buildPageMetadataFromSeo(seo: CmsSeoRecord | null | undefined, fallback
     return null;
   }
 
-  const canonical = seo.canonicalUrl || fallbackCanonical;
+  const canonical = resolveCmsCanonicalUrl(seo.canonicalUrl, fallbackCanonical);
   const ogImageUrl = toAbsoluteUrl(mediaUrl(seo.ogImage));
 
   return {
@@ -215,19 +217,20 @@ function buildPageMetadataFromSeo(seo: CmsSeoRecord | null | undefined, fallback
 export async function getHomePageMetadataFromCms(): Promise<PageMetadata | null> {
   const page = await fetchCmsPageBySlug("glowna");
   const seo = page?.seo;
-  return buildPageMetadataFromSeo(seo, SITE_URL);
+  return buildPageMetadataFromSeo(seo, getSiteUrl());
 }
 
 export async function getPageMetadataFromCms(slug: string, pagePath: string): Promise<PageMetadata | null> {
   const page = await fetchCmsPageBySlug(slug);
   const seo = page?.seo;
-  const canonicalFallback = `${SITE_URL}${pagePath.startsWith("/") ? pagePath : `/${pagePath}`}`;
+  const siteUrl = getSiteUrl();
+  const canonicalFallback = `${siteUrl}${pagePath.startsWith("/") ? pagePath : `/${pagePath}`}`;
   return buildPageMetadataFromSeo(seo, canonicalFallback);
 }
 
 export async function getBlogPostMetadataFromCms(slug: string): Promise<PageMetadata | null> {
   const post = await fetchCmsBlogPostBySlug(slug);
   const seo = post?.seo;
-  const canonicalFallback = `${SITE_URL}/blog/${slug}`;
+  const canonicalFallback = `${getSiteUrl()}/blog/${slug}`;
   return buildPageMetadataFromSeo(seo, canonicalFallback);
 }
