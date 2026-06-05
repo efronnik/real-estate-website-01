@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { ROUTE_PATHS } from "@/config/navigation";
 import { fetchCmsBlogPosts, safeCmsCall } from "@/lib/cms";
+import { isUsableCmsBlogPost } from "@/lib/cms-content";
 import { absoluteUrl } from "@/lib/seo";
 
 const STATIC_ROUTES: string[] = [
@@ -30,9 +31,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const posts = await safeCmsCall(fetchCmsBlogPosts, []);
   const blogEntries: MetadataRoute.Sitemap = posts
-    .filter((post) => Boolean(post.slug))
+    .filter((post) => isUsableCmsBlogPost(post))
     .map((post) => ({
-      url: absoluteUrl(`/blog/${post.slug}`),
+      url: absoluteUrl(`/blog/${post.slug!}`),
       lastModified: post.publishedAt ? new Date(post.publishedAt) : now,
       changeFrequency: "monthly",
       priority: 0.6,

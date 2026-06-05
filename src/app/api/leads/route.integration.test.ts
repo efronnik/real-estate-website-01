@@ -16,6 +16,7 @@ describe("POST /api/leads integration", () => {
   });
 
   afterEach(() => {
+    vi.unstubAllEnvs();
     vi.unstubAllGlobals();
   });
 
@@ -55,6 +56,33 @@ describe("POST /api/leads integration", () => {
     };
     expect(posted.data.leadStatus).toBe("new");
     expect(posted.data.fullName).toBe("Anna Nowak");
+  });
+
+  it("accepts the www alias of the configured site origin", async () => {
+    vi.stubEnv("NEXT_PUBLIC_SITE_URL", "https://find.pl");
+    const request = new Request("https://find.pl/api/leads", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Origin: "https://www.find.pl",
+        "x-forwarded-for": uniqueClientIp(),
+      },
+      body: JSON.stringify({
+        data: {
+          fullName: "Anna Nowak",
+          phone: "+48500111222",
+          leadType: "kontakt",
+          sourcePage: "kontakt",
+          consentData: true,
+        },
+      }),
+    });
+
+    const response = await POST(request);
+
+    expect(response.status).toBe(201);
+    expect(response.headers.get("Access-Control-Allow-Origin")).toBe("https://www.find.pl");
+    expect(fetch).toHaveBeenCalledTimes(1);
   });
 
   it("returns 400 when validation fails", async () => {
@@ -166,5 +194,20 @@ describe("POST /api/leads integration", () => {
 
     const response = await OPTIONS(request);
     expect(response.status).toBe(403);
+  });
+
+  it("allows OPTIONS preflight from the apex alias of a configured www origin", async () => {
+    vi.stubEnv("NEXT_PUBLIC_SITE_URL", "https://www.find.pl");
+    const request = new Request("https://www.find.pl/api/leads", {
+      method: "OPTIONS",
+      headers: {
+        Origin: "https://find.pl",
+      },
+    });
+
+    const response = await OPTIONS(request);
+
+    expect(response.status).toBe(204);
+    expect(response.headers.get("Access-Control-Allow-Origin")).toBe("https://find.pl");
   });
 });

@@ -6,7 +6,7 @@ type LeadRequestBody = {
 };
 
 const STRAPI_URL = process.env.STRAPI_URL ?? process.env.NEXT_PUBLIC_STRAPI_URL ?? "http://localhost:1337";
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+const FALLBACK_SITE_URL = "http://localhost:3000";
 const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
 const RATE_LIMIT_MAX_REQUESTS = 8;
 const MAX_CONTENT_LENGTH_BYTES = 16 * 1024;
@@ -26,7 +26,7 @@ const ALLOWED_INPUT_KEYS = new Set([
   "consentData",
 ]);
 const requestTimestampsByIp = new Map<string, number[]>();
-const ALLOWED_ORIGINS = new Set([SITE_URL, "http://localhost:3000", "http://127.0.0.1:3000"]);
+const LOCAL_ALLOWED_ORIGINS = ["http://localhost:3000", "http://127.0.0.1:3000"];
 
 type LeadLogLevel = "info" | "warn" | "error";
 type SafeLogPrimitive = string | number | boolean | null;
@@ -114,8 +114,47 @@ function getRequestOrigin(request: Request): string | null {
   }
 }
 
+function parseOrigin(raw: string | undefined): string | null {
+  if (!raw?.trim()) return null;
+  try {
+    return new URL(raw).origin;
+  } catch {
+    return null;
+  }
+}
+
+function getWwwAlias(origin: string): string | null {
+  try {
+    const parsed = new URL(origin);
+    if (parsed.hostname === "localhost" || parsed.hostname === "127.0.0.1") {
+      return null;
+    }
+    parsed.hostname = parsed.hostname.startsWith("www.")
+      ? parsed.hostname.slice("www.".length)
+      : `www.${parsed.hostname}`;
+    return parsed.origin;
+  } catch {
+    return null;
+  }
+}
+
+function getAllowedOrigins(): Set<string> {
+  const origins = new Set(LOCAL_ALLOWED_ORIGINS);
+  const siteOrigin = parseOrigin(process.env.NEXT_PUBLIC_SITE_URL ?? FALLBACK_SITE_URL);
+  if (siteOrigin) {
+    origins.add(siteOrigin);
+    const alias = getWwwAlias(siteOrigin);
+    if (alias) origins.add(alias);
+  }
+  return origins;
+}
+
+function isAllowedOrigin(origin: string | null): boolean {
+  return Boolean(origin && getAllowedOrigins().has(origin));
+}
+
 function buildCorsHeaders(origin: string | null): HeadersInit {
-  const allowedOrigin = origin && ALLOWED_ORIGINS.has(origin) ? origin : null;
+  const allowedOrigin = isAllowedOrigin(origin) ? origin : null;
   return {
     "Access-Control-Allow-Methods": "POST, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type",
@@ -184,7 +223,7 @@ export async function POST(request: Request) {
   const maskedIp = maskIp(clientIp);
   const requestOrigin = getRequestOrigin(request);
 
-  if (requestOrigin && !ALLOWED_ORIGINS.has(requestOrigin)) {
+  if (requestOrigin && !isAllowedOrigin(requestOrigin)) {
     logLeadEvent("warn", "origin_rejected", { requestId, ip: maskedIp, origin: requestOrigin });
     return jsonResponse(request, requestId, { error: "Origin not allowed." }, 403);
   }
@@ -299,7 +338,7 @@ export async function POST(request: Request) {
 export async function OPTIONS(request: Request) {
   const requestId = crypto.randomUUID();
   const origin = getRequestOrigin(request);
-  if (origin && !ALLOWED_ORIGINS.has(origin)) {
+  if (origin && !isAllowedOrigin(origin)) {
     return new NextResponse(null, { status: 403, headers: buildCorsHeaders(origin) });
   }
   return new NextResponse(null, {

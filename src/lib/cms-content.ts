@@ -44,6 +44,32 @@ export function resolveCmsText(cmsValue: string | null | undefined, fallback: st
   return cmsValue!.trim();
 }
 
+function isDevelopmentCanonicalHost(hostname: string): boolean {
+  const normalized = hostname.toLowerCase();
+  return (
+    normalized === "localhost" ||
+    normalized === "127.0.0.1" ||
+    normalized === "0.0.0.0" ||
+    normalized === "::1" ||
+    normalized.endsWith(".local")
+  );
+}
+
+export function resolveCmsCanonicalUrl(cmsValue: string | null | undefined, fallback: string): string {
+  const candidate = cmsValue?.trim();
+  if (!candidate) return fallback;
+
+  try {
+    const parsed = new URL(candidate);
+    if (!["http:", "https:"].includes(parsed.protocol) || isDevelopmentCanonicalHost(parsed.hostname)) {
+      return fallback;
+    }
+    return parsed.toString();
+  } catch {
+    return fallback;
+  }
+}
+
 export function isUsableCmsBlogPost(post: {
   title?: string;
   excerpt?: string;
