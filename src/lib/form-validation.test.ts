@@ -53,4 +53,36 @@ describe("buildLeadPayloadFromFormData", () => {
     );
     expect(payload.city).toBe("Warszawa");
   });
+
+  it("preserves wycena-specific fields in the message payload", () => {
+    const payload = buildLeadPayloadFromFormData(
+      formDataFrom({
+        full_name: "Anna Nowak",
+        phone: "+48600111222",
+        email: "anna@example.com",
+        city: "Warszawa",
+        district: "Mokotow",
+        property_type: "mieszkanie",
+        area_m2: "58",
+        rooms: "3",
+        condition: "dobry",
+        floor: "3/8",
+        building_type: "blok",
+        ownership_type: "pelna wlasnosc",
+        expected_price: "950000 PLN",
+        timeline: "1-3 miesiace",
+        message: "Prosze o szybki kontakt.",
+        lead_type: "wycena",
+        source_page: "sprzedaz",
+        consent_data: "on",
+      }),
+    );
+
+    expect(payload.message).toContain("Prosze o szybki kontakt.");
+    expect(payload.message).toContain("Szczegoly wyceny:");
+    expect(payload.message).toContain("Typ nieruchomosci: mieszkanie");
+    expect(payload.message).toContain("Metraz: 58");
+    expect(payload.message).toContain("Liczba pokoi: 3");
+    expect(payload.message).toContain("Oczekiwana cena: 950000 PLN");
+  });
 });
