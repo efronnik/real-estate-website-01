@@ -9,6 +9,9 @@ describe("cms-content", () => {
 
   it("keeps real CMS copy", () => {
     expect(isCmsDevPlaceholder("Proces sprzedazy od przygotowania po finalizacje.")).toBe(false);
+    expect(isCmsDevPlaceholder("Testowa kampania sprzedazy pozwala sprawdzic zainteresowanie kupujacych.")).toBe(false);
+    expect(isCmsDevPlaceholder("W kolejnym kroku omawiamy dokumenty i terminy przekazania mieszkania.")).toBe(false);
+    expect(isCmsDevPlaceholder("Aktualizacja z CMS opisuje nowa usluge premium.")).toBe(false);
   });
 
   it("falls back when placeholder", () => {
@@ -24,5 +27,16 @@ describe("cms-content", () => {
         content: "To jest testowy artykul blogowy nr 2.",
       }),
     ).toBe(false);
+  });
+
+  it("accepts real blog posts with formerly broad marker words", () => {
+    expect(
+      isUsableCmsBlogPost({
+        slug: "testowa-kampania-sprzedazy",
+        title: "Testowa kampania sprzedazy mieszkania",
+        excerpt: "Jak zaplanowac bezpieczny test komunikatu przed publikacja oferty.",
+        content: "W kolejnym kroku opisujemy, jak porownac zapytania i dopasowac cene.",
+      }),
+    ).toBe(true);
   });
 });
