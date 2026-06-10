@@ -74,8 +74,35 @@ type LeadPayload = {
   consentData?: boolean;
 };
 
+const MESSAGE_DETAIL_FIELDS = [
+  ["preferred_contact_time", "Preferowana godzina kontaktu"],
+  ["district", "Dzielnica"],
+  ["property_type", "Typ nieruchomosci"],
+  ["area_m2", "Metraz"],
+  ["rooms", "Liczba pokoi"],
+  ["condition", "Stan nieruchomosci"],
+  ["floor", "Pietro"],
+  ["building_type", "Typ budynku"],
+  ["ownership_type", "Forma wlasnosci"],
+  ["expected_price", "Oczekiwana cena"],
+  ["timeline", "Termin sprzedazy"],
+] as const;
+
 function asText(formData: FormData, key: string): string {
   return String(formData.get(key) ?? "").trim();
+}
+
+function buildMessageWithDetails(formData: FormData): string | undefined {
+  const message = asText(formData, "message");
+  const details = MESSAGE_DETAIL_FIELDS.map(([key, label]) => {
+    const value = asText(formData, key);
+    return value ? `${label}: ${value}` : null;
+  }).filter((detail): detail is string => Boolean(detail));
+
+  if (!details.length) return message || undefined;
+
+  const detailsBlock = ["Szczegoly formularza:", ...details].join("\n");
+  return message ? `${detailsBlock}\n\nWiadomosc:\n${message}` : detailsBlock;
 }
 
 export function buildLeadPayloadFromFormData(formData: FormData): LeadPayload {
@@ -89,7 +116,7 @@ export function buildLeadPayloadFromFormData(formData: FormData): LeadPayload {
     sourcePage: asText(formData, "source_page"),
     website: asText(formData, "website") || undefined,
     email: asText(formData, "email") || undefined,
-    message: asText(formData, "message") || undefined,
+    message: buildMessageWithDetails(formData),
     city: asText(formData, "city") || asText(formData, "city_or_district") || undefined,
     utmSource: asText(formData, "utm_source") || undefined,
     utmMedium: asText(formData, "utm_medium") || undefined,
