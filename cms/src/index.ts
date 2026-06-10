@@ -77,7 +77,6 @@ export default {
       "api::site-settings.site-settings.findOne",
       "api::seo.seo.find",
       "api::seo.seo.findOne",
-      "api::lead.lead.create",
     ];
 
     const editorCrudActions = [
@@ -115,7 +114,15 @@ export default {
       "api::lead.lead.findOne",
     ];
 
-    if (publicRole) await ensurePermissions(publicRole.id, readonlyActions);
+    if (publicRole) {
+      await ensurePermissions(publicRole.id, readonlyActions);
+      await strapi.db.query("plugin::users-permissions.permission").deleteMany({
+        where: {
+          role: publicRole.id,
+          action: "api::lead.lead.create",
+        },
+      });
+    }
     if (editorRole) await ensurePermissions(editorRole.id, editorCrudActions);
 
     // Keep "Authenticated" minimal for better security posture.

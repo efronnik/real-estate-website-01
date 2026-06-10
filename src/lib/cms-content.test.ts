@@ -9,6 +9,7 @@ describe("cms-content", () => {
 
   it("keeps real CMS copy", () => {
     expect(isCmsDevPlaceholder("Proces sprzedazy od przygotowania po finalizacje.")).toBe(false);
+    expect(isCmsDevPlaceholder("W kolejnym kroku przygotuj dokumenty do sprzedazy.")).toBe(false);
   });
 
   it("falls back when placeholder", () => {
@@ -24,5 +25,15 @@ describe("cms-content", () => {
         content: "To jest testowy artykul blogowy nr 2.",
       }),
     ).toBe(false);
+  });
+
+  it("keeps valid blog posts without an optional excerpt", () => {
+    expect(
+      isUsableCmsBlogPost({
+        slug: "nowy-poradnik",
+        title: "Nowy poradnik sprzedazy",
+        content: "W kolejnym kroku przygotuj dokumenty i plan prezentacji mieszkania.",
+      }),
+    ).toBe(true);
   });
 });

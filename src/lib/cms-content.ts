@@ -3,21 +3,23 @@
  */
 const CMS_DEV_PLACEHOLDER_SNIPPETS = [
   "[twoje imię]",
-  "eksperckie prowadzenie sprzedaży",
-  "szkieletem",
+  "to jest testowa tresc dla strony glownej",
+  "to jest testowy artykul blogowy nr 1",
+  "to jest testowy artykul blogowy nr 2",
+  "testowy lead z cms dla strony glownej",
+  "testowe dane cms dla projektu nieruchomosci",
+  "testowe dane z cms",
+  "testowe dane og z cms",
+  "testowe dane dla lejka",
+  "testowa kategoria poradnikowa",
+  "testowa kategoria inwestycyjna",
+  "tresc testowa do sprawdzenia renderu dynamicznego",
   "testow integracji",
-  "testowe dane",
   "sekcje, cta",
   "seo landing",
-  "w kolejnym kroku",
-  "testowy",
-  "testowa",
-  "testowe",
-  "z cms",
-  "developersk",
+  "wersja developerska",
   "seedowane",
   "example.local",
-  "wersja developerska",
   "do developmentu",
   "do sprawdzenia renderu",
   "wystarczajace do developmentu",
@@ -44,17 +46,25 @@ export function resolveCmsText(cmsValue: string | null | undefined, fallback: st
   return cmsValue!.trim();
 }
 
+function hasCmsValue(value?: string | null): value is string {
+  return Boolean(value?.trim());
+}
+
 export function isUsableCmsBlogPost(post: {
   title?: string;
   excerpt?: string;
   content?: string;
   slug?: string;
 }): boolean {
-  if (!post.slug?.trim() || !post.title?.trim()) {
+  if (!post.slug?.trim() || !post.title?.trim() || !post.content?.trim()) {
     return false;
   }
 
-  if (isCmsDevPlaceholder(post.title) || isCmsDevPlaceholder(post.excerpt) || isCmsDevPlaceholder(post.content)) {
+  if (
+    isCmsDevPlaceholder(post.title) ||
+    isCmsDevPlaceholder(post.content) ||
+    (hasCmsValue(post.excerpt) && isCmsDevPlaceholder(post.excerpt))
+  ) {
     return false;
   }
 
