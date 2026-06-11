@@ -19,6 +19,7 @@ cp .env.example .env.local
 Frontend env keys:
 
 - `NEXT_PUBLIC_STRAPI_URL` (default local CMS URL)
+- `STRAPI_API_TOKEN` (server-only token with permission to create leads)
 - `NEXT_PUBLIC_SITE_URL` (default local frontend URL)
 - `NEXT_PUBLIC_GA_MEASUREMENT_ID` (GA4 Measurement ID, for example `G-XXXXXXXXXX`)
 - `NEXT_PUBLIC_ANALYTICS_CONSENT_BANNER` (`true` to require consent before analytics, default `false`)
@@ -75,6 +76,7 @@ Use `UAT_CHECKLIST.md` for business acceptance (pages, forms, analytics) and `GA
 - Frontend reads public CMS content via Strapi REST API (`/api/*`), for example `/api/pages`
 - CORS allows requests from `CORS_ORIGIN`
 - Public role is read-only for selected collections
+- Lead creation goes through the Next.js `/api/leads` proxy, authenticated to Strapi with `STRAPI_API_TOKEN`
 
 ## Smoke check
 
