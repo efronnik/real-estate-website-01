@@ -9,6 +9,8 @@ describe("cms-content", () => {
 
   it("keeps real CMS copy", () => {
     expect(isCmsDevPlaceholder("Proces sprzedazy od przygotowania po finalizacje.")).toBe(false);
+    expect(isCmsDevPlaceholder("W kolejnym kroku omowimy dokumenty potrzebne do sprzedazy.")).toBe(false);
+    expect(isCmsDevPlaceholder("Testowa strategia wyceny po remoncie")).toBe(false);
   });
 
   it("falls back when placeholder", () => {

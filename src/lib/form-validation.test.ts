@@ -53,4 +53,49 @@ describe("buildLeadPayloadFromFormData", () => {
     );
     expect(payload.city).toBe("Warszawa");
   });
+
+  it("folds valuation details into the message payload", () => {
+    const payload = buildLeadPayloadFromFormData(
+      formDataFrom({
+        full_name: "Jan Kowalski",
+        phone: "+48 600 000 000",
+        lead_type: "wycena",
+        source_page: "sprzedaz",
+        city: "Warszawa",
+        district: "Mokotow",
+        property_type: "mieszkanie",
+        area_m2: "58",
+        rooms: "3",
+        condition: "dobry",
+        floor: "3/8",
+        building_type: "blok",
+        ownership_type: "pelna wlasnosc",
+        expected_price: "950000 PLN",
+        timeline: "1-3 miesiace",
+        message: "Prosze o szybki kontakt.",
+        consent_data: "on",
+      }),
+    );
+
+    expect(payload.message).toContain("Prosze o szybki kontakt.");
+    expect(payload.message).toContain("Szczegoly formularza:");
+    expect(payload.message).toContain("Dzielnica: Mokotow");
+    expect(payload.message).toContain("Typ nieruchomosci: mieszkanie");
+    expect(payload.message).toContain("Metraz (m2): 58");
+    expect(payload.message).toContain("Termin sprzedazy: 1-3 miesiace");
+  });
+
+  it("folds contact-only details into the message payload", () => {
+    const payload = buildLeadPayloadFromFormData(
+      formDataFrom({
+        full_name: "Ewa Test",
+        phone: "+48600111222",
+        source_page: "kontakt",
+        preferred_contact_time: "10:00-12:00",
+        consent_data: "on",
+      }),
+    );
+
+    expect(payload.message).toBe("Szczegoly formularza:\nPreferowana godzina kontaktu: 10:00-12:00");
+  });
 });
