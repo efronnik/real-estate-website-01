@@ -557,7 +557,7 @@ export interface ApiLeadLead extends Struct.CollectionTypeSchema {
   };
   attributes: {
     city: Schema.Attribute.String;
-    consentData: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
+    consentData: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
