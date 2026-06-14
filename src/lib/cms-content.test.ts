@@ -3,12 +3,13 @@ import { isCmsDevPlaceholder, isUsableCmsBlogPost, resolveCmsText } from "@/lib/
 
 describe("cms-content", () => {
   it("detects seeded dev placeholder copy", () => {
-    expect(isCmsDevPlaceholder("Testowy lead z CMS dla strony glownej.")).toBe(true);
-    expect(isCmsDevPlaceholder("To jest testowa tresc dla strony glownej.")).toBe(true);
+    expect(isCmsDevPlaceholder("Testowe dane z CMS")).toBe(true);
+    expect(isCmsDevPlaceholder("Artykul do sprawdzenia renderu")).toBe(true);
   });
 
   it("keeps real CMS copy", () => {
     expect(isCmsDevPlaceholder("Proces sprzedazy od przygotowania po finalizacje.")).toBe(false);
+    expect(isCmsDevPlaceholder("W kolejnym kroku przygotujemy strategie z CMS.")).toBe(false);
   });
 
   it("falls back when placeholder", () => {
@@ -21,8 +22,18 @@ describe("cms-content", () => {
       isUsableCmsBlogPost({
         slug: "5-zasad",
         title: "5 zasad",
-        content: "To jest testowy artykul blogowy nr 2.",
+        content: "To jest tresc artykulu z CMS do developmentu.",
       }),
     ).toBe(false);
+  });
+
+  it("keeps published blog posts without optional excerpt", () => {
+    expect(
+      isUsableCmsBlogPost({
+        slug: "analiza-rynku",
+        title: "Analiza rynku",
+        content: "Konkretny poradnik o przygotowaniu nieruchomosci do sprzedazy.",
+      }),
+    ).toBe(true);
   });
 });
