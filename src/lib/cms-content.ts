@@ -9,11 +9,6 @@ const CMS_DEV_PLACEHOLDER_SNIPPETS = [
   "testowe dane",
   "sekcje, cta",
   "seo landing",
-  "w kolejnym kroku",
-  "testowy",
-  "testowa",
-  "testowe",
-  "z cms",
   "developersk",
   "seedowane",
   "example.local",
@@ -36,6 +31,10 @@ export function isCmsDevPlaceholder(value?: string | null): boolean {
   return CMS_DEV_PLACEHOLDER_SNIPPETS.some((snippet) => normalized.includes(snippet));
 }
 
+function hasCmsDevPlaceholder(value?: string | null): boolean {
+  return Boolean(value?.trim()) && isCmsDevPlaceholder(value);
+}
+
 export function resolveCmsText(cmsValue: string | null | undefined, fallback: string): string {
   if (isCmsDevPlaceholder(cmsValue)) {
     return fallback;
@@ -50,11 +49,15 @@ export function isUsableCmsBlogPost(post: {
   content?: string;
   slug?: string;
 }): boolean {
-  if (!post.slug?.trim() || !post.title?.trim()) {
+  if (!post.slug?.trim() || !post.title?.trim() || !post.content?.trim()) {
     return false;
   }
 
-  if (isCmsDevPlaceholder(post.title) || isCmsDevPlaceholder(post.excerpt) || isCmsDevPlaceholder(post.content)) {
+  if (
+    hasCmsDevPlaceholder(post.title) ||
+    hasCmsDevPlaceholder(post.excerpt) ||
+    hasCmsDevPlaceholder(post.content)
+  ) {
     return false;
   }
 

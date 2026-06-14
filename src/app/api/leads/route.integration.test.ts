@@ -17,6 +17,7 @@ describe("POST /api/leads integration", () => {
 
   afterEach(() => {
     vi.unstubAllGlobals();
+    vi.unstubAllEnvs();
   });
 
   it("returns 201 and posts sanitized lead to Strapi", async () => {
@@ -55,6 +56,33 @@ describe("POST /api/leads integration", () => {
     };
     expect(posted.data.leadStatus).toBe("new");
     expect(posted.data.fullName).toBe("Anna Nowak");
+  });
+
+  it("accepts same-site POST when configured site URL has a trailing slash", async () => {
+    vi.stubEnv("NEXT_PUBLIC_SITE_URL", "https://example.com/");
+
+    const request = new Request("https://example.com/api/leads", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Origin: "https://example.com",
+        "x-forwarded-for": uniqueClientIp(),
+      },
+      body: JSON.stringify({
+        data: {
+          fullName: "Anna Nowak",
+          phone: "+48500111222",
+          leadType: "kontakt",
+          sourcePage: "kontakt",
+          consentData: true,
+        },
+      }),
+    });
+
+    const response = await POST(request);
+    expect(response.status).toBe(201);
+    expect(response.headers.get("Access-Control-Allow-Origin")).toBe("https://example.com");
+    expect(fetch).toHaveBeenCalledOnce();
   });
 
   it("returns 400 when validation fails", async () => {
