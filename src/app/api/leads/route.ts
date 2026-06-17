@@ -6,7 +6,6 @@ type LeadRequestBody = {
 };
 
 const STRAPI_URL = process.env.STRAPI_URL ?? process.env.NEXT_PUBLIC_STRAPI_URL ?? "http://localhost:1337";
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
 const RATE_LIMIT_MAX_REQUESTS = 8;
 const MAX_CONTENT_LENGTH_BYTES = 16 * 1024;
@@ -26,7 +25,8 @@ const ALLOWED_INPUT_KEYS = new Set([
   "consentData",
 ]);
 const requestTimestampsByIp = new Map<string, number[]>();
-const ALLOWED_ORIGINS = new Set([SITE_URL, "http://localhost:3000", "http://127.0.0.1:3000"]);
+const LOCAL_ALLOWED_ORIGINS = ["http://localhost:3000", "http://127.0.0.1:3000"];
+const ALLOWED_ORIGINS = buildAllowedOrigins();
 
 type LeadLogLevel = "info" | "warn" | "error";
 type SafeLogPrimitive = string | number | boolean | null;
@@ -46,6 +46,26 @@ const PII_LOG_KEYS = new Set([
   "payload",
   "body",
 ]);
+
+function normalizeOrigin(value: string | undefined): string | null {
+  const trimmed = value?.trim();
+  if (!trimmed) return null;
+  try {
+    return new URL(trimmed).origin;
+  } catch {
+    return null;
+  }
+}
+
+function buildAllowedOrigins(): Set<string> {
+  const configuredOrigins = [
+    process.env.NEXT_PUBLIC_SITE_URL,
+    ...(process.env.LEAD_ALLOWED_ORIGINS ?? "").split(","),
+    ...LOCAL_ALLOWED_ORIGINS,
+  ];
+
+  return new Set(configuredOrigins.map(normalizeOrigin).filter((origin): origin is string => Boolean(origin)));
+}
 
 function maskIp(ip: string): string {
   if (ip.includes(".")) {

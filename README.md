@@ -20,6 +20,7 @@ Frontend env keys:
 
 - `NEXT_PUBLIC_STRAPI_URL` (default local CMS URL)
 - `NEXT_PUBLIC_SITE_URL` (default local frontend URL)
+- `LEAD_ALLOWED_ORIGINS` (optional comma-separated extra origins that may submit `/api/leads`, e.g. apex + `www`)
 - `NEXT_PUBLIC_GA_MEASUREMENT_ID` (GA4 Measurement ID, for example `G-XXXXXXXXXX`)
 - `NEXT_PUBLIC_ANALYTICS_CONSENT_BANNER` (`true` to require consent before analytics, default `false`)
 
