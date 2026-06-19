@@ -53,4 +53,62 @@ describe("buildLeadPayloadFromFormData", () => {
     );
     expect(payload.city).toBe("Warszawa");
   });
+
+  it("preserves contact-only details in the submitted message", () => {
+    const payload = buildLeadPayloadFromFormData(
+      formDataFrom({
+        full_name: "Marek K",
+        phone: "+48600111222",
+        source_page: "kontakt",
+        message: "Prosze o kontakt.",
+        preferred_contact_time: "10:00-12:00",
+        consent_data: "on",
+      }),
+    );
+
+    expect(payload.message).toBe(
+      ["Prosze o kontakt.", "Dodatkowe dane formularza:", "Preferowana godzina kontaktu: 10:00-12:00"].join("\n"),
+    );
+  });
+
+  it("preserves valuation form details in the submitted message", () => {
+    const payload = buildLeadPayloadFromFormData(
+      formDataFrom({
+        full_name: "Anna Nowak",
+        phone: "+48600111222",
+        lead_type: "wycena",
+        source_page: "sprzedaz",
+        city: "Warszawa",
+        district: "Mokotow",
+        property_type: "mieszkanie",
+        area_m2: "58",
+        rooms: "3",
+        condition: "bardzo_dobry",
+        floor: "3/8",
+        building_type: "blok",
+        ownership_type: "pelna wlasnosc",
+        expected_price: "950000 PLN",
+        timeline: "1-3 miesiace",
+        message: "Jest balkon.",
+        consent_data: "on",
+      }),
+    );
+
+    expect(payload.message).toBe(
+      [
+        "Jest balkon.",
+        "Dodatkowe dane formularza:",
+        "Dzielnica: Mokotow",
+        "Typ nieruchomosci: mieszkanie",
+        "Metraz (m2): 58",
+        "Liczba pokoi: 3",
+        "Stan nieruchomosci: bardzo_dobry",
+        "Pietro: 3/8",
+        "Typ budynku: blok",
+        "Forma wlasnosci: pelna wlasnosc",
+        "Oczekiwana cena: 950000 PLN",
+        "Termin sprzedazy: 1-3 miesiace",
+      ].join("\n"),
+    );
+  });
 });
