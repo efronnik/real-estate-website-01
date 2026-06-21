@@ -74,8 +74,40 @@ type LeadPayload = {
   consentData?: boolean;
 };
 
+type MessageDetailField = {
+  key: string;
+  label: string;
+};
+
+const MESSAGE_DETAIL_FIELDS: MessageDetailField[] = [
+  { key: "preferred_contact_time", label: "Preferowana godzina kontaktu" },
+  { key: "district", label: "Dzielnica" },
+  { key: "property_type", label: "Typ nieruchomosci" },
+  { key: "area_m2", label: "Metraz m2" },
+  { key: "rooms", label: "Liczba pokoi" },
+  { key: "condition", label: "Stan nieruchomosci" },
+  { key: "floor", label: "Pietro" },
+  { key: "building_type", label: "Typ budynku" },
+  { key: "ownership_type", label: "Forma wlasnosci" },
+  { key: "expected_price", label: "Oczekiwana cena" },
+  { key: "timeline", label: "Termin sprzedazy" },
+];
+
 function asText(formData: FormData, key: string): string {
   return String(formData.get(key) ?? "").trim();
+}
+
+function buildMessageWithFormDetails(formData: FormData): string {
+  const details = MESSAGE_DETAIL_FIELDS.map(({ key, label }) => {
+    const value = asText(formData, key);
+    return value ? `${label}: ${value}` : null;
+  }).filter((detail): detail is string => Boolean(detail));
+  const message = asText(formData, "message");
+
+  if (details.length === 0) return message;
+  const detailsSummary = `Szczegoly formularza: ${details.join("; ")}`;
+  if (!message) return detailsSummary;
+  return `${detailsSummary} | Wiadomosc: ${message}`;
 }
 
 export function buildLeadPayloadFromFormData(formData: FormData): LeadPayload {
@@ -89,7 +121,7 @@ export function buildLeadPayloadFromFormData(formData: FormData): LeadPayload {
     sourcePage: asText(formData, "source_page"),
     website: asText(formData, "website") || undefined,
     email: asText(formData, "email") || undefined,
-    message: asText(formData, "message") || undefined,
+    message: buildMessageWithFormDetails(formData) || undefined,
     city: asText(formData, "city") || asText(formData, "city_or_district") || undefined,
     utmSource: asText(formData, "utm_source") || undefined,
     utmMedium: asText(formData, "utm_medium") || undefined,
