@@ -137,7 +137,6 @@ export default {
         metaTitle: "FIND Nieruchomosci",
         metaDescription:
           "Wsparcie w sprzedazy mieszkan i inwestowaniu w nieruchomosci w Warszawie.",
-        canonicalUrl: "http://localhost:3000/",
         ogTitle: "FIND Nieruchomosci",
         ogDescription: "Sprzedaz i inwestycje nieruchomosci w Warszawie.",
       },

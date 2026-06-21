@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { isCmsDevPlaceholder, isUsableCmsBlogPost, resolveCmsText } from "@/lib/cms-content";
+import { isCmsDevPlaceholder, isUsableCmsBlogPost, resolveCmsCanonicalUrl, resolveCmsText } from "@/lib/cms-content";
 
 describe("cms-content", () => {
   it("detects seeded dev placeholder copy", () => {
@@ -24,5 +24,20 @@ describe("cms-content", () => {
         content: "To jest testowy artykul blogowy nr 2.",
       }),
     ).toBe(false);
+  });
+
+  it("falls back from development canonical URLs", () => {
+    expect(resolveCmsCanonicalUrl("http://localhost:3000/", "https://find.example/sprzedaz")).toBe(
+      "https://find.example/sprzedaz",
+    );
+    expect(resolveCmsCanonicalUrl("http://127.0.0.1:3000/blog/test", "https://find.example/blog/test")).toBe(
+      "https://find.example/blog/test",
+    );
+  });
+
+  it("keeps production CMS canonical URLs", () => {
+    expect(resolveCmsCanonicalUrl("https://find.example/kontakt", "https://find.example/fallback")).toBe(
+      "https://find.example/kontakt",
+    );
   });
 });
