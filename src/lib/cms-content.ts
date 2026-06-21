@@ -54,7 +54,9 @@ export function isUsableCmsBlogPost(post: {
     return false;
   }
 
-  if (isCmsDevPlaceholder(post.title) || isCmsDevPlaceholder(post.excerpt) || isCmsDevPlaceholder(post.content)) {
+  const hasPlaceholderExcerpt = Boolean(post.excerpt?.trim()) && isCmsDevPlaceholder(post.excerpt);
+
+  if (isCmsDevPlaceholder(post.title) || hasPlaceholderExcerpt || isCmsDevPlaceholder(post.content)) {
     return false;
   }
 
