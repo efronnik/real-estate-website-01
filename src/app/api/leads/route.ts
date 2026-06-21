@@ -6,7 +6,7 @@ type LeadRequestBody = {
 };
 
 const STRAPI_URL = process.env.STRAPI_URL ?? process.env.NEXT_PUBLIC_STRAPI_URL ?? "http://localhost:1337";
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+const DEFAULT_SITE_URL = "http://localhost:3000";
 const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
 const RATE_LIMIT_MAX_REQUESTS = 8;
 const MAX_CONTENT_LENGTH_BYTES = 16 * 1024;
@@ -26,7 +26,6 @@ const ALLOWED_INPUT_KEYS = new Set([
   "consentData",
 ]);
 const requestTimestampsByIp = new Map<string, number[]>();
-const ALLOWED_ORIGINS = new Set([SITE_URL, "http://localhost:3000", "http://127.0.0.1:3000"]);
 
 type LeadLogLevel = "info" | "warn" | "error";
 type SafeLogPrimitive = string | number | boolean | null;
@@ -106,16 +105,40 @@ function logLeadEvent(level: LeadLogLevel, event: string, meta: Record<string, u
 function getRequestOrigin(request: Request): string | null {
   const origin = request.headers.get("origin");
   if (!origin) return null;
+  return normalizeOrigin(origin);
+}
+
+function normalizeOrigin(value: string | null | undefined): string | null {
+  if (!value) return null;
   try {
-    const parsed = new URL(origin);
+    const parsed = new URL(value);
     return parsed.origin;
   } catch {
     return null;
   }
 }
 
+function getAllowedOrigins() {
+  return new Set(
+    [
+      normalizeOrigin(process.env.NEXT_PUBLIC_SITE_URL ?? DEFAULT_SITE_URL),
+      normalizeOrigin("http://localhost:3000"),
+      normalizeOrigin("http://127.0.0.1:3000"),
+    ].filter((origin): origin is string => Boolean(origin)),
+  );
+}
+
+function getStrapiLeadHeaders(): HeadersInit | null {
+  const token = process.env.STRAPI_API_TOKEN?.trim();
+  if (!token) return null;
+  return {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`,
+  };
+}
+
 function buildCorsHeaders(origin: string | null): HeadersInit {
-  const allowedOrigin = origin && ALLOWED_ORIGINS.has(origin) ? origin : null;
+  const allowedOrigin = origin && getAllowedOrigins().has(origin) ? origin : null;
   return {
     "Access-Control-Allow-Methods": "POST, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type",
@@ -184,7 +207,7 @@ export async function POST(request: Request) {
   const maskedIp = maskIp(clientIp);
   const requestOrigin = getRequestOrigin(request);
 
-  if (requestOrigin && !ALLOWED_ORIGINS.has(requestOrigin)) {
+  if (requestOrigin && !getAllowedOrigins().has(requestOrigin)) {
     logLeadEvent("warn", "origin_rejected", { requestId, ip: maskedIp, origin: requestOrigin });
     return jsonResponse(request, requestId, { error: "Origin not allowed." }, 403);
   }
@@ -269,11 +292,15 @@ export async function POST(request: Request) {
 
   let response: Response;
   try {
+    const strapiHeaders = getStrapiLeadHeaders();
+    if (!strapiHeaders) {
+      logLeadEvent("error", "strapi_token_missing", { requestId, ip: maskedIp });
+      return jsonResponse(request, requestId, { error: "Lead submit failed." }, 502);
+    }
+
     response = await fetch(`${STRAPI_URL}/api/leads`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: strapiHeaders,
       body: JSON.stringify({ data: result.payload }),
       cache: "no-store",
     });
@@ -299,7 +326,7 @@ export async function POST(request: Request) {
 export async function OPTIONS(request: Request) {
   const requestId = crypto.randomUUID();
   const origin = getRequestOrigin(request);
-  if (origin && !ALLOWED_ORIGINS.has(origin)) {
+  if (origin && !getAllowedOrigins().has(origin)) {
     return new NextResponse(null, { status: 403, headers: buildCorsHeaders(origin) });
   }
   return new NextResponse(null, {
