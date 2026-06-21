@@ -17,6 +17,7 @@ describe("POST /api/leads integration", () => {
 
   afterEach(() => {
     vi.unstubAllGlobals();
+    vi.unstubAllEnvs();
   });
 
   it("returns 201 and posts sanitized lead to Strapi", async () => {
@@ -166,5 +167,33 @@ describe("POST /api/leads integration", () => {
 
     const response = await OPTIONS(request);
     expect(response.status).toBe(403);
+  });
+
+  it("accepts same-site leads when NEXT_PUBLIC_SITE_URL has a trailing slash", async () => {
+    vi.stubEnv("NEXT_PUBLIC_SITE_URL", "https://find.example/");
+    vi.resetModules();
+    const { POST: postWithConfiguredOrigin } = await import("./route");
+
+    const request = new Request("https://find.example/api/leads", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Origin: "https://find.example",
+        "x-forwarded-for": uniqueClientIp(),
+      },
+      body: JSON.stringify({
+        data: {
+          fullName: "Anna Nowak",
+          phone: "+48500111222",
+          leadType: "kontakt",
+          sourcePage: "kontakt",
+          consentData: true,
+        },
+      }),
+    });
+
+    const response = await postWithConfiguredOrigin(request);
+    expect(response.status).toBe(201);
+    expect(response.headers.get("Access-Control-Allow-Origin")).toBe("https://find.example");
   });
 });

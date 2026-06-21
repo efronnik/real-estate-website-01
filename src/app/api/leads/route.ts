@@ -6,7 +6,8 @@ type LeadRequestBody = {
 };
 
 const STRAPI_URL = process.env.STRAPI_URL ?? process.env.NEXT_PUBLIC_STRAPI_URL ?? "http://localhost:1337";
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+const FALLBACK_SITE_URL = "http://localhost:3000";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? FALLBACK_SITE_URL;
 const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
 const RATE_LIMIT_MAX_REQUESTS = 8;
 const MAX_CONTENT_LENGTH_BYTES = 16 * 1024;
@@ -26,7 +27,18 @@ const ALLOWED_INPUT_KEYS = new Set([
   "consentData",
 ]);
 const requestTimestampsByIp = new Map<string, number[]>();
-const ALLOWED_ORIGINS = new Set([SITE_URL, "http://localhost:3000", "http://127.0.0.1:3000"]);
+
+function normalizeOrigin(raw: string): string {
+  const trimmed = raw.trim();
+  if (!trimmed) return FALLBACK_SITE_URL;
+  try {
+    return new URL(trimmed).origin;
+  } catch {
+    return FALLBACK_SITE_URL;
+  }
+}
+
+const ALLOWED_ORIGINS = new Set([normalizeOrigin(SITE_URL), "http://localhost:3000", "http://127.0.0.1:3000"]);
 
 type LeadLogLevel = "info" | "warn" | "error";
 type SafeLogPrimitive = string | number | boolean | null;
