@@ -41,6 +41,15 @@ export default {
       );
     };
 
+    const revokePermissions = async (roleId: number, actions: string[]) => {
+      await strapi.db.query("plugin::users-permissions.permission").deleteMany({
+        where: {
+          role: roleId,
+          action: { $in: actions },
+        },
+      });
+    };
+
     const publicRole = await strapi.db
       .query("plugin::users-permissions.role")
       .findOne({ where: { type: "public" } });
@@ -77,6 +86,9 @@ export default {
       "api::site-settings.site-settings.findOne",
       "api::seo.seo.find",
       "api::seo.seo.findOne",
+    ];
+
+    const publicWriteActions = [
       "api::lead.lead.create",
     ];
 
@@ -115,18 +127,16 @@ export default {
       "api::lead.lead.findOne",
     ];
 
-    if (publicRole) await ensurePermissions(publicRole.id, readonlyActions);
+    if (publicRole) {
+      await ensurePermissions(publicRole.id, readonlyActions);
+      await revokePermissions(publicRole.id, publicWriteActions);
+    }
     if (editorRole) await ensurePermissions(editorRole.id, editorCrudActions);
 
     // Keep "Authenticated" minimal for better security posture.
     // Any accidental CRUD grants for content APIs are removed on boot.
     if (authenticatedRole) {
-      await strapi.db.query("plugin::users-permissions.permission").deleteMany({
-        where: {
-          role: authenticatedRole.id,
-          action: { $in: editorCrudActions },
-        },
-      });
+      await revokePermissions(authenticatedRole.id, editorCrudActions);
     }
 
     const pagesCount = await strapi.db.query("api::page.page").count();
