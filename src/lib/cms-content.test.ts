@@ -9,6 +9,7 @@ describe("cms-content", () => {
 
   it("keeps real CMS copy", () => {
     expect(isCmsDevPlaceholder("Proces sprzedazy od przygotowania po finalizacje.")).toBe(false);
+    expect(isCmsDevPlaceholder("W kolejnym kroku przygotowujemy dokumenty dla klienta.")).toBe(false);
   });
 
   it("falls back when placeholder", () => {
@@ -24,5 +25,16 @@ describe("cms-content", () => {
         content: "To jest testowy artykul blogowy nr 2.",
       }),
     ).toBe(false);
+  });
+
+  it("keeps published blog posts when optional CMS fields are blank", () => {
+    expect(
+      isUsableCmsBlogPost({
+        slug: "rynek-pierwotny",
+        title: "Rynek pierwotny bez niespodzianek",
+        excerpt: "",
+        content: "   ",
+      }),
+    ).toBe(true);
   });
 });

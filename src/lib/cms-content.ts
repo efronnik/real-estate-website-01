@@ -3,17 +3,19 @@
  */
 const CMS_DEV_PLACEHOLDER_SNIPPETS = [
   "[twoje imię]",
-  "eksperckie prowadzenie sprzedaży",
-  "szkieletem",
   "testow integracji",
   "testowe dane",
+  "testowy lead z cms dla strony glownej",
+  "to jest testowa tresc dla strony glownej",
+  "testowa kategoria poradnikowa",
+  "testowa kategoria inwestycyjna",
+  "testowe dane dla lejka inwestora",
+  "tresc testowa do sprawdzenia renderu dynamicznego",
+  "to jest testowy artykul blogowy nr 2",
+  "eksperckie prowadzenie sprzedaży",
+  "szkieletem",
   "sekcje, cta",
   "seo landing",
-  "w kolejnym kroku",
-  "testowy",
-  "testowa",
-  "testowe",
-  "z cms",
   "developersk",
   "seedowane",
   "example.local",
@@ -44,6 +46,10 @@ export function resolveCmsText(cmsValue: string | null | undefined, fallback: st
   return cmsValue!.trim();
 }
 
+function hasNonEmptyCmsDevPlaceholder(value?: string | null): boolean {
+  return Boolean(value?.trim()) && isCmsDevPlaceholder(value);
+}
+
 export function isUsableCmsBlogPost(post: {
   title?: string;
   excerpt?: string;
@@ -54,7 +60,11 @@ export function isUsableCmsBlogPost(post: {
     return false;
   }
 
-  if (isCmsDevPlaceholder(post.title) || isCmsDevPlaceholder(post.excerpt) || isCmsDevPlaceholder(post.content)) {
+  if (
+    isCmsDevPlaceholder(post.title) ||
+    hasNonEmptyCmsDevPlaceholder(post.excerpt) ||
+    hasNonEmptyCmsDevPlaceholder(post.content)
+  ) {
     return false;
   }
 
