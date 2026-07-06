@@ -3,6 +3,7 @@
  */
 const CMS_DEV_PLACEHOLDER_VALUES = [
   "testowy lead z cms dla strony glownej.",
+  "to jest testowa tresc dla strony glownej.",
   "to jest testowa tresc dla strony glownej. dane sa automatycznie seedowane podczas developmentu.",
   "testowe dane z cms",
   "testowe dane dla lejka inwestora.",
