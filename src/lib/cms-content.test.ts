@@ -9,6 +9,8 @@ describe("cms-content", () => {
 
   it("keeps real CMS copy", () => {
     expect(isCmsDevPlaceholder("Proces sprzedazy od przygotowania po finalizacje.")).toBe(false);
+    expect(isCmsDevPlaceholder("W kolejnym kroku przygotuj dokumenty do sprzedaży mieszkania.")).toBe(false);
+    expect(isCmsDevPlaceholder("Opis testowy scenariusza negocjacji dla sprzedającego.")).toBe(false);
   });
 
   it("falls back when placeholder", () => {
@@ -24,5 +26,22 @@ describe("cms-content", () => {
         content: "To jest testowy artykul blogowy nr 2.",
       }),
     ).toBe(false);
+  });
+
+  it("keeps real blog posts with optional fields missing or common phrases", () => {
+    expect(
+      isUsableCmsBlogPost({
+        slug: "negocjacje",
+        title: "Scenariusz rozmowy z kupującym",
+      }),
+    ).toBe(true);
+
+    expect(
+      isUsableCmsBlogPost({
+        slug: "kolejny-krok",
+        title: "Dokumenty przed sprzedażą",
+        content: "W kolejnym kroku przygotuj zaświadczenia i komplet dokumentów dla notariusza.",
+      }),
+    ).toBe(true);
   });
 });
