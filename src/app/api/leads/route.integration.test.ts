@@ -2,6 +2,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { OPTIONS, POST } from "./route";
 
 let ipSeq = 0;
+const originalStrapiApiToken = process.env.STRAPI_API_TOKEN;
+
 function uniqueClientIp() {
   ipSeq += 1;
   return `203.0.113.${ipSeq}`;
@@ -9,6 +11,7 @@ function uniqueClientIp() {
 
 describe("POST /api/leads integration", () => {
   beforeEach(() => {
+    process.env.STRAPI_API_TOKEN = "test-strapi-token";
     vi.stubGlobal(
       "fetch",
       vi.fn().mockResolvedValue(new Response(JSON.stringify({ data: { id: 1 } }), { status: 200 })),
@@ -16,6 +19,11 @@ describe("POST /api/leads integration", () => {
   });
 
   afterEach(() => {
+    if (originalStrapiApiToken === undefined) {
+      delete process.env.STRAPI_API_TOKEN;
+    } else {
+      process.env.STRAPI_API_TOKEN = originalStrapiApiToken;
+    }
     vi.unstubAllGlobals();
   });
 
@@ -46,7 +54,7 @@ describe("POST /api/leads integration", () => {
       `${strapiBase}/api/leads`,
       expect.objectContaining({
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", Authorization: "Bearer test-strapi-token" },
       }),
     );
     const [, init] = vi.mocked(fetch).mock.calls[0];
@@ -128,6 +136,32 @@ describe("POST /api/leads integration", () => {
 
     const response = await POST(request);
     expect(response.status).toBe(200);
+    expect(fetch).not.toHaveBeenCalled();
+  });
+
+  it("fails closed without a Strapi API token", async () => {
+    delete process.env.STRAPI_API_TOKEN;
+
+    const request = new Request("http://127.0.0.1:3000/api/leads", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Origin: "http://127.0.0.1:3000",
+        "x-forwarded-for": uniqueClientIp(),
+      },
+      body: JSON.stringify({
+        data: {
+          fullName: "Jan Kowalski",
+          phone: "+48500111222",
+          leadType: "kontakt",
+          sourcePage: "kontakt",
+          consentData: true,
+        },
+      }),
+    });
+
+    const response = await POST(request);
+    expect(response.status).toBe(500);
     expect(fetch).not.toHaveBeenCalled();
   });
 
