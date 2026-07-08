@@ -35,6 +35,7 @@ export default {
             "api::seo.seo.find",
             "api::seo.seo.findOne",
         ];
+        const publicForbiddenActions = ["api::lead.lead.create"];
         const existingPermissions = await strapi.db
             .query("plugin::users-permissions.permission")
             .findMany({
@@ -52,5 +53,12 @@ export default {
                 role: publicRole.id,
             },
         })));
+        // Lead writes must go through the Next proxy so origin checks, rate limits, and validation run.
+        await strapi.db.query("plugin::users-permissions.permission").deleteMany({
+            where: {
+                role: publicRole.id,
+                action: { $in: publicForbiddenActions },
+            },
+        });
     },
 };
