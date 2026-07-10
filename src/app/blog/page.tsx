@@ -8,7 +8,7 @@ import { ROUTE_PATHS } from "@/config/navigation";
 import { CtaClickLink } from "@/components/cta-click-link";
 import { HeroBackgroundVideo } from "@/components/hero-background-video";
 import { fetchCmsBlogPosts, type CmsBlogPostRecord, fetchCmsPageBySlug } from "@/lib/cms";
-import { isUsableCmsBlogPost, resolveCmsText } from "@/lib/cms-content";
+import { isUsableCmsBlogSummary, resolveCmsText } from "@/lib/cms-content";
 
 const blogPaths = [
   {
@@ -110,19 +110,21 @@ export default function BlogPage() {
     const hardcodedBySlug = Object.fromEntries(posts.map((post) => [post.slug, post]));
 
     const merged = cmsPosts
-      .filter((post) => isUsableCmsBlogPost(post))
+      .filter((post) => isUsableCmsBlogSummary(post))
       .map((post, idx) => {
-        const slug = post.slug as string;
+        const slug = post.slug!.trim();
         const hardcoded = hardcodedBySlug[slug];
-        if (hardcoded) return hardcoded;
 
         return {
           slug,
-          title: post.title as string,
-          excerpt: post.excerpt ?? "Artykuł ekspercki o sprzedaży i inwestowaniu w nieruchomości.",
-          image: posts[idx % posts.length].image,
+          title: post.title!.trim(),
+          excerpt:
+            post.excerpt?.trim() ||
+            hardcoded?.excerpt ||
+            "Artykuł ekspercki o sprzedaży i inwestowaniu w nieruchomości.",
+          image: hardcoded?.image ?? posts[idx % posts.length].image,
           meta: getCmsCategoryLabel(post),
-          cta: "Czytaj artykuł",
+          cta: hardcoded?.cta ?? "Czytaj artykuł",
         };
       });
 
@@ -142,7 +144,7 @@ export default function BlogPage() {
         fetchCmsPageBySlug("blog"),
       ]);
       if (!mounted) return;
-      setCmsPosts(blogPosts.filter((post) => isUsableCmsBlogPost(post)));
+      setCmsPosts(blogPosts.filter((post) => isUsableCmsBlogSummary(post)));
       setHeroHeadline(resolveCmsText(blogPage?.headline, "") || null);
       setHeroLead(resolveCmsText(blogPage?.lead, "") || null);
     };
