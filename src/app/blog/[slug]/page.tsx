@@ -10,7 +10,7 @@ import { CtaClickLink } from "@/components/cta-click-link";
 import { HeroBackgroundVideo } from "@/components/hero-background-video";
 import { RemoteFillImage } from "@/components/remote-fill-image";
 import { fetchCmsBlogPostBySlug, type CmsBlogPostRecord } from "@/lib/cms";
-import { isUsableCmsBlogPost } from "@/lib/cms-content";
+import { hasUsableCmsBlogContent, isUsableCmsBlogSummary, resolveCmsText } from "@/lib/cms-content";
 
 type ArticleSection = {
   title: string;
@@ -594,24 +594,35 @@ export default function BlogArticlePage() {
   const [cmsArticle, setCmsArticle] = useState<CmsBlogPostRecord | null>(null);
   const fallbackArticle = articles[slug];
   const article = useMemo(() => {
-    const hasProseFallback =
-      (fallbackArticle?.intro?.length ?? 0) > 0 || (fallbackArticle?.sections?.length ?? 0) > 0;
+    if (cmsArticle && isUsableCmsBlogSummary(cmsArticle)) {
+      const category = resolveCmsText(
+        cmsArticle.category?.name ?? cmsArticle.category?.attributes?.name,
+        fallbackArticle?.category ?? "Blog",
+      );
+      const cmsTitle = cmsArticle.title!.trim();
+      const cmsLead = cmsArticle.excerpt?.trim() || fallbackArticle?.lead || "";
 
-    if (hasProseFallback && fallbackArticle) {
-      return fallbackArticle;
-    }
+      if (!hasUsableCmsBlogContent(cmsArticle)) {
+        return fallbackArticle
+          ? {
+              ...fallbackArticle,
+              title: cmsTitle,
+              lead: cmsLead,
+              category,
+            }
+          : undefined;
+      }
 
-    if (cmsArticle && isUsableCmsBlogPost(cmsArticle)) {
       return {
-        title: cmsArticle.title ?? "Artykuł",
-        lead: cmsArticle.excerpt ?? "",
-        category: cmsArticle.category?.name ?? cmsArticle.category?.attributes?.name ?? "Blog",
-        readTime: "5 min czytania",
+        title: cmsTitle,
+        lead: cmsLead,
+        category,
+        readTime: fallbackArticle?.readTime ?? "5 min czytania",
         points: [],
         checklist: [],
         showFramework: false,
         showMistakes: false,
-        closing: cmsArticle.content ?? "",
+        closing: cmsArticle.content!.trim(),
       };
     }
     return fallbackArticle;
