@@ -25,4 +25,26 @@ describe("cms-content", () => {
       }),
     ).toBe(false);
   });
+
+  it("accepts real blog posts with a blank optional excerpt", () => {
+    expect(
+      isUsableCmsBlogPost({
+        slug: "nowy-poradnik",
+        title: "Nowy poradnik",
+        excerpt: "   ",
+        content: "Praktyczny poradnik dla wlascicieli mieszkan w Warszawie.",
+      }),
+    ).toBe(true);
+  });
+
+  it("rejects blog posts with a placeholder excerpt", () => {
+    expect(
+      isUsableCmsBlogPost({
+        slug: "nowy-poradnik",
+        title: "Nowy poradnik",
+        excerpt: "Testowe dane z CMS",
+        content: "Praktyczny poradnik dla wlascicieli mieszkan w Warszawie.",
+      }),
+    ).toBe(false);
+  });
 });
