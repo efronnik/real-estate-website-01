@@ -54,7 +54,12 @@ export function isUsableCmsBlogPost(post: {
     return false;
   }
 
-  if (isCmsDevPlaceholder(post.title) || isCmsDevPlaceholder(post.excerpt) || isCmsDevPlaceholder(post.content)) {
+  const hasExcerpt = Boolean(post.excerpt?.trim());
+  if (
+    isCmsDevPlaceholder(post.title) ||
+    (hasExcerpt && isCmsDevPlaceholder(post.excerpt)) ||
+    isCmsDevPlaceholder(post.content)
+  ) {
     return false;
   }
 

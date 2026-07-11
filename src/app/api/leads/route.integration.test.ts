@@ -1,14 +1,27 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { OPTIONS, POST } from "./route";
 
+const ORIGINAL_STRAPI_API_TOKEN = process.env.STRAPI_API_TOKEN;
+const ORIGINAL_SITE_URL = process.env.NEXT_PUBLIC_SITE_URL;
+
 let ipSeq = 0;
 function uniqueClientIp() {
   ipSeq += 1;
   return `203.0.113.${ipSeq}`;
 }
 
+function restoreEnv(key: "STRAPI_API_TOKEN" | "NEXT_PUBLIC_SITE_URL", value: string | undefined) {
+  if (value === undefined) {
+    delete process.env[key];
+    return;
+  }
+  process.env[key] = value;
+}
+
 describe("POST /api/leads integration", () => {
   beforeEach(() => {
+    process.env.STRAPI_API_TOKEN = "test-strapi-token";
+    process.env.NEXT_PUBLIC_SITE_URL = "http://localhost:3000";
     vi.stubGlobal(
       "fetch",
       vi.fn().mockResolvedValue(new Response(JSON.stringify({ data: { id: 1 } }), { status: 200 })),
@@ -17,6 +30,8 @@ describe("POST /api/leads integration", () => {
 
   afterEach(() => {
     vi.unstubAllGlobals();
+    restoreEnv("STRAPI_API_TOKEN", ORIGINAL_STRAPI_API_TOKEN);
+    restoreEnv("NEXT_PUBLIC_SITE_URL", ORIGINAL_SITE_URL);
   });
 
   it("returns 201 and posts sanitized lead to Strapi", async () => {
@@ -46,7 +61,7 @@ describe("POST /api/leads integration", () => {
       `${strapiBase}/api/leads`,
       expect.objectContaining({
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", Authorization: "Bearer test-strapi-token" },
       }),
     );
     const [, init] = vi.mocked(fetch).mock.calls[0];
@@ -55,6 +70,58 @@ describe("POST /api/leads integration", () => {
     };
     expect(posted.data.leadStatus).toBe("new");
     expect(posted.data.fullName).toBe("Anna Nowak");
+  });
+
+  it("accepts the configured site origin after normalizing trailing slashes", async () => {
+    process.env.NEXT_PUBLIC_SITE_URL = "https://example.com/";
+
+    const request = new Request("https://example.com/api/leads", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Origin: "https://example.com",
+        "x-forwarded-for": uniqueClientIp(),
+      },
+      body: JSON.stringify({
+        data: {
+          fullName: "Anna Nowak",
+          phone: "+48500111222",
+          leadType: "kontakt",
+          sourcePage: "kontakt",
+          consentData: true,
+        },
+      }),
+    });
+
+    const response = await POST(request);
+    expect(response.status).toBe(201);
+    expect(fetch).toHaveBeenCalled();
+  });
+
+  it("fails closed without posting to Strapi when the API token is missing", async () => {
+    delete process.env.STRAPI_API_TOKEN;
+
+    const request = new Request("http://127.0.0.1:3000/api/leads", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Origin: "http://127.0.0.1:3000",
+        "x-forwarded-for": uniqueClientIp(),
+      },
+      body: JSON.stringify({
+        data: {
+          fullName: "Anna Nowak",
+          phone: "+48500111222",
+          leadType: "kontakt",
+          sourcePage: "kontakt",
+          consentData: true,
+        },
+      }),
+    });
+
+    const response = await POST(request);
+    expect(response.status).toBe(500);
+    expect(fetch).not.toHaveBeenCalled();
   });
 
   it("returns 400 when validation fails", async () => {
