@@ -19,6 +19,7 @@ export default {
             .findOne({ where: { type: "public" } });
         if (!publicRole)
             return;
+        const publicForbiddenActions = ["api::lead.lead.create"];
         const publicActions = [
             "api::page.page.find",
             "api::page.page.findOne",
@@ -52,5 +53,11 @@ export default {
                 role: publicRole.id,
             },
         })));
+        await strapi.db.query("plugin::users-permissions.permission").deleteMany({
+            where: {
+                role: publicRole.id,
+                action: { $in: publicForbiddenActions },
+            },
+        });
     },
 };
