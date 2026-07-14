@@ -25,4 +25,14 @@ describe("cms-content", () => {
       }),
     ).toBe(false);
   });
+
+  it("keeps real blog posts without an optional excerpt", () => {
+    expect(
+      isUsableCmsBlogPost({
+        slug: "proces-sprzedazy",
+        title: "Proces sprzedaży mieszkania",
+        content: "Praktyczny przewodnik po bezpiecznej sprzedaży nieruchomości.",
+      }),
+    ).toBe(true);
+  });
 });
