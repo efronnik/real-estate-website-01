@@ -178,6 +178,11 @@ function isRateLimited(ip: string): boolean {
   return limited;
 }
 
+function getStrapiApiToken(): string | null {
+  const token = process.env.STRAPI_API_TOKEN?.trim();
+  return token ? token : null;
+}
+
 export async function POST(request: Request) {
   const clientIp = getClientIp(request);
   const requestId = crypto.randomUUID();
@@ -267,11 +272,18 @@ export async function POST(request: Request) {
     return jsonResponse(request, requestId, { ok: true }, 200);
   }
 
+  const strapiApiToken = getStrapiApiToken();
+  if (!strapiApiToken) {
+    logLeadEvent("error", "strapi_token_missing", { requestId, ip: maskedIp });
+    return jsonResponse(request, requestId, { error: "Lead submit failed." }, 500);
+  }
+
   let response: Response;
   try {
     response = await fetch(`${STRAPI_URL}/api/leads`, {
       method: "POST",
       headers: {
+        Authorization: `Bearer ${strapiApiToken}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ data: result.payload }),
